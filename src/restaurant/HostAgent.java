@@ -25,7 +25,9 @@ public class HostAgent extends Agent {
 
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
-
+	private enum hostState {free, seatingCustomer};
+	private hostState state = hostState.free;
+	
 	public HostGui hostGui = null;
 
 	public HostAgent(String name) {
@@ -76,6 +78,13 @@ public class HostAgent extends Agent {
 		atTable.release();// = true;
 		stateChanged();
 	}
+	
+	public void msgInLobby() {
+		if(state == hostState.seatingCustomer) {
+			state = hostState.free;
+			stateChanged();
+		}
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -89,8 +98,10 @@ public class HostAgent extends Agent {
 		for (Table table : tables) {
 			if (!table.isOccupied()) {
 				if (!waitingCustomers.isEmpty()) {
-					seatCustomer(waitingCustomers.get(0), table);//the action
-					return true;//return true to the abstract agent to reinvoke the scheduler.
+					if(state == hostState.free) {
+						seatCustomer(waitingCustomers.get(0), table);//the action
+						return true;//return true to the abstract agent to reinvoke the scheduler.
+					}
 				}
 			}
 		}
@@ -104,7 +115,8 @@ public class HostAgent extends Agent {
 	// Actions
 
 	private void seatCustomer(CustomerAgent customer, Table table) {
-		customer.msgSitAtTable();
+		state = hostState.seatingCustomer;
+		customer.msgSitAtTable(table.tableNumber);
 		DoSeatCustomer(customer, table);
 		try {
 			atTable.acquire();

@@ -21,7 +21,7 @@ public class CustomerGui implements Gui{
 
 	public static final int xTable = 200;
 	public static final int yTable = 250;
-	
+
 	private final int CUSTOMER_WIDTH = 20, CUSTOMER_LENGTH = 20;
 
 	public CustomerGui(CustomerAgent c, RestaurantGui gui){ //HostAgent m) {
@@ -79,8 +79,28 @@ public class CustomerGui implements Gui{
 	}
 
 	public void DoGoToSeat(int seatnumber) {//later you will map seatnumber to table coordinates.
-		xDestination = xTable;
-		yDestination = yTable;
+		switch(seatnumber) {
+			case 1:
+				xDestination = xTable;
+				yDestination = yTable;
+				break;
+				
+			case 2:
+				xDestination = 2 * xTable;
+				yDestination = yTable;
+				break;
+				
+			case 3:
+				xDestination = xTable;
+				yDestination = 2 * yTable;
+				break;
+				
+			case 4:
+				xDestination = 2 * xTable;
+				yDestination = 2 * yTable;
+				break;
+		}
+
 		command = Command.GoToSeat;
 	}
 

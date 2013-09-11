@@ -23,6 +23,9 @@ public class AnimationPanel extends JPanel implements ActionListener {
 
     public AnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
+    	setPreferredSize(new Dimension(WINDOWX, WINDOWY));
+    	setMaximumSize(new Dimension(WINDOWX, WINDOWY));
+    	setMinimumSize(new Dimension(WINDOWX, WINDOWY));
         setVisible(true);
         
         bufferSize = this.getSize();
