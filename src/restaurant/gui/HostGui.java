@@ -7,14 +7,17 @@ import restaurant.HostAgent;
 import java.awt.*;
 
 public class HostGui implements Gui {
+	
+	private static final int XPOS = -20, YPOS = -20;
+	private static final int XTABLE = 200, YTABLE = 250;
 
     private HostAgent agent = null;
 
-    private int xPos = -20, yPos = -20;//default waiter position
-    private int xDestination = -20, yDestination = -20;//default start position
+    private int xPos = XPOS, yPos = YPOS;//default waiter position
+    private int xDestination = XPOS, yDestination = YPOS;//default start position
 
-    public static final int xTable = 200;
-    public static final int yTable = 250;
+    public static final int xTable = XTABLE;
+    public static final int yTable = YTABLE;
 
     public HostGui(HostAgent agent) {
         this.agent = agent;
@@ -46,9 +49,28 @@ public class HostGui implements Gui {
         return true;
     }
 
-    public void DoBringToTable(CustomerAgent customer) {
-        xDestination = xTable + 20;
-        yDestination = yTable - 20;
+    public void DoBringToTable(CustomerAgent customer, int tableNumber) {
+        switch(tableNumber) {
+        case 1: 
+        	xDestination = xTable + 20;
+            yDestination = yTable - 20;
+            break;
+            
+        case 2:
+        	xDestination = 2 * xTable + 20;
+            yDestination = yTable - 20;
+            break;
+        	
+        case 3:
+        	xDestination = xTable + 20;
+            yDestination = 2 * yTable - 20;
+            break;
+        	
+        case 4:
+        	xDestination = 2 * xTable + 20;
+            yDestination = 2 * yTable - 20;
+            break;
+        }
     }
 
     public void DoLeaveCustomer() {
