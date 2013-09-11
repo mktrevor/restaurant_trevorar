@@ -10,8 +10,12 @@ import java.util.ArrayList;
 
 public class AnimationPanel extends JPanel implements ActionListener {
 
-    private final int WINDOWX = 450;
-    private final int WINDOWY = 350;
+    private static final int WINDOWX = 450;
+    private static final int WINDOWY = 350;
+    private static final int TABLE_LENGTH = 50, TABLE_WIDTH = 50;
+    private static final int TABLE_X_COORD = 200, TABLE_Y_COORD = 250;
+    private static final int TIMER_INTERVAL = 20;
+    
     private Image bufferImage;
     private Dimension bufferSize;
 
@@ -23,7 +27,7 @@ public class AnimationPanel extends JPanel implements ActionListener {
         
         bufferSize = this.getSize();
  
-    	Timer timer = new Timer(20, this );
+    	Timer timer = new Timer(TIMER_INTERVAL, this );
     	timer.start();
     }
 
@@ -40,7 +44,11 @@ public class AnimationPanel extends JPanel implements ActionListener {
 
         //Here is the table
         g2.setColor(Color.ORANGE);
-        g2.fillRect(200, 250, 50, 50);//200 and 250 need to be table params
+        g2.fillRect(TABLE_X_COORD, TABLE_Y_COORD, TABLE_LENGTH, TABLE_WIDTH);//200 and 250 need to be table params
+        
+        g2.fillRect(2 * TABLE_X_COORD, TABLE_Y_COORD, TABLE_LENGTH, TABLE_WIDTH);//200 and 250 need to be table params
+        g2.fillRect(TABLE_X_COORD, 2 * TABLE_Y_COORD, TABLE_LENGTH, TABLE_WIDTH);//200 and 250 need to be table params
+        g2.fillRect(2 * TABLE_X_COORD, 2 * TABLE_Y_COORD, TABLE_LENGTH, TABLE_WIDTH);//200 and 250 need to be table params
 
 
         for(Gui gui : guis) {

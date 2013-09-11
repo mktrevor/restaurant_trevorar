@@ -27,24 +27,30 @@ public class RestaurantGui extends JFrame implements ActionListener {
     private JPanel infoPanel;
     private JLabel infoLabel; //part of infoPanel
     private JCheckBox stateCB;//part of infoLabel
+    
+    private JPanel namePanel;
+    private JLabel nameLabel; //part of infoPanel - will have a picture and name
+    private ImageIcon pic;
 
     private Object currentPerson;/* Holds the agent that the info is about.
     								Seems like a hack */
-
+    private final int WINDOWX = 600;
+    private final int WINDOWY = 650;
+    private final int WINDOW_X_COORD = 50;
+    private final int WINDOW_Y_COORD = 50;
     /**
      * Constructor for RestaurantGui class.
      * Sets up all the gui components.
      */
     public RestaurantGui() {
-        int WINDOWX = 450;
-        int WINDOWY = 350;
+        
 
         animationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         animationFrame.setBounds(100+WINDOWX, 50 , WINDOWX+100, WINDOWY+100);
         animationFrame.setVisible(true);
     	animationFrame.add(animationPanel); 
     	
-    	setBounds(50, 50, WINDOWX, WINDOWY);
+    	setBounds(WINDOW_X_COORD, WINDOW_Y_COORD, WINDOWX, WINDOWY);
 
         setLayout(new BoxLayout((Container) getContentPane(), 
         		BoxLayout.Y_AXIS));
@@ -63,6 +69,17 @@ public class RestaurantGui extends JFrame implements ActionListener {
         infoPanel.setMaximumSize(infoDim);
         infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));
 
+        namePanel = new JPanel();
+        /*namePanel.setPreferredSize(infoDim);
+        namePanel.setMinimumSize(infoDim);
+        namePanel.setMaximumSize(infoDim);*/
+        
+        pic = new ImageIcon("image/owl.jpg");
+        nameLabel = new JLabel("Trevor", pic, JLabel.CENTER);
+        nameLabel.setHorizontalTextPosition(JLabel.CENTER);
+        nameLabel.setVerticalTextPosition(JLabel.BOTTOM);
+        namePanel.add(nameLabel);
+        
         stateCB = new JCheckBox();
         stateCB.setVisible(false);
         stateCB.addActionListener(this);
@@ -73,6 +90,8 @@ public class RestaurantGui extends JFrame implements ActionListener {
         infoLabel.setText("<html><pre><i>Click Add to make customers</i></pre></html>");
         infoPanel.add(infoLabel);
         infoPanel.add(stateCB);
+        
+        add(namePanel);
         add(infoPanel);
     }
     /**

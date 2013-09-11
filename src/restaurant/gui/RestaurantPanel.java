@@ -33,14 +33,14 @@ public class RestaurantPanel extends JPanel {
         gui.animationPanel.addGui(hostGui);
         host.startThread();
 
-        setLayout(new GridLayout(1, 2, 20, 20));
-        group.setLayout(new GridLayout(1, 2, 10, 10));
+        setLayout(new BorderLayout(0, 0));
+        group.setLayout(new GridLayout(1, 2, 1, 1));
 
         group.add(customerPanel);
 
         initRestLabel();
-        add(restLabel);
-        add(group);
+        add(restLabel, BorderLayout.WEST);
+        add(group, BorderLayout.CENTER);
     }
 
     /**
@@ -86,11 +86,14 @@ public class RestaurantPanel extends JPanel {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(String type, String name) {
+    public void addPerson(String type, String name, boolean isHungry) { //AND HERE
 
     	if (type.equals("Customers")) {
     		CustomerAgent c = new CustomerAgent(name);	
     		CustomerGui g = new CustomerGui(c, gui);
+    		if(isHungry) {
+    			g.setHungry();
+    		}
 
     		gui.animationPanel.addGui(g);// dw
     		c.setHost(host);
