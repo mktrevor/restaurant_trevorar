@@ -20,13 +20,8 @@ public class HostAgent extends Agent {
 	public List<CustomerAgent> waitingCustomers
 	= new ArrayList<CustomerAgent>();
 	
-	class MyWaiterAgent {
-			WaiterAgent w;
-			boolean occupied;
-	}
-	
-	public List<MyWaiterAgent> waiters
-	= new ArrayList<MyWaiterAgent>();
+	public List<MyWaiter> waiters
+	= new ArrayList<MyWaiter>();
 	
 	public Collection<Table> tables;
 	//note that tables is typed with Collection semantics.
@@ -67,7 +62,7 @@ public class HostAgent extends Agent {
 	}
 	
 	public void addWaiter(WaiterAgent w) {
-		waiters.add(w);
+		waiters.add(new MyWaiter(w));
 	}
 	// Messages
 
@@ -77,8 +72,10 @@ public class HostAgent extends Agent {
 	}
 	
 	public void msgTableIsFree(int table) {
-		for (Table table : tables) {
-			if table.get
+		for (Table t : tables) {
+			if (t.tableNumber == table) {
+				//STUB
+			}
 		}
 	}
 
@@ -119,7 +116,7 @@ public class HostAgent extends Agent {
 				if (!waitingCustomers.isEmpty()) {
 					if(state == hostState.free) {
 						//HACK - implement a way to pick waiter!
-						waiters.get(0).msgPleaseSeatCustomer(waitingCustomers.get(0), table.tableNumber);//the action
+						waiters.get(0).w.msgPleaseSeatCustomer(waitingCustomers.get(0), table.tableNumber);//the action
 						return true;//return true to the abstract agent to reinvoke the scheduler.
 					}
 				}
@@ -198,6 +195,19 @@ public class HostAgent extends Agent {
 		public String toString() {
 			return "table " + tableNumber;
 		}
+	}	
+	
+	private class MyWaiter {
+		WaiterAgent w;
+		boolean occupied;
+		
+		MyWaiter(WaiterAgent w) {
+			this.w = w;
+			occupied = false;
+		}
 	}
 }
+
+
+
 

@@ -18,15 +18,16 @@ public class CustomerAgent extends Agent {
 	private CustomerGui customerGui;
 
 	// agent correspondents
+	private WaiterAgent waiter;
 	private HostAgent host;
 
 	//    private boolean isHungry = false; //hack for gui
 	public enum AgentState
-	{DoingNothing, WaitingInRestaurant, BeingSeated, Seated, Eating, DoneEating, Leaving};
-	private AgentState state = AgentState.DoingNothing;//The start state
+	{doingNothing, waitingInRestaurant, beingSeated, seated, ordering, eating, doneEating, leaving};
+	private AgentState state = AgentState.doingNothing;//The start state
 
 	public enum AgentEvent 
-	{none, gotHungry, followHost, seated, doneEating, doneLeaving};
+	{none, gotHungry, followWaiter, seated, ordered, doneEating, doneLeaving};
 	AgentEvent event = AgentEvent.none;
 
 	/**
@@ -43,6 +44,10 @@ public class CustomerAgent extends Agent {
 	/**
 	 * hack to establish connection to Host agent.
 	 */
+	public void setWaiter(WaiterAgent waiter) {
+		this.waiter = waiter;
+	}
+	
 	public void setHost(HostAgent host) {
 		this.host = host;
 	}
@@ -61,7 +66,7 @@ public class CustomerAgent extends Agent {
 	public void msgSitAtTable(int tableNumber) {
 		this.tableNumber = tableNumber;
 		print("Received msgSitAtTable");
-		event = AgentEvent.followHost;
+		event = AgentEvent.followWaiter;
 		stateChanged();
 	}
 
@@ -82,29 +87,29 @@ public class CustomerAgent extends Agent {
 	protected boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
 
-		if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry ){
-			state = AgentState.WaitingInRestaurant;
+		if (state == AgentState.doingNothing && event == AgentEvent.gotHungry ){
+			state = AgentState.waitingInRestaurant;
 			goToRestaurant();
 			return true;
 		}
-		if (state == AgentState.WaitingInRestaurant && event == AgentEvent.followHost ){
-			state = AgentState.BeingSeated;
+		if (state == AgentState.waitingInRestaurant && event == AgentEvent.followWaiter ){
+			state = AgentState.beingSeated;
 			SitDown(tableNumber);
 			return true;
 		}
-		if (state == AgentState.BeingSeated && event == AgentEvent.seated){
-			state = AgentState.Eating;
+		if (state == AgentState.beingSeated && event == AgentEvent.seated){
+			state = AgentState.eating;
 			EatFood();
 			return true;
 		}
 
-		if (state == AgentState.Eating && event == AgentEvent.doneEating){
-			state = AgentState.Leaving;
+		if (state == AgentState.eating && event == AgentEvent.doneEating){
+			state = AgentState.leaving;
 			leaveTable();
 			return true;
 		}
-		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
-			state = AgentState.DoingNothing;
+		if (state == AgentState.leaving && event == AgentEvent.doneLeaving){
+			state = AgentState.doingNothing;
 			//no action
 			return true;
 		}
@@ -115,7 +120,7 @@ public class CustomerAgent extends Agent {
 
 	private void goToRestaurant() {
 		Do("Going to restaurant");
-		host.msgIWantFood(this);//send our instance, so he can respond to us
+		host.msgImHungry(this);//send our instance, so he can respond to us
 	}
 
 	private void SitDown(int tableNumber) {
@@ -147,7 +152,7 @@ public class CustomerAgent extends Agent {
 
 	private void leaveTable() {
 		Do("Leaving.");
-		host.msgLeavingTable(this);
+		waiter.msgImDoneEating(this);
 		customerGui.DoExitRestaurant();
 	}
 
