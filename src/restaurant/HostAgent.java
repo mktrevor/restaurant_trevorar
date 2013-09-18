@@ -115,10 +115,11 @@ public class HostAgent extends Agent {
             If so seat him at the table.
 		 */
 		for (Table table : tables) {
-			if (!table.isOccupied()) {
+			if (!table.occupied) {
 				if (!waitingCustomers.isEmpty()) {
 					if(state == hostState.free) {
-						seatCustomer(waitingCustomers.get(0), table);//the action
+						//HACK - implement a way to pick waiter!
+						waiters.get(0).msgPleaseSeatCustomer(waitingCustomers.get(0), table.tableNumber);//the action
 						return true;//return true to the abstract agent to reinvoke the scheduler.
 					}
 				}
@@ -133,7 +134,7 @@ public class HostAgent extends Agent {
 
 	// Actions
 
-	private void seatCustomer(CustomerAgent customer, Table table) {
+	/*private void seatCustomer(CustomerAgent customer, Table table) {
 		state = hostState.seatingCustomer;
 		customer.msgSitAtTable(table.tableNumber);
 		DoSeatCustomer(customer, table);
@@ -146,7 +147,7 @@ public class HostAgent extends Agent {
 		table.setOccupant(customer);
 		waitingCustomers.remove(customer);
 		hostGui.DoLeaveCustomer();
-	}
+	}*/
 
 	// The animation DoXYZ() routines
 	private void DoSeatCustomer(CustomerAgent customer, Table table) {

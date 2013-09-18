@@ -17,16 +17,19 @@ public class WaiterAgent extends Agent {
 	static final int NTABLES = 4;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
-	public List<CustomerAgent> waitingCustomers
-	= new ArrayList<CustomerAgent>();
-	public Collection<Table> tables;
-	//note that tables is typed with Collection semantics.
-	//Later we will see how it is implemented
+	public List<MyCustomer> customers
+	= new ArrayList<MyCustomer>();
+	
+	public static enum CustomerState { waiting, seated, readyToOrder, 
+		askedForOrder, oredered, foodReady, served, finished, 
+		leftRestaurant };
+		
+	public HostAgent host;
 
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
-	private enum hostState {free, seatingCustomer};
-	private hostState state = hostState.free;
+	private enum waiterState {free, seatingCustomer};
+	private waiterState state = waiterState.free;
 	
 	public HostGui hostGui = null;
 
@@ -34,11 +37,6 @@ public class WaiterAgent extends Agent {
 		super();
 
 		this.name = name;
-		// make some tables
-		tables = new ArrayList<Table>(NTABLES);
-		for (int ix = 1; ix <= NTABLES; ix++) {
-			tables.add(new Table(ix));//how you add to a collections
-		}
 	}
 
 	public String getMaitreDName() {
@@ -57,6 +55,10 @@ public class WaiterAgent extends Agent {
 		return tables;
 	}
 	// Messages
+	
+	public void msgPleaseSeatCustomer(CustomerAgent c, int table) {
+		//Stub
+	}
 
 	public void msgIWantFood(CustomerAgent cust) {
 		waitingCustomers.add(cust);
@@ -148,32 +150,45 @@ public class WaiterAgent extends Agent {
 		return hostGui;
 	}
 
-	private class Table {
-		CustomerAgent occupiedBy;
-		int tableNumber;
-
-		Table(int tableNumber) {
-			this.tableNumber = tableNumber;
+	private class MyCustomer {
+		CustomerAgent c;
+		int table;
+		CustomerState s;
+		String choice;
+		
+		MyCustomer(CustomerAgent c) {
+			this.c = c;
+			s = CustomerState.waiting;
 		}
-
-		void setOccupant(CustomerAgent cust) {
-			occupiedBy = cust;
+		
+		// Getters
+		public CustomerAgent getC() {
+			return c;
 		}
-
-		void setUnoccupied() {
-			occupiedBy = null;
+		
+		public String getChoice() {
+			return choice;
 		}
-
-		CustomerAgent getOccupant() {
-			return occupiedBy;
+		
+		public CustomerState getS() {
+			return s;
 		}
-
-		boolean isOccupied() {
-			return occupiedBy != null;
+		
+		public int getTable() {
+			return table;
 		}
-
-		public String toString() {
-			return "table " + tableNumber;
+		
+		// Setters
+		public void setChoice(String choice) {
+			this.choice = choice;
+		}
+		
+		public void setS(CustomerState s) {
+			this.s = s;
+		}
+		
+		public void setTable(int table) {
+			this.table = table;
 		}
 	}
 }
