@@ -2,6 +2,7 @@ package restaurant.gui;
 
 import restaurant.CustomerAgent;
 import restaurant.HostAgent;
+import restaurant.WaiterAgent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,6 +101,14 @@ public class RestaurantPanel extends JPanel {
     		c.setGui(g);
     		customers.add(c);
     		c.startThread();
+    	}
+    	
+    	if (type.equals("Waiters")) {
+    		WaiterAgent w = new WaiterAgent(name);
+    		WaiterGui g = new WaiterGui(w);
+    		
+    		gui.animationPanel.addGui(g);
+    		host.addWaiter(w);
     	}
     }
 

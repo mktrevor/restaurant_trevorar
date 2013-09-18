@@ -13,21 +13,12 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class HostAgent extends Agent {
+public class CookAgent extends Agent {
 	static final int NTABLES = 4;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
 	public List<CustomerAgent> waitingCustomers
 	= new ArrayList<CustomerAgent>();
-	
-	class MyWaiterAgent {
-			WaiterAgent w;
-			boolean occupied;
-	}
-	
-	public List<MyWaiterAgent> waiters
-	= new ArrayList<MyWaiterAgent>();
-	
 	public Collection<Table> tables;
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
@@ -39,7 +30,7 @@ public class HostAgent extends Agent {
 	
 	public HostGui hostGui = null;
 
-	public HostAgent(String name) {
+	public CookAgent(String name) {
 		super();
 
 		this.name = name;
@@ -65,24 +56,14 @@ public class HostAgent extends Agent {
 	public Collection getTables() {
 		return tables;
 	}
-	
-	public void addWaiter(WaiterAgent w) {
-		waiters.add(w);
-	}
 	// Messages
 
-	public void msgImHungry(CustomerAgent cust) {
+	public void msgIWantFood(CustomerAgent cust) {
 		waitingCustomers.add(cust);
 		stateChanged();
 	}
-	
-	public void msgTableIsFree(int table) {
-		for (Table table : tables) {
-			if table.get
-		}
-	}
 
-	/*public void msgLeavingTable(CustomerAgent cust) {
+	public void msgLeavingTable(CustomerAgent cust) {
 		for (Table table : tables) {
 			if (table.getOccupant() == cust) {
 				print(cust + " leaving " + table);
@@ -90,7 +71,7 @@ public class HostAgent extends Agent {
 				stateChanged();
 			}
 		}
-	}*/
+	}
 
 	public void msgAtTable() {//from animation
 		//print("msgAtTable() called");
@@ -168,17 +149,14 @@ public class HostAgent extends Agent {
 	}
 
 	private class Table {
-		//CustomerAgent occupiedBy; (Waiter)
+		CustomerAgent occupiedBy;
 		int tableNumber;
-		
-		boolean occupied;
 
 		Table(int tableNumber) {
 			this.tableNumber = tableNumber;
 		}
 
-		//Waiter code!
-		/*void setOccupant(CustomerAgent cust) {
+		void setOccupant(CustomerAgent cust) {
 			occupiedBy = cust;
 		}
 
@@ -192,7 +170,7 @@ public class HostAgent extends Agent {
 
 		boolean isOccupied() {
 			return occupiedBy != null;
-		}*/
+		}
 
 		public String toString() {
 			return "table " + tableNumber;
