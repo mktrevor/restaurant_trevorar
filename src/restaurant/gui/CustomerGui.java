@@ -48,7 +48,7 @@ public class CustomerGui implements Gui{
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
 			else if (command==Command.LeaveRestaurant) {
-				agent.msgAnimationFinishedLeaveRestaurant();
+				agent.msgAnimationDoneEatingFood();
 				System.out.println("about to call gui.setCustomerEnabled(agent);");
 				isHungry = false;
 				gui.setCustomerEnabled(agent);
@@ -67,7 +67,7 @@ public class CustomerGui implements Gui{
 	}
 	public void setHungry() {
 		isHungry = true;
-		agent.gotHungry();
+		agent.msgGotHungry();
 		setPresent(true);
 	}
 	public boolean isHungry() {
