@@ -12,6 +12,7 @@ import java.util.TimerTask;
  */
 public class CustomerAgent extends Agent {
 	private String name;
+	private String choice;
 	private int hungerLevel = 5;        // determines length of meal
 	private int tableNumber; // Variable to hold number of table to eat at
 	Timer timer = new Timer();
@@ -27,7 +28,7 @@ public class CustomerAgent extends Agent {
 	private AgentState state = AgentState.doingNothing;//The start state
 
 	public enum AgentEvent 
-	{none, gotHungry, followWaiter, seated, ordered, doneEating, doneLeaving};
+	{none, gotHungry, followWaiter, seated, askedToOrder, ordered, startedEating, doneEating, doneLeaving};
 	AgentEvent event = AgentEvent.none;
 
 	/**
@@ -57,17 +58,15 @@ public class CustomerAgent extends Agent {
 	}
 	// Messages
 
-	public void gotHungry() {//from animation
+	public void msgGotHungry() {//from animation
 		print("I'm hungry");
 		event = AgentEvent.gotHungry;
 		stateChanged();
 	}
-
-	public void msgSitAtTable(int tableNumber) {
-		this.tableNumber = tableNumber;
-		print("Received msgSitAtTable");
+	
+	public void msgFollowMe(WaiterAgent w /*, Menu m*/) {
+		waiter = w;
 		event = AgentEvent.followWaiter;
-		stateChanged();
 	}
 
 	public void msgAnimationFinishedGoToSeat() {
@@ -75,10 +74,17 @@ public class CustomerAgent extends Agent {
 		event = AgentEvent.seated;
 		stateChanged();
 	}
-	public void msgAnimationFinishedLeaveRestaurant() {
-		//from animation
-		event = AgentEvent.doneLeaving;
-		stateChanged();
+	
+	public void msgWhatDoYouWant() {
+		//STUB
+	}
+	
+	public void msgHereIsYourFood(String choice) {
+		//STUB
+	}
+	
+	public void msgAnimationDoneEatingFood() {
+		//STUB
 	}
 
 	/**
@@ -94,18 +100,32 @@ public class CustomerAgent extends Agent {
 		}
 		if (state == AgentState.waitingInRestaurant && event == AgentEvent.followWaiter ){
 			state = AgentState.beingSeated;
-			SitDown(tableNumber);
+			sitDown(tableNumber);
 			return true;
 		}
 		if (state == AgentState.beingSeated && event == AgentEvent.seated){
-			state = AgentState.eating;
-			EatFood();
+			state = AgentState.seated;
+			readyToOrder();
 			return true;
 		}
-
+		if (state == AgentState.seated && event == AgentEvent.askedToOrder){
+			state = AgentState.ordering;
+			orderFood();
+			return true;
+		}
+		if (state == AgentState.ordering && event == AgentEvent.startedEating){
+			state = AgentState.eating;
+			eatFood();
+			return true;
+		}
 		if (state == AgentState.eating && event == AgentEvent.doneEating){
+			state = AgentState.doneEating;
+			tellWaiterImDone();
+			return true;
+		}
+		if (state == AgentState.doneEating && event == AgentEvent.doneLeaving){
 			state = AgentState.leaving;
-			leaveTable();
+			leaveRestaurant();
 			return true;
 		}
 		if (state == AgentState.leaving && event == AgentEvent.doneLeaving){
@@ -123,12 +143,20 @@ public class CustomerAgent extends Agent {
 		host.msgImHungry(this);//send our instance, so he can respond to us
 	}
 
-	private void SitDown(int tableNumber) {
+	private void sitDown(int tableNumber) {
 		Do("Being seated. Going to table");
 		customerGui.DoGoToSeat(tableNumber);
 	}
+	
+	private void readyToOrder() {
+		//STUB
+	}
+	
+	private void orderFood() {
+		//STUB
+	}
 
-	private void EatFood() {
+	private void eatFood() {
 		Do("Eating Food");
 		//This next complicated line creates and starts a timer thread.
 		//We schedule a deadline of getHungerLevel()*1000 milliseconds.
@@ -149,10 +177,14 @@ public class CustomerAgent extends Agent {
 		},
 		50000);//getHungerLevel() * 1000);//how long to wait before running task
 	}
-
-	private void leaveTable() {
-		Do("Leaving.");
+	
+	//Combine last two???
+	private void tellWaiterImDone() {
 		waiter.msgImDoneEating(this);
+	}
+
+	private void leaveRestaurant() {
+		Do("Leaving.");
 		customerGui.DoExitRestaurant();
 	}
 
