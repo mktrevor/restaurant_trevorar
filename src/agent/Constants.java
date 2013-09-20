@@ -63,5 +63,4 @@ public interface Constants {
      * The default encoding used when none is detected
      */
     public static String DEFAULT_ENCODING = "ISO-8859-1";
-
 }

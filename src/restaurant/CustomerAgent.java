@@ -64,7 +64,7 @@ public class CustomerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgFollowMe(WaiterAgent w /*, Menu m*/) {
+	public void msgFollowMe(WaiterAgent w, Menu m) {
 		waiter = w;
 		event = AgentEvent.followWaiter;
 	}

@@ -1,6 +1,7 @@
 package restaurant;
 
 import agent.Agent;
+import agent.Constants.Food;
 import restaurant.gui.HostGui;
 import restaurant.gui.WaiterGui;
 
@@ -27,7 +28,7 @@ public class WaiterAgent extends Agent {
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
 	/* CHECK THIS LINE OUT */
-	private enum waiterState {free, seatingCustomer};
+	private enum waiterState {free, doingStuff};
 	private waiterState state = waiterState.free;
 	
 	public WaiterGui waiterGui = null;
@@ -79,18 +80,28 @@ public class WaiterAgent extends Agent {
 	}
 	
 	public void msgOrderDone(String choice, int table) {
-		//STUB
+		for(MyCustomer mc : customers) {
+			if(mc.table == table) {
+				mc.s = customerState.foodReady;
+				if(choice != mc.choice) {
+					print("WHOOPS, THIS IS THE WRONG FOOD!");
+				}
+			}
+		}
+		stateChanged();
 	}
 	
 	public void msgImDoneEating(CustomerAgent c) {
-		//STUB
+		for(MyCustomer mc : customers) {
+			if(mc.c == c) {
+				mc.s = customerState.finished;
+			}
+		}
+		stateChanged();
 	}
 	
-	
-	
-	
 	public void msgInLobby() {
-		if(state == waiterState.seatingCustomer) {
+		if(state == waiterState.doingStuff) {
 			state = waiterState.free;
 			stateChanged();
 		}
@@ -101,23 +112,24 @@ public class WaiterAgent extends Agent {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		for(MyCustomer mc : customers) {
-			if(mc.getS() == CustomerState.waiting) {
-				//STUB
+			if(mc.s == customerState.waiting) {
+				seatCustomer(mc);
 			}
-			else if(mc.getS() == CustomerState.readyToOrder) {
-				//STUB
+			else if(mc.s == customerState.readyToOrder) {
+				takeOrder(mc);
 			}
-			else if(mc.getS() == CustomerState.ordered) {
-				//STUB
+			else if(mc.s == customerState.ordered) {
+				sendOrderToCook(mc.choice);
 			}
-			else if(mc.getS() == CustomerState.foodReady) {
-				//STUB
+			else if(mc.s == customerState.foodReady) {
+				bringFoodToCustomer(mc);
 			}
-			else if(mc.getS() == CustomerState.finished) {
-				//STUB
+			else if(mc.s == customerState.finished) {
+				tellHostCustomerIsDone(mc);
 			}
 			else {
 				//STUB - walk around!
+				//DoLeaveCustomer();
 			}
 		}
 
@@ -129,8 +141,10 @@ public class WaiterAgent extends Agent {
 
 	// Actions
 
-	private void seatCustomer(CustomerAgent customer) {
-		state = waiterState.seatingCustomer; // Check state!
+	private void seatCustomer(MyCustomer c) {
+		state = waiterState.doingStuff;
+		
+		c.c.msgFollowMe(this, new Menu());
 		//(host code)
 		/*customer.msgSitAtTable(table.tableNumber);
 		DoSeatCustomer(customer, table);
@@ -149,6 +163,10 @@ public class WaiterAgent extends Agent {
 	
 	private void takeOrder(MyCustomer c) {
 		//STUB
+	}
+	
+	private void sendOrderToCooke(MyCustomer c) {
+		
 	}
 	
 	private void bringFoodToCustomer(MyCustomer c) {
