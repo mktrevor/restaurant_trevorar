@@ -114,22 +114,28 @@ public class WaiterAgent extends Agent {
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.waiting) {
 				seatCustomer(mc);
+				return true;
 			}
 			else if(mc.s == customerState.readyToOrder) {
 				takeOrder(mc);
+				return true;
 			}
 			else if(mc.s == customerState.ordered) {
 				sendOrderToCook(mc);
+				return true;
 			}
 			else if(mc.s == customerState.foodReady) {
 				bringFoodToCustomer(mc);
+				return true;
 			}
 			else if(mc.s == customerState.finished) {
 				tellHostCustomerIsDone(mc);
+				return true;
 			}
 			else {
 				//STUB - walk around!
 				//DoLeaveCustomer();
+				//return true;
 			}
 		}
 

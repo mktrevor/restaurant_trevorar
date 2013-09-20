@@ -13,7 +13,7 @@ import java.util.TimerTask;
 public class CustomerAgent extends Agent {
 	private String name;
 	private String choice;
-	private int hungerLevel = 5;        // determines length of meal
+	private int hungerLevel = 5; // determines length of meal
 	private int tableNumber; // Variable to hold number of table to eat at
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
@@ -44,11 +44,7 @@ public class CustomerAgent extends Agent {
 
 	/**
 	 * hack to establish connection to Host agent.
-	 */
-	public void setWaiter(WaiterAgent waiter) {
-		this.waiter = waiter;
-	}
-	
+	 */	
 	public void setHost(HostAgent host) {
 		this.host = host;
 	}
@@ -67,6 +63,7 @@ public class CustomerAgent extends Agent {
 	public void msgFollowMe(WaiterAgent w, Menu m) {
 		waiter = w;
 		event = AgentEvent.followWaiter;
+		stateChanged();
 	}
 
 	public void msgAnimationFinishedGoToSeat() {
@@ -76,15 +73,18 @@ public class CustomerAgent extends Agent {
 	}
 	
 	public void msgWhatDoYouWant() {
-		//STUB
+		event = AgentEvent.askedToOrder;
+		stateChanged();
 	}
 	
 	public void msgHereIsYourFood(String choice) {
-		//STUB
+		event = AgentEvent.startedEating;
+		stateChanged();
 	}
 	
 	public void msgAnimationDoneEatingFood() {
-		//STUB
+		event = AgentEvent.doneEating;
+		stateChanged();
 	}
 
 	/**
@@ -149,11 +149,13 @@ public class CustomerAgent extends Agent {
 	}
 	
 	private void readyToOrder() {
-		//STUB
+		Do("I'm ready to order!");
+		waiter.msgImReadyToOrder(this);
 	}
 	
 	private void orderFood() {
-		//STUB
+		Do("I'm ordering!");
+		waiter.msgHereIsMyChoice(this, choice);
 	}
 
 	private void eatFood() {
@@ -174,13 +176,13 @@ public class CustomerAgent extends Agent {
 				//isHungry = false;
 				stateChanged();
 			}
-		},
-		50000);//getHungerLevel() * 1000);//how long to wait before running task
+		}, hungerLevel * 1000);//how long to wait before running task
 	}
 	
 	//Combine last two???
 	private void tellWaiterImDone() {
 		waiter.msgImDoneEating(this);
+		event = AgentEvent.doneLeaving;
 	}
 
 	private void leaveRestaurant() {
