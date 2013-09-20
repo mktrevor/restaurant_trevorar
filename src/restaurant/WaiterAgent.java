@@ -15,20 +15,18 @@ import java.util.concurrent.Semaphore;
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
 public class WaiterAgent extends Agent {
-	static final int NTABLES = 4;//a global for the number of tables.
-	//Notice that we implement waitingCustomers using ArrayList, but type it
-	//with List semantics.
 	public List<MyCustomer> customers
 	= new ArrayList<MyCustomer>();
 	
-	public static enum CustomerState { waiting, seated, readyToOrder, 
+	private static enum customerState { waiting, seated, readyToOrder, 
 		askedForOrder, ordered, foodReady, served, finished, 
 		leftRestaurant };
 		
-	public HostAgent host;
+	private HostAgent host;
 
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
+	/* CHECK THIS LINE OUT */
 	private enum waiterState {free, seatingCustomer};
 	private waiterState state = waiterState.free;
 	
@@ -51,26 +49,33 @@ public class WaiterAgent extends Agent {
 	// Messages
 	
 	public void msgPleaseSeatCustomer(CustomerAgent c, int table) {
-		//Stub
-	}
-
-	public void msgIWantFood(CustomerAgent c) {
-		customers.add(new MyCustomer(c));
+		customers.add(new MyCustomer(c, table, customerState.waiting));
 		stateChanged();
 	}
 
 	public void msgImReadyToOrder(CustomerAgent c) {
-		//STUB
+		for(MyCustomer mc : customers) {
+			if(mc.c == c) {
+				mc.s = customerState.readyToOrder;
+			}
+		}
+		stateChanged();
 	}
 
 	public void msgAtTable() {//from animation
-		//print("msgAtTable() called");
+		print("msgAtTable() called");
 		atTable.release();// = true;
 		stateChanged();
 	}
 	
 	public void msgHereIsMyChoice(CustomerAgent c, String choice) {
-		//STUB
+		for(MyCustomer mc : customers) {
+			if(mc.c == c) {
+				mc.s = customerState.ordered;
+				mc.choice = choice;
+			}
+		}
+		stateChanged();
 	}
 	
 	public void msgOrderDone(String choice, int table) {
@@ -176,12 +181,13 @@ public class WaiterAgent extends Agent {
 	private class MyCustomer {
 		CustomerAgent c;
 		int table;
-		CustomerState s;
+		customerState s;
 		String choice;
 		
-		MyCustomer(CustomerAgent c) {
+		MyCustomer(CustomerAgent c, int table, customerState state) {
 			this.c = c;
-			s = CustomerState.waiting;
+			this.table = table;
+			this.s = state;
 		}
 		
 		// Getters
@@ -193,7 +199,7 @@ public class WaiterAgent extends Agent {
 			return choice;
 		}
 		
-		public CustomerState getS() {
+		public customerState getS() {
 			return s;
 		}
 		
