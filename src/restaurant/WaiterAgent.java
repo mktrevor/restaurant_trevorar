@@ -1,7 +1,6 @@
 package restaurant;
 
 import agent.Agent;
-import agent.Constants.Food;
 import restaurant.gui.HostGui;
 import restaurant.gui.WaiterGui;
 
@@ -24,6 +23,7 @@ public class WaiterAgent extends Agent {
 		leftRestaurant };
 		
 	private HostAgent host;
+	private CookAgent cook;
 
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
@@ -119,7 +119,7 @@ public class WaiterAgent extends Agent {
 				takeOrder(mc);
 			}
 			else if(mc.s == customerState.ordered) {
-				sendOrderToCook(mc.choice);
+				sendOrderToCook(mc);
 			}
 			else if(mc.s == customerState.foodReady) {
 				bringFoodToCustomer(mc);
@@ -158,23 +158,34 @@ public class WaiterAgent extends Agent {
 		waitingCustomers.remove(customer);
 		hostGui.DoLeaveCustomer();*/
 		
-		//STUB
+		DoSeatCustomer(c.c, c.table);
+		
+		c.s = customerState.seated;
 	}
 	
 	private void takeOrder(MyCustomer c) {
-		//STUB
+		//GUI Method (Implement)
+		//DoGoToTable(c.table);
+		
+		c.c.msgWhatDoYouWant();
+		c.s = customerState.askedForOrder;
 	}
 	
-	private void sendOrderToCooke(MyCustomer c) {
-		
+	private void sendOrderToCook(MyCustomer c) {
+		cook.msgHereIsOrder(this, c.choice, c.table);
 	}
 	
 	private void bringFoodToCustomer(MyCustomer c) {
-		//STUB
+		//GUI Method (Implement)
+		//DoGoToTable(c.table);
+		
+		c.c.msgHereIsYourFood(c.choice);
+		c.s = customerState.served;
 	}
 	
 	private void tellHostCustomerIsDone(MyCustomer c) {
-		//STUB
+		host.msgTableIsFree(c.table, this);
+		c.s = customerState.leftRestaurant;
 	}
 
 	// The animation DoXYZ() routines
@@ -207,36 +218,7 @@ public class WaiterAgent extends Agent {
 			this.table = table;
 			this.s = state;
 		}
-		
-		// Getters
-		public CustomerAgent getC() {
-			return c;
-		}
-		
-		public String getChoice() {
-			return choice;
-		}
-		
-		public customerState getS() {
-			return s;
-		}
-		
-		public int getTable() {
-			return table;
-		}
-		
-		// Setters
-		public void setChoice(String choice) {
-			this.choice = choice;
-		}
-		
-		public void setS(CustomerState s) {
-			this.s = s;
-		}
-		
-		public void setTable(int table) {
-			this.table = table;
-		}
 	}
+	
 }
 

@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-import restaurant.WaiterAgent.Food;
-
 /**
  * Base class for simple agents
  */
@@ -137,7 +135,7 @@ public abstract class Agent {
     public class Menu {
     	public List<Food> menuChoices = new ArrayList<Food>();
     	
-    	Menu() {
+    	public Menu() {
     		menuChoices.add(steak);
     		menuChoices.add(chicken);
     		menuChoices.add(fish);
