@@ -28,9 +28,6 @@ public class HostAgent extends Agent {
 	//Later we will see how it is implemented
 
 	private String name;
-	private Semaphore atTable = new Semaphore(0,true);
-	private enum hostState {free, seatingCustomer};
-	private hostState state = hostState.free;
 	
 	public HostGui hostGui = null;
 
@@ -40,41 +37,47 @@ public class HostAgent extends Agent {
 		this.name = name;
 		// make some tables
 		tables = new ArrayList<Table>(NTABLES);
-		for (int ix = 1; ix <= NTABLES; ix++) {
-			tables.add(new Table(ix));//how you add to a collections
+		for (int i = 1; i <= NTABLES; i++) {
+			tables.add(new Table(i));//how you add to a collections
 		}
-	}
-
-	public String getMaitreDName() {
-		return name;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public List getWaitingCustomers() {
-		return waitingCustomers;
+	public List getCustomers() {
+		return customers;
 	}
 
 	public Collection getTables() {
 		return tables;
 	}
 	
+	public List getWaiters() {
+		return waiters;
+	}
+	
 	public void addWaiter(WaiterAgent w) {
 		waiters.add(new MyWaiter(w));
 	}
+	
 	// Messages
 
-	public void msgImHungry(CustomerAgent cust) {
-		waitingCustomers.add(cust);
+	public void msgImHungry(CustomerAgent c) {
+		customers.add(new MyCustomer(c));
 		stateChanged();
 	}
 	
-	public void msgTableIsFree(int table) {
+	public void msgTableIsFree(int table, WaiterAgent w) {
 		for (Table t : tables) {
 			if (t.tableNumber == table) {
-				//STUB
+				t.occupied = false;
+			}
+		}
+		for (MyWaiter mw : waiters) {
+			if(mw.w == w) {
+				mw.numCustomers--;
 			}
 		}
 	}
@@ -100,10 +103,10 @@ public class HostAgent extends Agent {
 		 */
 		for (Table table : tables) {
 			if (!table.occupied) {
-				if (!waitingCustomers.isEmpty()) {
-					if(state == hostState.free) {
-						//HACK - implement a way to pick waiter!
-						waiters.get(0).w.msgPleaseSeatCustomer(waitingCustomers.get(0), table.tableNumber);//the action
+				for(MyCustomer mc : customers) {
+					if (mc.waiting) {
+						seatCustomer(mc, table);
+			
 						return true;//return true to the abstract agent to reinvoke the scheduler.
 					}
 				}
@@ -117,21 +120,19 @@ public class HostAgent extends Agent {
 	}
 
 	// Actions
-
-	/*private void seatCustomer(CustomerAgent customer, Table table) {
-		state = hostState.seatingCustomer;
-		customer.msgSitAtTable(table.tableNumber);
-		DoSeatCustomer(customer, table);
-		try {
-			atTable.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	
+	private void seatCustomer(MyCustomer mc, Table table) {
+		MyWaiter leastBusyWaiter = waiters.get(0);
+		for(MyWaiter mw : waiters) {
+			if(mw.numCustomers < leastBusyWaiter.numCustomers) {
+				leastBusyWaiter = mw;
+			}
 		}
-		table.setOccupant(customer);
-		waitingCustomers.remove(customer);
-		hostGui.DoLeaveCustomer();
-	}*/
+
+		leastBusyWaiter.w.msgPleaseSeatCustomer(mc.c, table.tableNumber);
+		leastBusyWaiter.numCustomers++; //Assigned a new customer to the least busy waiter
+		table.occupied = true;
+	}
 
 	// The animation DoXYZ() routines
 	private void DoSeatCustomer(CustomerAgent customer, Table table) {
@@ -198,9 +199,9 @@ public class HostAgent extends Agent {
 		CustomerAgent c;
 		boolean waiting;
 		
-		MyCustomer(CustomerAgent c, boolean waiting) {
+		MyCustomer(CustomerAgent c) {
 			this.c = c;
-			this.waiting = waiting;
+			this.waiting = true;
 		}
 	}
 }

@@ -35,21 +35,21 @@ public class HostGui implements Gui {
             yPos--;
         
         if(xPos == XPOS && yPos == YPOS) {
-        	agent.msgInLobby();
+        	//agent.msgInLobby();
         }
 
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xTable + 20) & (yDestination == yTable - 20)) {
-           agent.msgAtTable();
+           //agent.msgAtTable();
         } else if (xPos == xDestination && yPos == yDestination
         		& (xDestination == 2 * xTable + 20) & (yDestination == yTable - 20)) {
-            agent.msgAtTable();
+            //agent.msgAtTable();
         } else if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xTable + 20) & (yDestination == 2 * yTable - 20)) {
-            agent.msgAtTable();
+            //agent.msgAtTable();
         } else if (xPos == xDestination && yPos == yDestination
         		& (xDestination == 2 * xTable + 20) & (yDestination == 2 * yTable - 20)) {
-            agent.msgAtTable();
+            //agent.msgAtTable();
         }
     }
 
