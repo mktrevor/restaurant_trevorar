@@ -17,8 +17,8 @@ public class HostAgent extends Agent {
 	static final int NTABLES = 4;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
-	public List<CustomerAgent> waitingCustomers
-	= new ArrayList<CustomerAgent>();
+	public List<MyCustomer> customers
+	= new ArrayList<MyCustomer>();
 	
 	public List<MyWaiter> waiters
 	= new ArrayList<MyWaiter>();
@@ -88,20 +88,7 @@ public class HostAgent extends Agent {
 			}
 		}
 	}*/
-
-	public void msgAtTable() {//from animation
-		//print("msgAtTable() called");
-		atTable.release();// = true;
-		stateChanged();
-	}
 	
-	public void msgInLobby() {
-		if(state == hostState.seatingCustomer) {
-			state = hostState.free;
-			stateChanged();
-		}
-	}
-
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
@@ -199,11 +186,21 @@ public class HostAgent extends Agent {
 	
 	private class MyWaiter {
 		WaiterAgent w;
-		boolean occupied;
+		int numCustomers;
 		
 		MyWaiter(WaiterAgent w) {
 			this.w = w;
-			occupied = false;
+			numCustomers = 0;
+		}
+	}
+	
+	private class MyCustomer {
+		CustomerAgent c;
+		boolean waiting;
+		
+		MyCustomer(CustomerAgent c, boolean waiting) {
+			this.c = c;
+			this.waiting = waiting;
 		}
 	}
 }
