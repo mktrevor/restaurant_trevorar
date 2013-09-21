@@ -17,16 +17,13 @@ public class CookAgent extends Agent {
 	
 	public List<Order> orders = new ArrayList<Order>();
 	
-	public enum OrderState { pending, cooking, cooked, finished };
-	
-	//Implement this map
-	//map(String, Food) foods;
+	public enum orderState { pending, cooking, cooked, finished };
 
 	private String name;
-	private enum cookState {free, seatingCustomer};
-	private cookState state = cookState.free;
 	
-	public HostGui hostGui = null;
+	Timer timer = new Timer();
+	
+	//public cookGui cookGui = null;
 
 	public CookAgent(String name) {
 		super();
@@ -45,23 +42,32 @@ public class CookAgent extends Agent {
 	// Messages
 
 	public void msgHereIsOrder(WaiterAgent w, String choice, int table) {
-		//STUB
+		orders.add(new Order(w, choice, table, orderState.pending));
+		stateChanged();
 	}
 	
-	public void msgFoodDone(Order o) {
-		//STUB
+	public void msgFoodDoneCooking(Order o) {
+		o.s = orderState.cooked;
+		stateChanged();
 	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-		/*if(cooked orders) {
-			//STUB
+		for(Order o : orders) {
+			if(o.s == orderState.cooked) {
+				plateIt(o);
+				return true;
+			}
 		}
-		if(pending orders) {
-			//STUB
-		}*/
+
+		for(Order o : orders) {
+			if(o.s == orderState.pending) {
+				cookIt(o);
+				return true;
+			}
+		}
 
 		return false;
 		//we have tried all our rules and found
@@ -72,11 +78,27 @@ public class CookAgent extends Agent {
 	// Actions
 
 	private void cookIt(Order o) {
-		//STUB
+		//Animation
+		//DoCooking(o) 
+		
+		o.s = orderState.cooking;
+		int cookTime;
+		for(Food f : Menu.getFoods()) {
+			if(f.getType() == o.choice) {
+				cookTime = f.getTime();
+			}
+		}
+		
+		//Fix cooking timer!
+		//timer.start( run(msgFoodDoneCooking(o)), cookTime);
 	}
 	
 	private void plateIt(Order o) {
-		//STUB
+		//Animation
+		//DoPlating(o);
+	
+		o.w.msgOrderDone(o.choice, o.table);
+		o.s = orderState.finished;
 	}
 
 	// The animation DoXYZ() routines
@@ -84,21 +106,27 @@ public class CookAgent extends Agent {
 
 	//utilities
 
-	public void setGui(HostGui gui) {
+	//Stuff for cook GUi
+	/*public void setGui(HostGui gui) {
 		hostGui = gui;
 	}
 
 	public HostGui getGui() {
 		return hostGui;
-	}
+	}*/
 
 	private class Order {
-		//STUB
-	}
-	
-	private class Food {
-		//STUB
-	}
-	
+		WaiterAgent w;
+		String choice;
+		int table;
+		orderState s;
+		
+		Order(WaiterAgent w, String choice, int table, orderState s) {
+			this.w = w;
+			this.choice = choice;
+			this.table = table;
+			this.s = s;
+		}
+	}	
 }
 
