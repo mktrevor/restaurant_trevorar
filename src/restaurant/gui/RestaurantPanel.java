@@ -19,6 +19,7 @@ public class RestaurantPanel extends JPanel {
     private HostAgent host = new HostAgent("Sarah");
     private HostGui hostGui = new HostGui(host);
 
+    private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
 
     private JPanel restLabel = new JPanel();
@@ -78,6 +79,13 @@ public class RestaurantPanel extends JPanel {
                 if (temp.getName() == name)
                     gui.updateInfoPanel(temp);
             }
+        }
+        if(type.equals("Waiters")) {
+        	for (int i = 0; i < customers.size(); i++) {
+                CustomerAgent temp = customers.get(i);
+                if (temp.getName() == name)
+                    gui.updateInfoPanel(temp);
+        	}
         }
     }
 

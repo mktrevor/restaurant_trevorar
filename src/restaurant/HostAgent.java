@@ -129,8 +129,9 @@ public class HostAgent extends Agent {
 			}
 		}
 
-		leastBusyWaiter.w.msgPleaseSeatCustomer(mc.c, table.tableNumber);
+		leastBusyWaiter.w.msgPleaseSeatCustomer(this, mc.c, table.tableNumber);
 		leastBusyWaiter.numCustomers++; //Assigned a new customer to the least busy waiter
+		mc.waiting = false;
 		table.occupied = true;
 	}
 

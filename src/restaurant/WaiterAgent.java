@@ -47,9 +47,13 @@ public class WaiterAgent extends Agent {
 		return customers;
 	}
 	
+	public void setHost(HostAgent h) {
+		this.host = h;
+	}
+	
 	// Messages
 	
-	public void msgPleaseSeatCustomer(CustomerAgent c, int table) {
+	public void msgPleaseSeatCustomer(HostAgent h, CustomerAgent c, int table) {
 		customers.add(new MyCustomer(c, table, customerState.waiting));
 		stateChanged();
 	}
