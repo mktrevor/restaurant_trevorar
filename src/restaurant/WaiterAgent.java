@@ -68,8 +68,8 @@ public class WaiterAgent extends Agent {
 				mc.s = customerState.readyToOrder;
 				System.out.println("Cust ready to order!!!!");
 			}
-		}
 		stateChanged();
+		}
 	}
 
 	public void msgAtTable() {//from animation
@@ -85,8 +85,8 @@ public class WaiterAgent extends Agent {
 				System.out.println("ORDERED");
 				mc.choice = choice;
 			}
+			stateChanged();
 		}
-		stateChanged();
 	}
 	
 	public void msgOrderDone(String choice, int table) {
@@ -95,8 +95,9 @@ public class WaiterAgent extends Agent {
 			if(mc.table == table) {
 				mc.s = customerState.foodReady;
 			}
+			stateChanged();
 		}
-		stateChanged();
+		
 	}
 	
 	public void msgAtCook() {
