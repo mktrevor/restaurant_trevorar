@@ -62,7 +62,7 @@ public class WaiterAgent extends Agent {
 
 	public void msgImReadyToOrder(CustomerAgent c) {
 		for(MyCustomer mc : customers) {
-			if(mc.c == c) {
+			if(mc.c.getName() == c.getName()) {
 				mc.s = customerState.readyToOrder;
 			}
 		}
@@ -76,7 +76,7 @@ public class WaiterAgent extends Agent {
 	
 	public void msgHereIsMyChoice(CustomerAgent c, String choice) {
 		for(MyCustomer mc : customers) {
-			if(mc.c == c) {
+			if(mc.c.getName() == c.getName()) {
 				mc.s = customerState.ordered;
 				mc.choice = choice;
 			}
@@ -100,7 +100,7 @@ public class WaiterAgent extends Agent {
 	
 	public void msgImDoneEating(CustomerAgent c) {
 		for(MyCustomer mc : customers) {
-			if(mc.c == c) {
+			if(mc.c.getName() == c.getName()) {
 				mc.s = customerState.finished;
 			}
 		}
@@ -187,7 +187,13 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void sendOrderToCook(MyCustomer c) {
-		print("Sending " + c.c.getName() + "'s order of " + c.choice + " to cook.");
+		waiterGui.DoGoToCook();
+		print("Taking " + c.c.getName() + "'s order of " + c.choice + " to cook.");
+		try {
+			atCook.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		cook.msgHereIsOrder(this, c.choice, c.table);
 		c.s = customerState.orderSentToCook;
 	}

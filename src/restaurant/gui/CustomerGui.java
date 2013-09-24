@@ -54,6 +54,7 @@ public class CustomerGui implements Gui{
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
+			
 
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
