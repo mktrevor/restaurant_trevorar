@@ -213,8 +213,9 @@ public class WaiterAgent extends Agent {
 			e.printStackTrace();
 		}
 		
-		c.c.msgHereIsYourFood(c.choice);
 		c.s = customerState.served;
+		print("Here is your " + c.choice + ".");
+		c.c.msgHereIsYourFood(c.choice);
 	}
 	
 	private void tellHostCustomerIsDone(MyCustomer c) {
