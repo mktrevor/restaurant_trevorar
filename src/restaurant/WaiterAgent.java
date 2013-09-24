@@ -19,7 +19,7 @@ public class WaiterAgent extends Agent {
 	= new ArrayList<MyCustomer>();
 	
 	private static enum customerState { waiting, seated, readyToOrder, 
-		askedForOrder, ordered, foodReady, served, finished, 
+		askedForOrder, ordered, orderSentToCook, foodReady, served, finished, 
 		leftRestaurant };
 		
 	private HostAgent host;
@@ -107,13 +107,6 @@ public class WaiterAgent extends Agent {
 		}
 		stateChanged();
 	}
-	
-	public void msgInLobby() {
-		if(state == waiterState.doingStuff) {
-			state = waiterState.free;
-			stateChanged();
-		}
-	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -198,6 +191,7 @@ public class WaiterAgent extends Agent {
 	private void sendOrderToCook(MyCustomer c) {
 		print("Sending " + c.c.getName() + "'s order of " + c.choice + " to cook.");
 		cook.msgHereIsOrder(this, c.choice, c.table);
+		c.s = customerState.orderSentToCook;
 	}
 	
 	private void bringFoodToCustomer(MyCustomer c) {

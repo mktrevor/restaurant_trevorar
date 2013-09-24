@@ -43,10 +43,6 @@ public class WaiterGui implements Gui {
         else if (yPos > yDestination)
             yPos--;
         
-        if(xPos == XPOS && yPos == YPOS) {
-        	agent.msgInLobby();
-        }
-
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == (int) tableLocations.get(1).getWidth() + 30) & (yDestination == (int) tableLocations.get(1).getHeight() - 30)) {
            agent.msgAtTable();

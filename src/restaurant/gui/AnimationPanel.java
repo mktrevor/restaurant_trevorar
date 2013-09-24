@@ -59,6 +59,7 @@ public class AnimationPanel extends JPanel implements ActionListener {
 		g2.setColor(getBackground());
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
         
+		//Drawing tables
 		g2.drawImage(tables.get(0), 200, 200, 100, 60, this);
 		g2.drawImage(tables.get(1), 450, 200, 100, 60, this);
 		g2.drawImage(tables.get(2), 200, 400, 100, 60, this);
