@@ -13,12 +13,9 @@ import javax.swing.JLabel;
 public class WaiterGui implements Gui {
 	
 	private static final int XPOS = -20, YPOS = -20;
-	private static final int XTABLE = 200, YTABLE = 250;
+	private static final int XTABLE = 200, YTABLE = 200;
 
     private WaiterAgent agent = null;
-    
-    /*private ImageIcon icon = new ImageIcon("images/cust.png");
-    JLabel myIcon = new JLabel(icon);*/
 
     private int xPos = XPOS, yPos = YPOS;//default waiter position
     private int xDestination = XPOS, yDestination = YPOS;//default start position
@@ -77,7 +74,7 @@ public class WaiterGui implements Gui {
             break;
             
         case 2:
-        	xDestination = 2 * xTable + 20;
+        	xDestination = 3 * xTable + 20;
             yDestination = yTable - 20;
             break;
         	

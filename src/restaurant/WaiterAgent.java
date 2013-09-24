@@ -141,9 +141,8 @@ public class WaiterAgent extends Agent {
 				return true;
 			}
 			else {
-				//STUB - walk around!
-				//DoLeaveCustomer();
-				//return true;
+				DoLeaveCustomer();
+				return true;
 			}
 		}
 
@@ -209,7 +208,10 @@ public class WaiterAgent extends Agent {
 		//Same with "table"
 		print("Seating " + customer + " at " + table);
 		waiterGui.DoBringToTable(customer, table);
-
+	}
+	
+	private void DoLeaveCustomer() {
+		waiterGui.DoLeaveCustomer();
 	}
 
 	//utilities
