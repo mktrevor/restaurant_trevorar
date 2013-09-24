@@ -64,7 +64,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
         restPanel.setMaximumSize(restDim);
         add(restPanel, BorderLayout.WEST);
         
-        Dimension animationDim = new Dimension(WINDOWX/2, (int) (WINDOWY * .6));
+        Dimension animationDim = new Dimension(WINDOWX/2, (int) (WINDOWY * .75));
         animationPanel.setPreferredSize(animationDim);
         add(animationPanel, BorderLayout.CENTER);
         

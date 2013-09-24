@@ -18,10 +18,10 @@ public class RestaurantPanel extends JPanel {
 
     //Host, cook, waiters and customers
     private HostAgent host = new HostAgent("Sarah");
-    //private HostGui hostGui = new HostGui(host);
+    private HostGui hostGui = new HostGui(host);
     
-    /*private CookAgent cook = new CookAgent("Chef");
-    private CookGui cookGui = new CookGui(cook);*/
+    private CookAgent cook = new CookAgent("Chef");
+    private CookGui cookGui = new CookGui(cook);
 
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
@@ -35,7 +35,7 @@ public class RestaurantPanel extends JPanel {
 
     public RestaurantPanel(RestaurantGui gui) {
         this.gui = gui;
-        //host.setGui(hostGui);
+        host.setGui(hostGui);
 
         //gui.animationPanel.addGui(hostGui);
         host.startThread();
@@ -63,8 +63,8 @@ public class RestaurantPanel extends JPanel {
 
         restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
         restLabel.add(label, BorderLayout.CENTER);
-        restLabel.add(new JLabel("               "), BorderLayout.EAST);
-        restLabel.add(new JLabel("               "), BorderLayout.WEST);
+        restLabel.add(new JLabel("    "), BorderLayout.EAST);
+        restLabel.add(new JLabel("    "), BorderLayout.WEST);
     }
 
     /**
@@ -123,6 +123,7 @@ public class RestaurantPanel extends JPanel {
     		
     		gui.animationPanel.addGui(g);
     		w.setHost(host);
+    		w.setCook(cook);
     		w.setGui(g);
     		host.addWaiter(w);
     		waiters.add(w);

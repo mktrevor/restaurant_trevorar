@@ -51,6 +51,10 @@ public class WaiterAgent extends Agent {
 		this.host = h;
 	}
 	
+	public void setCook(CookAgent c) {
+		this.cook = c;
+	}
+	
 	// Messages
 	
 	public void msgPleaseSeatCustomer(HostAgent h, CustomerAgent c, int table) {
@@ -176,12 +180,13 @@ public class WaiterAgent extends Agent {
 	private void takeOrder(MyCustomer c) {
 		//GUI Method (Implement)
 		//DoGoToTable(c.table);
-		
+		print("Taking order from: " + c.c.getName());
 		c.c.msgWhatDoYouWant();
 		c.s = customerState.askedForOrder;
 	}
 	
 	private void sendOrderToCook(MyCustomer c) {
+		print("Sending " + c.c.getName() + "'s order of " + c.choice + " to cook.");
 		cook.msgHereIsOrder(this, c.choice, c.table);
 	}
 	
