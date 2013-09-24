@@ -37,6 +37,11 @@ public class CustomerGui implements Gui{
 		yDestination = -40;
 		//maitreD = m;
 		this.gui = gui;
+		
+        tableLocations.put(new Integer(1), new Dimension(200, 200));
+        tableLocations.put(new Integer(2), new Dimension(450, 200));
+        tableLocations.put(new Integer(3), new Dimension(200, 400));
+        tableLocations.put(new Integer(4), new Dimension(450, 400));
 	}
 
 	public void updatePosition() {
@@ -82,30 +87,13 @@ public class CustomerGui implements Gui{
 		isPresent = p;
 	}
 
-	public void DoGoToSeat(int seatnumber) {//later you will map seatnumber to table coordinates.
-		switch(seatnumber) {
-			case 1:
-				xDestination = xTable;
-				yDestination = yTable;
-				break;
-				
-			case 2:
-				xDestination = 2 * xTable;
-				yDestination = yTable;
-				break;
-				
-			case 3:
-				xDestination = xTable;
-				yDestination = 2 * yTable;
-				break;
-				
-			case 4:
-				xDestination = 2 * xTable;
-				yDestination = 2 * yTable;
-				break;
-		}
-
+	public void WalkToSeat() {
 		command = Command.GoToSeat;
+	}
+	
+	public void DoGoToSeat(int seatnumber) {//later you will map seatnumber to table coordinates.
+		xDestination = (int) tableLocations.get(seatnumber).getWidth();
+		yDestination = (int) tableLocations.get(seatnumber).getHeight();
 	}
 
 	public void DoExitRestaurant() {

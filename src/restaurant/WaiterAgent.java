@@ -172,6 +172,7 @@ public class WaiterAgent extends Agent {
 		hostGui.DoLeaveCustomer();*/
 		
 		DoSeatCustomer(c.c, c.table);
+		
 		try {
 			atTable.acquire();
 		} catch (InterruptedException e) {

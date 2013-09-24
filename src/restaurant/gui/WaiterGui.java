@@ -28,6 +28,11 @@ public class WaiterGui implements Gui {
 
     public WaiterGui(WaiterAgent agent) {
         this.agent = agent;
+        
+        tableLocations.put(new Integer(1), new Dimension(200, 200));
+        tableLocations.put(new Integer(2), new Dimension(450, 200));
+        tableLocations.put(new Integer(3), new Dimension(200, 400));
+        tableLocations.put(new Integer(4), new Dimension(450, 400));
     }
 
     public void updatePosition() {
