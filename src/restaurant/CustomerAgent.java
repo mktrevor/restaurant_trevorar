@@ -188,6 +188,7 @@ public class CustomerAgent extends Agent {
 
 	private void eatFood() {
 		Do("Eating Food");
+		customerGui.startedEating();
 		//This next complicated line creates and starts a timer thread.
 		//We schedule a deadline of getHungerLevel()*1000 milliseconds.
 		//When that time elapses, it will call back to the run routine
@@ -201,10 +202,15 @@ public class CustomerAgent extends Agent {
 			public void run() {
 				print("Done eating!");
 				event = AgentEvent.doneEating;
+				GuiDoneEating();
 				//isHungry = false;
 				stateChanged();
 			}
 		}, hungerLevel * 1000);//how long to wait before running task
+	}
+	
+	private void GuiDoneEating() {
+		customerGui.doneEating();
 	}
 	
 	//Combine last two???

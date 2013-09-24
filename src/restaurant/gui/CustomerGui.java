@@ -13,6 +13,9 @@ public class CustomerGui implements Gui{
 	private CustomerAgent agent = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
+	private boolean isEating = false;
+	
+	ImageIcon foodIcon;
 
 	private WaiterGui waiterGui;
 	RestaurantGui gui;
@@ -97,10 +100,27 @@ public class CustomerGui implements Gui{
 		yDestination = (int) tableLocations.get(table).getHeight();
 	}
 
+	public void startedEating(String choice) {
+		foodIcon = new ImageIcon("images/" + choice + ".png");
+		isEating = true;
+	}
+	
+	public void doneEating() {
+		isEating = false;
+	}
+	
 	public void DoExitRestaurant() {
 		xDestination = -40;
 		yDestination = -40;
 		command = Command.LeaveRestaurant;
+	}
+	
+	public boolean getEating() {
+		return isEating;
+	}
+	
+	public Image getFoodImage() {
+		return foodIcon.getImage();
 	}
 	
     public int getXPos() {
