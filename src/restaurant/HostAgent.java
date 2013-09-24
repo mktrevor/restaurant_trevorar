@@ -133,6 +133,7 @@ public class HostAgent extends Agent {
 		}
 
 		leastBusyWaiter.w.msgPleaseSeatCustomer(this, mc.c, table.tableNumber);
+		print(leastBusyWaiter.w.getName() + ", could you please seat customer " + mc.c.getName() + "?");
 		leastBusyWaiter.numCustomers++; //Assigned a new customer to the least busy waiter
 		mc.waiting = false;
 		table.occupied = true;

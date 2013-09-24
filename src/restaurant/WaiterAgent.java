@@ -88,9 +88,6 @@ public class WaiterAgent extends Agent {
 		for(MyCustomer mc : customers) {
 			if(mc.table == table) {
 				mc.s = customerState.foodReady;
-				if(choice != mc.choice) {
-					print("WHOOPS, THIS IS THE WRONG FOOD!");
-				}
 			}
 		}
 		stateChanged();
