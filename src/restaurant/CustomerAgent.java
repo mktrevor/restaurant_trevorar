@@ -171,6 +171,8 @@ public class CustomerAgent extends Agent {
 				break;
 		}
 		
+		print(choice);
+		
 		waiter.msgHereIsMyChoice(this, choice);
 	}
 

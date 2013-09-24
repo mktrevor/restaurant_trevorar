@@ -73,7 +73,6 @@ public class WaiterAgent extends Agent {
 	}
 
 	public void msgAtTable() {//from animation
-		print("msgAtTable() called");
 		atTable.release();// = true;
 		stateChanged();
 	}
@@ -196,8 +195,13 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void bringFoodToCustomer(MyCustomer c) {
-		//GUI Method (Implement)
-		//DoGoToTable(c.table);
+		waiterGui.DoGoToTable(c.table);
+		
+		try {
+			atTable.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		c.c.msgHereIsYourFood(c.choice);
 		c.s = customerState.served;

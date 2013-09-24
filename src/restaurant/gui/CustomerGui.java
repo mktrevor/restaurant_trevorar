@@ -33,8 +33,8 @@ public class CustomerGui implements Gui{
 		agent = c;
 		xPos = -60;
 		yPos = -60;
-		xDestination = -40;
-		yDestination = -40;
+		xDestination = -60;
+		yDestination = -60;
 		//maitreD = m;
 		this.gui = gui;
 		
