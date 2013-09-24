@@ -10,14 +10,18 @@ import java.util.ArrayList;
 
 public class AnimationPanel extends JPanel implements ActionListener {
 
-    private static final int WINDOWX = 600;
+    private static final int WINDOWX = 800;
     private static final int WINDOWY = 600;
     private static final int TABLE_LENGTH = 50, TABLE_WIDTH = 50;
     private static final int TABLE_X_COORD = 200, TABLE_Y_COORD = 200;
     private static final int TIMER_INTERVAL = 20;
     
-    private Image bufferImage;
-    private Dimension bufferSize;
+    //private Image bufferImage;
+    //private Dimension bufferSize;
+    
+    private ImageIcon tableIcon = new ImageIcon("images/table.png");
+    private List<Image> tables = new ArrayList<Image>();
+    private final int NUM_TABLES = 4;
 
     private List<Gui> guis = new ArrayList<Gui>();
 
@@ -28,17 +32,52 @@ public class AnimationPanel extends JPanel implements ActionListener {
     	setMinimumSize(new Dimension(WINDOWX, WINDOWY));
         setVisible(true);
         
+        for(int i = 0; i < NUM_TABLES; i++) {
+        	tables.add(tableIcon.getImage());
+        }
+    	
+        Timer timer = new Timer(TIMER_INTERVAL, this);
+        timer.start();
+    }
+    /*public AnimationPanel() {
+    	setSize(WINDOWX, WINDOWY);
+        
         bufferSize = this.getSize();
         
     	Timer timer = new Timer(TIMER_INTERVAL, this );
     	timer.start();
-    }
+    }*/
 
 	public void actionPerformed(ActionEvent e) {
 		repaint();  //Will have paintComponent called
 	}
+	
+	public void paintComponent(Graphics g) {
+		//super.paintComponent(g);
+		
+		Graphics2D g2 = (Graphics2D)g;
+		g2.setColor(getBackground());
+        g2.fillRect(0, 0, WINDOWX, WINDOWY );
+        
+		g2.drawImage(tables.get(0), 200, 200, 100, 60, this);
+		g2.drawImage(tables.get(1), 450, 200, 100, 60, this);
+		g2.drawImage(tables.get(2), 200, 400, 100, 60, this);
+		g2.drawImage(tables.get(3), 450, 400, 100, 60, this);
+		
+		for(Gui gui : guis) {
+            if (gui.isPresent()) {
+                gui.updatePosition();
+            }
+        }
+		
+		for(Gui gui : guis) {
+			if(gui.isPresent()) {
+				g2.drawImage(gui.getImage(), gui.getXPos(), gui.getYPos(), 30, 30, this);
+			}
+		}
+	}
 
-    public void paintComponent(Graphics g) {
+    /*public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
 
         //Clear the screen by painting a rectangle the size of the frame
@@ -65,7 +104,7 @@ public class AnimationPanel extends JPanel implements ActionListener {
                 gui.draw(g2);
             }
         }
-    }
+    }*/
 
     public void addGui(CustomerGui gui) {
         guis.add(gui);

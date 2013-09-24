@@ -4,6 +4,9 @@ import restaurant.CustomerAgent;
 import restaurant.HostAgent;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
+
+import javax.swing.ImageIcon;
 
 public class CustomerGui implements Gui{
 
@@ -11,8 +14,10 @@ public class CustomerGui implements Gui{
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 
-	//private HostAgent host;
+	private WaiterGui waiterGui;
 	RestaurantGui gui;
+	
+	private ImageIcon customerIcon = new ImageIcon("images/cust.png");
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -58,9 +63,8 @@ public class CustomerGui implements Gui{
 	}
 
 	public void draw(Graphics2D g) {
-		g.setColor(Color.GREEN);
-		g.fillRect(xPos, yPos, CUSTOMER_WIDTH, CUSTOMER_LENGTH);
-	}
+        
+    }
 
 	public boolean isPresent() {
 		return isPresent;
@@ -109,4 +113,16 @@ public class CustomerGui implements Gui{
 		yDestination = -40;
 		command = Command.LeaveRestaurant;
 	}
+	
+    public int getXPos() {
+        return xPos;
+    }
+
+    public int getYPos() {
+        return yPos;
+    }
+    
+    public Image getImage() {
+    	return customerIcon.getImage();
+    }
 }

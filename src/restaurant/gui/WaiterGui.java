@@ -6,16 +6,19 @@ import restaurant.HostAgent;
 import restaurant.WaiterAgent;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class WaiterGui implements Gui {
 	
-	private static final int XPOS = -20, YPOS = -20;
+	private static final int XPOS = -30, YPOS = -30;
 	private static final int XTABLE = 200, YTABLE = 200;
 
     private WaiterAgent agent = null;
+    
+    private ImageIcon waiterIcon = new ImageIcon("images/wait.png");
 
     private int xPos = XPOS, yPos = YPOS;//default waiter position
     private int xDestination = XPOS, yDestination = YPOS;//default start position
@@ -57,6 +60,10 @@ public class WaiterGui implements Gui {
         }
     }
 
+    /*public void draw(Graphics2D g) {
+        g.drawImage(waiterIcon.getImage(), xPos, yPos, 30, 30, (ImageObserver) g);
+    }*/
+    
     public void draw(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.fillRect(xPos, yPos, 20, 20);
@@ -101,5 +108,9 @@ public class WaiterGui implements Gui {
 
     public int getYPos() {
         return yPos;
+    }
+    
+    public Image getImage() {
+    	return waiterIcon.getImage();
     }
 }
