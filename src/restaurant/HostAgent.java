@@ -60,6 +60,7 @@ public class HostAgent extends Agent {
 	
 	public void addWaiter(WaiterAgent w) {
 		waiters.add(new MyWaiter(w));
+		stateChanged();
 	}
 	
 	// Messages
@@ -105,9 +106,11 @@ public class HostAgent extends Agent {
 			if (!table.occupied) {
 				for(MyCustomer mc : customers) {
 					if (mc.waiting) {
-						seatCustomer(mc, table);
+						if(!waiters.isEmpty()) {
+							seatCustomer(mc, table);
 			
-						return true;//return true to the abstract agent to reinvoke the scheduler.
+							return true;//return true to the abstract agent to reinvoke the scheduler.
+						}
 					}
 				}
 			}

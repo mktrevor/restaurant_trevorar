@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class AnimationPanel extends JPanel implements ActionListener {
 
-    private static final int WINDOWX = 450;
-    private static final int WINDOWY = 350;
+    private static final int WINDOWX = 600;
+    private static final int WINDOWY = 600;
     private static final int TABLE_LENGTH = 50, TABLE_WIDTH = 50;
     private static final int TABLE_X_COORD = 200, TABLE_Y_COORD = 250;
     private static final int TIMER_INTERVAL = 20;
@@ -46,12 +46,12 @@ public class AnimationPanel extends JPanel implements ActionListener {
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
 
         //Here is the table
-        g2.setColor(Color.ORANGE);
+        /*g2.setColor(Color.ORANGE);
         g2.fillRect(TABLE_X_COORD, TABLE_Y_COORD, TABLE_LENGTH, TABLE_WIDTH);//200 and 250 need to be table params
         
         g2.fillRect(2 * TABLE_X_COORD, TABLE_Y_COORD, TABLE_LENGTH, TABLE_WIDTH);
         g2.fillRect(TABLE_X_COORD, 2 * TABLE_Y_COORD, TABLE_LENGTH, TABLE_WIDTH);
-        g2.fillRect(2 * TABLE_X_COORD, 2 * TABLE_Y_COORD, TABLE_LENGTH, TABLE_WIDTH);
+        g2.fillRect(2 * TABLE_X_COORD, 2 * TABLE_Y_COORD, TABLE_LENGTH, TABLE_WIDTH);*/
         
 
         for(Gui gui : guis) {

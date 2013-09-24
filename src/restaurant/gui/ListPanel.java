@@ -63,7 +63,8 @@ public class ListPanel extends JPanel implements ActionListener {
 
 		add(nameLabel);
 		add(enterName);
-		add(hungryChk);
+		if(type == "Customers")
+			add(hungryChk);
 		addPersonB.addActionListener(this);
 		add(addPersonB);
 
