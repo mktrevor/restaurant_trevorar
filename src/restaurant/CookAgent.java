@@ -41,7 +41,7 @@ public class CookAgent extends Agent {
 
 	// Messages
 
-	public void msgHereIsOrderFromCustomer(WaiterAgent w, String choice, int table) {
+	public void msgHereIsOrder(WaiterAgent w, String choice, int table) {
 		orders.add(new Order(w, choice, table, orderState.pending));
 		stateChanged();
 	}
