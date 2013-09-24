@@ -110,13 +110,12 @@ public class RestaurantPanel extends JPanel {
     			g.setHungry();
     		}
 
-    		gui.animationPanel.addGui(g);// dw
+    		gui.animationPanel.addGui(g);
     		c.setHost(host);
     		c.setGui(g);
     		customers.add(c);
     		c.startThread();
     	}
-    	
     	if (type.equals("Waiters")) {
     		WaiterAgent w = new WaiterAgent(name);
     		WaiterGui g = new WaiterGui(w);
