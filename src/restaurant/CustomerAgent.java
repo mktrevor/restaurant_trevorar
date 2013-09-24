@@ -14,7 +14,7 @@ import java.util.TimerTask;
 public class CustomerAgent extends Agent {
 	private String name;
 	private String choice;
-	private int hungerLevel = 5; // determines length of meal
+	private int hungerLevel = 10; // determines length of meal
 	private int tableNumber; // Variable to hold number of table to eat at
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
@@ -171,7 +171,7 @@ public class CustomerAgent extends Agent {
 				break;
 		}
 		
-		print(choice);
+		print(choice + " please!");
 		
 		waiter.msgHereIsMyChoice(this, choice);
 	}
@@ -189,7 +189,7 @@ public class CustomerAgent extends Agent {
 		timer.schedule(new TimerTask() {
 			Object cookie = 1;
 			public void run() {
-				print("Done eating, cookie=" + cookie);
+				print("Done eating!");
 				event = AgentEvent.doneEating;
 				//isHungry = false;
 				stateChanged();

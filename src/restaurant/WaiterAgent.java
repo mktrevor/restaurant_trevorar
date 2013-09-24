@@ -27,10 +27,7 @@ public class WaiterAgent extends Agent {
 
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
-	private Semaphore inLobby = new Semaphore(0, true);
-	/* CHECK THIS LINE OUT */
-	private enum waiterState {free, doingStuff};
-	private waiterState state = waiterState.free;
+	private Semaphore atCook = new Semaphore(0, true);
 	
 	public WaiterGui waiterGui = null;
 
@@ -99,6 +96,11 @@ public class WaiterAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgAtCook() {
+		atCook.release();
+		stateChanged();
+	}
+	
 	public void msgImDoneEating(CustomerAgent c) {
 		for(MyCustomer mc : customers) {
 			if(mc.c == c) {
@@ -147,7 +149,6 @@ public class WaiterAgent extends Agent {
 	// Actions
 
 	private void seatCustomer(MyCustomer c) {
-		state = waiterState.doingStuff;
 		
 		c.c.msgFollowMe(this, new Menu());
 		//(host code)
@@ -195,7 +196,19 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void bringFoodToCustomer(MyCustomer c) {
+		waiterGui.DoGoToCook();
+		
+		print("Getting food from cook.");
+		
+		try {
+			atCook.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		waiterGui.DoGoToTable(c.table);
+		
+		print("Bringing food to table.");
 		
 		try {
 			atTable.acquire();
