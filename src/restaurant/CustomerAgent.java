@@ -100,7 +100,7 @@ public class CustomerAgent extends Agent {
 		}
 		if (state == AgentState.waitingInRestaurant && event == AgentEvent.followWaiter ){
 			state = AgentState.beingSeated;
-			sitDown(tableNumber);
+			sitDown();
 			return true;
 		}
 		if (state == AgentState.beingSeated && event == AgentEvent.seated){
@@ -143,9 +143,9 @@ public class CustomerAgent extends Agent {
 		host.msgImHungry(this);//send our instance, so he can respond to us
 	}
 
-	private void sitDown(int tableNumber) {
+	private void sitDown() {
 		Do("Being seated. Going to table");
-		customerGui.DoGoToSeat(tableNumber);
+		customerGui.DoGoToSeat();
 	}
 	
 	private void readyToOrder() {

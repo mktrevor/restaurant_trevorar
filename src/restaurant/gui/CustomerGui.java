@@ -31,8 +31,8 @@ public class CustomerGui implements Gui{
 
 	public CustomerGui(CustomerAgent c, RestaurantGui gui){ //HostAgent m) {
 		agent = c;
-		xPos = -40;
-		yPos = -40;
+		xPos = -60;
+		yPos = -60;
 		xDestination = -40;
 		yDestination = -40;
 		//maitreD = m;
@@ -87,13 +87,13 @@ public class CustomerGui implements Gui{
 		isPresent = p;
 	}
 
-	public void WalkToSeat() {
+	public void DoGoToSeat() {
 		command = Command.GoToSeat;
 	}
 	
-	public void DoGoToSeat(int seatnumber) {//later you will map seatnumber to table coordinates.
-		xDestination = (int) tableLocations.get(seatnumber).getWidth();
-		yDestination = (int) tableLocations.get(seatnumber).getHeight();
+	public void GivenTableNumber(int table) {//later you will map seatnumber to table coordinates.
+		xDestination = (int) tableLocations.get(table).getWidth();
+		yDestination = (int) tableLocations.get(table).getHeight();
 	}
 
 	public void DoExitRestaurant() {

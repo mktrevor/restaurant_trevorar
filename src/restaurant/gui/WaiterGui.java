@@ -78,28 +78,15 @@ public class WaiterGui implements Gui {
         return true;
     }
 
-    public void DoBringToTable(CustomerAgent customer, int tableNumber) {
-        switch(tableNumber) {
-        case 1: 
-        	xDestination = xTable + 20;
-            yDestination = yTable - 20;
-            break;
-            
-        case 2:
-        	xDestination = 3 * xTable + 20;
-            yDestination = yTable - 20;
-            break;
-        	
-        case 3:
-        	xDestination = xTable + 20;
-            yDestination = 2 * yTable - 20;
-            break;
-        	
-        case 4:
-        	xDestination = 2 * xTable + 20;
-            yDestination = 2 * yTable - 20;
-            break;
-        }
+    public void DoBringToTable(CustomerAgent c, int table) {
+    	xDestination = (int) tableLocations.get(table).getWidth() + 30;
+		yDestination = (int) tableLocations.get(table).getHeight() - 30;
+        
+        GiveTableNumberToCustomerGui(c, table);
+    }
+    
+    public void GiveTableNumberToCustomerGui(CustomerAgent c, int table) {
+    	c.getGui().GivenTableNumber(table);
     }
 
     public void DoLeaveCustomer() {
