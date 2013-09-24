@@ -150,7 +150,17 @@ public class CustomerAgent extends Agent {
 	}
 	
 	private void readyToOrder() {
-		Do("I'm ready to order!");
+		timer.schedule(new TimerTask() {
+			public void run() {
+				Do("I'm ready to order!");
+				callWaiter();
+			}
+		}, 3000	);
+
+		//waiter.msgImReadyToOrder(this);
+	}
+	
+	private void callWaiter() {
 		waiter.msgImReadyToOrder(this);
 	}
 	

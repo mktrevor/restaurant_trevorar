@@ -56,14 +56,17 @@ public class WaiterAgent extends Agent {
 	// Messages
 	
 	public void msgPleaseSeatCustomer(HostAgent h, CustomerAgent c, int table) {
+		print("msgPleaseSeatCustomer received.");
 		customers.add(new MyCustomer(c, table, customerState.waiting));
 		stateChanged();
 	}
 
 	public void msgImReadyToOrder(CustomerAgent c) {
+		print("msgImReadyToOrder received.");
 		for(MyCustomer mc : customers) {
 			if(mc.c.getName() == c.getName()) {
 				mc.s = customerState.readyToOrder;
+				System.out.println("Cust ready to order!!!!");
 			}
 		}
 		stateChanged();
@@ -75,9 +78,11 @@ public class WaiterAgent extends Agent {
 	}
 	
 	public void msgHereIsMyChoice(CustomerAgent c, String choice) {
+		print("msgHereIsMyChoice received.");
 		for(MyCustomer mc : customers) {
 			if(mc.c.getName() == c.getName()) {
 				mc.s = customerState.ordered;
+				System.out.println("ORDERED");
 				mc.choice = choice;
 			}
 		}
@@ -85,6 +90,7 @@ public class WaiterAgent extends Agent {
 	}
 	
 	public void msgOrderDone(String choice, int table) {
+		print("msgOrderDone received.");
 		for(MyCustomer mc : customers) {
 			if(mc.table == table) {
 				mc.s = customerState.foodReady;
@@ -99,6 +105,7 @@ public class WaiterAgent extends Agent {
 	}
 	
 	public void msgImDoneEating(CustomerAgent c) {
+		print("msgImDoneEating received.");
 		for(MyCustomer mc : customers) {
 			if(mc.c.getName() == c.getName()) {
 				mc.s = customerState.finished;
@@ -110,32 +117,38 @@ public class WaiterAgent extends Agent {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	protected boolean pickAndExecuteAnAction() {		
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.waiting) {
 				seatCustomer(mc);
 				return true;
 			}
-			else if(mc.s == customerState.readyToOrder) {
+		}
+		for(MyCustomer mc : customers) {
+			if(mc.s == customerState.readyToOrder) {
 				takeOrder(mc);
 				return true;
 			}
-			else if(mc.s == customerState.ordered) {
+		}
+		for(MyCustomer mc : customers) {
+			if(mc.s == customerState.ordered) {
 				sendOrderToCook(mc);
 				return true;
 			}
-			else if(mc.s == customerState.foodReady) {
+		}
+		for(MyCustomer mc : customers) {
+			if(mc.s == customerState.foodReady) {
 				bringFoodToCustomer(mc);
 				return true;
 			}
-			else if(mc.s == customerState.finished) {
+		}
+		for(MyCustomer mc : customers) {
+			if(mc.s == customerState.finished) {
 				tellHostCustomerIsDone(mc);
 				return true;
 			}
-			else {
-				DoLeaveCustomer();
-			}
 		}
+		DoLeaveCustomer();
 
 		return false;
 		//we have tried all our rules and found
@@ -148,18 +161,6 @@ public class WaiterAgent extends Agent {
 	private void seatCustomer(MyCustomer c) {
 		
 		c.c.msgFollowMe(this, new Menu());
-		//(host code)
-		/*customer.msgSitAtTable(table.tableNumber);
-		DoSeatCustomer(customer, table);
-		try {
-			atTable.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		table.setOccupant(customer);
-		waitingCustomers.remove(customer);
-		hostGui.DoLeaveCustomer();*/
 		
 		DoSeatCustomer(c.c, c.table);
 		

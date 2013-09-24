@@ -91,7 +91,6 @@ public class CookAgent extends Agent {
 			}
 		}
 		
-		//Fix cooking timer!
 		timer.schedule(new TimerTask() {
 							public void run() {
 								 msgFoodDoneCooking(o);
@@ -102,7 +101,7 @@ public class CookAgent extends Agent {
 	private void plateIt(Order o) {
 		//Animation
 		//DoPlating(o);
-		print("Food done cooking, time to plate it!");
+		print(o.choice + " done cooking, time to plate it!");
 		o.w.msgOrderDone(o.choice, o.table);
 		o.s = orderState.finished;
 	}

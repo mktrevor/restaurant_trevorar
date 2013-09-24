@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 public class WaiterGui implements Gui {
 	
 	private static final int XPOS = -30, YPOS = -30;
+	
+	private boolean moving;
 
     private WaiterAgent agent = null;
     
