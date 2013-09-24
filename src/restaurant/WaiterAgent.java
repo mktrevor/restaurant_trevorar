@@ -27,6 +27,7 @@ public class WaiterAgent extends Agent {
 
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
+	private Semaphore inLobby = new Semaphore(0, true);
 	/* CHECK THIS LINE OUT */
 	private enum waiterState {free, doingStuff};
 	private waiterState state = waiterState.free;

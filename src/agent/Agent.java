@@ -165,8 +165,8 @@ public abstract class Agent {
     	}
     }
     
-    static Food steak = new Food("steak", 20);
-    static Food chicken = new Food("chicken", 10);
-    static Food fish = new Food("fish", 20);
+    static final Food steak = new Food("steak", 20);
+    static final Food chicken = new Food("chicken", 10);
+    static final Food fish = new Food("fish", 15);
 }
 

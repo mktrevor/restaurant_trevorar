@@ -77,20 +77,26 @@ public class CookAgent extends Agent {
 
 	// Actions
 
-	private void cookIt(Order o) {
+	private void cookIt(final Order o) {
 		//Animation
 		//DoCooking(o) 
 		
+		print("Cooking up an order of " + o.choice + "!");
+		
 		o.s = orderState.cooking;
-		int cookTime;
+		int cookTime = 0;
 		for(Food f : Menu.getFoods()) {
 			if(f.getType() == o.choice) {
-				cookTime = f.getTime();
+				cookTime = f.getTime() * 1000;
 			}
 		}
 		
 		//Fix cooking timer!
-		//timer.start( run(msgFoodDoneCooking(o)), cookTime);
+		timer.schedule(new TimerTask() {
+							public void run() {
+								 msgFoodDoneCooking(o);
+							}
+						}, cookTime	);
 	}
 	
 	private void plateIt(Order o) {

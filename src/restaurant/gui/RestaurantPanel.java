@@ -101,7 +101,7 @@ public class RestaurantPanel extends JPanel {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(String type, String name, boolean isHungry) { //AND HERE
+    public void addPerson(String type, String name, boolean isHungry) {
 
     	if (type.equals("Customers")) {
     		CustomerAgent c = new CustomerAgent(name);	
