@@ -14,7 +14,6 @@ import javax.swing.JLabel;
 public class WaiterGui implements Gui {
 	
 	private static final int XPOS = -30, YPOS = -30;
-	private static final int XTABLE = 200, YTABLE = 200;
 
     private WaiterAgent agent = null;
     
@@ -23,12 +22,10 @@ public class WaiterGui implements Gui {
     private int xPos = XPOS, yPos = YPOS;//default waiter position
     private int xDestination = XPOS, yDestination = YPOS;//default start position
 
-    public static final int xTable = XTABLE;
-    public static final int yTable = YTABLE;
-
     public WaiterGui(WaiterAgent agent) {
         this.agent = agent;
         
+        //Map for table locations
         tableLocations.put(new Integer(1), new Dimension(200, 200));
         tableLocations.put(new Integer(2), new Dimension(450, 200));
         tableLocations.put(new Integer(3), new Dimension(200, 400));
@@ -51,16 +48,16 @@ public class WaiterGui implements Gui {
         }
 
         if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTable + 20) & (yDestination == yTable - 20)) {
+        		& (xDestination == (int) tableLocations.get(1).getWidth() + 30) & (yDestination == (int) tableLocations.get(1).getHeight() - 30)) {
            agent.msgAtTable();
         } else if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == 2 * xTable + 20) & (yDestination == yTable - 20)) {
+        		& (xDestination == (int) tableLocations.get(2).getWidth() + 30) & (yDestination == (int) tableLocations.get(2).getHeight() - 30)) {
             agent.msgAtTable();
         } else if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTable + 20) & (yDestination == 2 * yTable - 20)) {
+        		& (xDestination == (int) tableLocations.get(3).getWidth() + 30) & (yDestination == (int) tableLocations.get(3).getHeight() - 30)) {
             agent.msgAtTable();
         } else if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == 2 * xTable + 20) & (yDestination == 2 * yTable - 20)) {
+        		& (xDestination == (int) tableLocations.get(4).getWidth() + 30) & (yDestination == (int) tableLocations.get(4).getHeight() - 30)) {
             agent.msgAtTable();
         }
     }
@@ -87,6 +84,11 @@ public class WaiterGui implements Gui {
     
     public void GiveTableNumberToCustomerGui(CustomerAgent c, int table) {
     	c.getGui().GivenTableNumber(table);
+    }
+    
+    public void DoGoToTable(int table) {
+    	xDestination = (int) tableLocations.get(table).getWidth() + 30;
+		yDestination = (int) tableLocations.get(table).getHeight() - 30;
     }
 
     public void DoLeaveCustomer() {

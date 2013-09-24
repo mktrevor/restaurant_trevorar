@@ -142,7 +142,6 @@ public class WaiterAgent extends Agent {
 			}
 			else {
 				DoLeaveCustomer();
-				return true;
 			}
 		}
 
@@ -183,8 +182,14 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void takeOrder(MyCustomer c) {
-		//GUI Method (Implement)
-		//DoGoToTable(c.table);
+		waiterGui.DoGoToTable(c.table);
+		
+		try {
+			atTable.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		print("Taking order from: " + c.c.getName());
 		c.c.msgWhatDoYouWant();
 		c.s = customerState.askedForOrder;

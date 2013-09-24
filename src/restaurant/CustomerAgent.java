@@ -4,6 +4,7 @@ import restaurant.gui.CustomerGui;
 import restaurant.gui.RestaurantGui;
 import agent.Agent;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -155,6 +156,21 @@ public class CustomerAgent extends Agent {
 	
 	private void orderFood() {
 		Do("I'm ordering!");
+		int randomNum = ((int) name.charAt(0)) % 3;
+		switch(randomNum) {
+			case 0:
+				choice = "steak";
+				break;
+	
+			case 1:
+				choice = "chicken";
+				break;
+	
+			case 2:
+				choice = "fish";
+				break;
+		}
+		
 		waiter.msgHereIsMyChoice(this, choice);
 	}
 
