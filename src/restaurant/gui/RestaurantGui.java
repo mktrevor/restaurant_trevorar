@@ -106,8 +106,6 @@ public class RestaurantGui extends JFrame implements ActionListener {
         pausePanel.add(resumeButton);
         
         add(pausePanel, BorderLayout.NORTH);
-
-        restPanel.addPerson("Waiters", "Head Waiter", false);
     }
     /**
      * updateInfoPanel() takes the given customer (or, for v3, Host) object and

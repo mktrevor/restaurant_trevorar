@@ -61,11 +61,9 @@ public class WaiterAgent extends Agent {
 	}
 
 	public void msgImReadyToOrder(CustomerAgent c) {
-		print("msgImReadyToOrder received.");
 		for(MyCustomer mc : customers) {
 			if(mc.c.getName() == c.getName()) {
 				mc.s = customerState.readyToOrder;
-				System.out.println("Cust ready to order!!!!");
 			}
 		stateChanged();
 		}
@@ -77,26 +75,23 @@ public class WaiterAgent extends Agent {
 	}
 	
 	public void msgHereIsMyChoice(CustomerAgent c, String choice) {
-		print("msgHereIsMyChoice received.");
 		for(MyCustomer mc : customers) {
 			if(mc.c.getName() == c.getName()) {
 				mc.s = customerState.ordered;
-				System.out.println("ORDERED");
 				mc.choice = choice;
+				print("One " + choice + ", coming right up!");
 			}
 			stateChanged();
 		}
 	}
 	
 	public void msgOrderDone(String choice, int table) {
-		print("msgOrderDone received.");
 		for(MyCustomer mc : customers) {
 			if(mc.table == table) {
 				mc.s = customerState.foodReady;
 			}
 			stateChanged();
 		}
-		
 	}
 	
 	public void msgAtCook() {
@@ -105,9 +100,9 @@ public class WaiterAgent extends Agent {
 	}
 	
 	public void msgImDoneEating(CustomerAgent c) {
-		print("msgImDoneEating received.");
 		for(MyCustomer mc : customers) {
 			if(mc.c.getName() == c.getName()) {
+				print("Table " + mc.table + " is free!");
 				mc.s = customerState.finished;
 			}
 		}

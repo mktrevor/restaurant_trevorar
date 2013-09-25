@@ -142,6 +142,7 @@ public abstract class Agent {
     
     public void resume() {
     	pause.release();
+    	isPaused = false;
     	stateChanged();
     }
     
