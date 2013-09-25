@@ -9,6 +9,8 @@ import java.util.concurrent.*;
  */
 public abstract class Agent {
     Semaphore stateChange = new Semaphore(1, true);//binary semaphore, fair
+    Semaphore pause = new Semaphore(0, true);
+    boolean isPaused = false;
     private AgentThread agentThread;
 
     protected Agent() {
@@ -109,6 +111,9 @@ public abstract class Agent {
 
             while (goOn) {
                 try {
+                	if(isPaused) {
+                		pause.acquire();
+                	}
                     // The agent sleeps here until someone calls, stateChanged(),
                     // which causes a call to stateChange.give(), which wakes up agent.
                     stateChange.acquire();
@@ -129,6 +134,14 @@ public abstract class Agent {
             goOn = false;
             this.interrupt();
         }
+    }
+    
+    public void pause() {
+    	isPaused = true;
+    }
+    
+    public void resume() {
+    	pause.release();
     }
     
   //Code for food and menu classes    

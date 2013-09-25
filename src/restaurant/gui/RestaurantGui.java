@@ -33,6 +33,10 @@ public class RestaurantGui extends JFrame implements ActionListener {
     private JLabel infoLabel; //part of infoPanel
     private JCheckBox stateCB;//part of infoLabel
     
+    private JPanel pausePanel;
+    private JButton pauseButton;
+    private JButton resumeButton;
+    
     private Object currentPerson;/* Holds the agent that the info is about.
     								Seems like a hack */
     private final int WINDOWX = 1200;
@@ -88,6 +92,21 @@ public class RestaurantGui extends JFrame implements ActionListener {
         infoPanel.add(stateCB);
         
         add(infoPanel, BorderLayout.SOUTH);
+        
+        //The pause/resume buttons;
+        pauseButton = new JButton("Pause");
+        pauseButton.addActionListener(this);
+        resumeButton = new JButton("Resume");
+        resumeButton.addActionListener(this);
+        resumeButton.setEnabled(false);
+        
+        pausePanel = new JPanel();
+        
+        pausePanel.add(pauseButton);
+        pausePanel.add(resumeButton);
+        
+        add(pausePanel, BorderLayout.NORTH);
+        
     }
     /**
      * updateInfoPanel() takes the given customer (or, for v3, Host) object and
@@ -124,6 +143,16 @@ public class RestaurantGui extends JFrame implements ActionListener {
                 c.getGui().setHungry();
                 stateCB.setEnabled(false);
             }
+        }
+        if(e.getSource() == pauseButton) {
+        	restPanel.pause();
+        	pauseButton.setEnabled(false);
+        	resumeButton.setEnabled(true);
+        }
+        if(e.getSource() == resumeButton) {
+        	restPanel.resume();
+        	resumeButton.setEnabled(false);
+        	pauseButton.setEnabled(true);
         }
     }
     /**

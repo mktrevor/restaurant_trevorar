@@ -130,5 +130,27 @@ public class RestaurantPanel extends JPanel {
     		w.startThread();
     	}
     }
+    
+    public void pause() {
+    	cook.pause();
+    	host.pause();
+    	for(CustomerAgent c : customers) {
+    		c.pause();
+    	}
+    	for(WaiterAgent w : waiters) {
+    		w.pause();
+    	}
+    }
+    
+    public void resume() {
+    	cook.resume();
+    	host.resume();
+    	for(CustomerAgent c : customers) {
+    		c.resume();
+    	}
+    	for(WaiterAgent w : waiters) {
+    		w.resume();
+    	}
+    }
 
 }
