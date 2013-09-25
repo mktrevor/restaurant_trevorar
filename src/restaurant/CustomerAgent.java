@@ -166,8 +166,8 @@ public class CustomerAgent extends Agent {
 	
 	private void orderFood() {
 		print("I'm ordering!");
-		int randomNum = ((int) name.charAt(0)) % 3;
-		switch(randomNum) {
+		int choiceNum = ((int) name.charAt(0)) % 3;
+		switch(choiceNum) {
 			case 0:
 				choice = "steak";
 				break;

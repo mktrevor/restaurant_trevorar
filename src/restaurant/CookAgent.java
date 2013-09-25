@@ -99,11 +99,11 @@ public class CookAgent extends Agent {
 	}
 	
 	private void plateIt(Order o) {
+		o.s = orderState.finished;
 		//Animation
 		//DoPlating(o);
 		print(o.choice + " done cooking, time to plate it!");
 		o.w.msgOrderDone(o.choice, o.table);
-		o.s = orderState.finished;
 	}
 
 	// The animation DoXYZ() routines

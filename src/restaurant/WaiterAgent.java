@@ -176,29 +176,30 @@ public class WaiterAgent extends Agent {
 			e.printStackTrace();
 		}
 		
+		c.s = customerState.askedForOrder;
 		print("Taking order from: " + c.c.getName());
 		c.c.msgWhatDoYouWant();
-		c.s = customerState.askedForOrder;
 
 		DoLeaveCustomer();
 	}
 	
 	private void sendOrderToCook(MyCustomer c) {
-		waiterGui.DoGoToCook();
 		print("Taking " + c.c.getName() + "'s order of " + c.choice + " to cook.");
+		waiterGui.DoGoToCook();
+		
 		try {
 			atCook.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		cook.msgHereIsOrder(this, c.choice, c.table);
+		
 		c.s = customerState.orderSentToCook;
+		cook.msgHereIsOrder(this, c.choice, c.table);
 	}
 	
 	private void bringFoodToCustomer(MyCustomer c) {
-		waiterGui.DoGoToCook();
-		
 		print("Getting food from cook.");
+		waiterGui.DoGoToCook();
 		
 		try {
 			atCook.acquire();
@@ -224,8 +225,8 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void tellHostCustomerIsDone(MyCustomer c) {
-		host.msgTableIsFree(c.table, this);
 		c.s = customerState.leftRestaurant;
+		host.msgTableIsFree(c.table, this);
 	}
 
 	// The animation DoXYZ() routines
