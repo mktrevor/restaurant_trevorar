@@ -6,6 +6,9 @@ import restaurant.HostAgent;
 import restaurant.WaiterAgent;
 
 import javax.swing.*;
+
+import agent.Agent;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -16,6 +19,8 @@ import java.util.Vector;
  */
 public class RestaurantPanel extends JPanel {
 
+    private Vector<Agent> agents = new Vector<Agent>();
+    
     //Host, cook, waiters and customers
     private HostAgent host = new HostAgent("Sarah");
     private HostGui hostGui = new HostGui(host);
@@ -25,6 +30,7 @@ public class RestaurantPanel extends JPanel {
 
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
+    
 
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
@@ -40,6 +46,9 @@ public class RestaurantPanel extends JPanel {
         //gui.animationPanel.addGui(hostGui);
         host.startThread();
         cook.startThread();
+        
+        agents.add(host);
+        agents.add(cook);
 
         setLayout(new BorderLayout(0, 0));
         group.setLayout(new GridLayout(1, 3, 1, 1));
@@ -88,8 +97,8 @@ public class RestaurantPanel extends JPanel {
         }
         
         if(type.equals("Waiters")) {
-        	for (int i = 0; i < customers.size(); i++) {
-                CustomerAgent temp = customers.get(i);
+        	for (int i = 0; i < waiters.size(); i++) {
+                WaiterAgent temp = waiters.get(i);
                 if (temp.getName() == name)
                     gui.updateInfoPanel(temp);
         	}
@@ -105,7 +114,7 @@ public class RestaurantPanel extends JPanel {
     public void addPerson(String type, String name, boolean isHungry) {
 
     	if (type.equals("Customers")) {
-    		CustomerAgent c = new CustomerAgent(name);	
+    		CustomerAgent c = new CustomerAgent(name);
     		CustomerGui g = new CustomerGui(c, gui);
     		if(isHungry) {
     			g.setHungry();
@@ -114,6 +123,7 @@ public class RestaurantPanel extends JPanel {
     		gui.animationPanel.addGui(g);
     		c.setHost(host);
     		c.setGui(g);
+    		agents.add(c);
     		customers.add(c);
     		c.startThread();
     	}
@@ -126,30 +136,21 @@ public class RestaurantPanel extends JPanel {
     		w.setCook(cook);
     		w.setGui(g);
     		host.addWaiter(w);
+    		agents.add(w);
     		waiters.add(w);
     		w.startThread();
     	}
     }
     
     public void pause() {
-    	cook.pause();
-    	host.pause();
-    	for(CustomerAgent c : customers) {
-    		c.pause();
-    	}
-    	for(WaiterAgent w : waiters) {
-    		w.pause();
+    	for(Agent a : agents) {
+    		a.pause();
     	}
     }
     
     public void resume() {
-    	cook.resume();
-    	host.resume();
-    	for(CustomerAgent c : customers) {
-    		c.resume();
-    	}
-    	for(WaiterAgent w : waiters) {
-    		w.resume();
+    	for(Agent a : agents) {
+    		a.resume();
     	}
     }
 
