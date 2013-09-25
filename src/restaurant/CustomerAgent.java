@@ -140,19 +140,19 @@ public class CustomerAgent extends Agent {
 	// Actions
 
 	private void goToRestaurant() {
-		Do("Going to restaurant");
+		print("Going to restaurant");
 		host.msgImHungry(this);//send our instance, so he can respond to us
 	}
 
 	private void sitDown() {
-		Do("Being seated. Going to table");
+		print("Being seated. Going to table");
 		customerGui.DoGoToSeat();
 	}
 	
 	private void readyToOrder() {
 		timer.schedule(new TimerTask() {
 			public void run() {
-				Do("I'm ready to order!");
+				print("I'm ready to order!");
 				callWaiter();
 			}
 		}, 3000	);
@@ -165,7 +165,7 @@ public class CustomerAgent extends Agent {
 	}
 	
 	private void orderFood() {
-		Do("I'm ordering!");
+		print("I'm ordering!");
 		int randomNum = ((int) name.charAt(0)) % 3;
 		switch(randomNum) {
 			case 0:
@@ -187,7 +187,7 @@ public class CustomerAgent extends Agent {
 	}
 
 	private void eatFood() {
-		Do("Eating Food");
+		print("Eating Food");
 		customerGui.startedEating(choice);
 		//This next complicated line creates and starts a timer thread.
 		//We schedule a deadline of getHungerLevel()*1000 milliseconds.
@@ -220,7 +220,7 @@ public class CustomerAgent extends Agent {
 	}
 
 	private void leaveRestaurant() {
-		Do("Leaving.");
+		print("Leaving.");
 		customerGui.DoExitRestaurant();
 	}
 

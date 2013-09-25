@@ -99,8 +99,8 @@ public class WaiterGui implements Gui {
     }
 
     public void DoLeaveCustomer() {
-        xDestination = -30;
-        yDestination = -30;
+        xDestination += 60;
+        yDestination -= 60;
     }
 
     public int getXPos() {

@@ -56,7 +56,6 @@ public class WaiterAgent extends Agent {
 	// Messages
 	
 	public void msgPleaseSeatCustomer(HostAgent h, CustomerAgent c, int table) {
-		print("msgPleaseSeatCustomer received.");
 		customers.add(new MyCustomer(c, table, customerState.waiting));
 		stateChanged();
 	}
@@ -119,6 +118,19 @@ public class WaiterAgent extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {		
+	
+		for(MyCustomer mc : customers) {
+			if(mc.s == customerState.finished) {
+				tellHostCustomerIsDone(mc);
+				return true;
+			}
+		}
+		for(MyCustomer mc : customers) {
+			if(mc.s == customerState.foodReady) {
+				bringFoodToCustomer(mc);
+				return true;
+			}
+		}
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.waiting) {
 				seatCustomer(mc);
@@ -137,24 +149,8 @@ public class WaiterAgent extends Agent {
 				return true;
 			}
 		}
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.foodReady) {
-				bringFoodToCustomer(mc);
-				return true;
-			}
-		}
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.finished) {
-				tellHostCustomerIsDone(mc);
-				return true;
-			}
-		}
-		DoLeaveCustomer();
 
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
 	}
 
 	// Actions
@@ -172,6 +168,8 @@ public class WaiterAgent extends Agent {
 		}
 		
 		c.s = customerState.seated;
+
+		DoLeaveCustomer();
 	}
 	
 	private void takeOrder(MyCustomer c) {
@@ -186,6 +184,8 @@ public class WaiterAgent extends Agent {
 		print("Taking order from: " + c.c.getName());
 		c.c.msgWhatDoYouWant();
 		c.s = customerState.askedForOrder;
+
+		DoLeaveCustomer();
 	}
 	
 	private void sendOrderToCook(MyCustomer c) {
@@ -213,7 +213,7 @@ public class WaiterAgent extends Agent {
 		
 		waiterGui.DoGoToTable(c.table);
 		
-		print("Bringing food to table.");
+		print("Bringing food to table " + c.table);
 		
 		try {
 			atTable.acquire();
@@ -224,6 +224,8 @@ public class WaiterAgent extends Agent {
 		c.s = customerState.served;
 		print("Here is your " + c.choice + ".");
 		c.c.msgHereIsYourFood(c.choice);
+
+		DoLeaveCustomer();
 	}
 	
 	private void tellHostCustomerIsDone(MyCustomer c) {
