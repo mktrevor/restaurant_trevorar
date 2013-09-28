@@ -72,16 +72,15 @@ public class AnimationPanel extends JPanel implements ActionListener {
         }
 		
 		for(Gui gui : guis) {
-			if(gui.isPresent()) {
-				g2.drawImage(gui.getImage(), gui.getXPos(), gui.getYPos(), 30, 30, this);
-			}
-			if(gui instanceof CustomerGui) {
+			gui.draw(g2);
+			/*if(gui instanceof CustomerGui) {
 				CustomerGui tempGui = (CustomerGui) gui;
 				if(tempGui.getEating()) {
 					g2.drawImage(tempGui.getFoodImage(), tempGui.getXPos() + 10, tempGui.getYPos() + 30, 20, 20, this);
 				}
+				gui.draw(g2);
 				
-			}
+			}*/
 		}
 	}
 

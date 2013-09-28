@@ -81,6 +81,7 @@ public class HostAgent extends Agent {
 				mw.numCustomers--;
 			}
 		}
+		stateChanged();
 	}
 
 	/*public void msgLeavingTable(CustomerAgent cust) {

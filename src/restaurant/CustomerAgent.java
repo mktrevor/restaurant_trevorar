@@ -150,14 +150,14 @@ public class CustomerAgent extends Agent {
 	}
 	
 	private void readyToOrder() {
+		waiter.msgCustomerSatDown();
+		
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("I'm ready to order!");
 				callWaiter();
 			}
 		}, 3000	);
-
-		//waiter.msgImReadyToOrder(this);
 	}
 	
 	private void callWaiter() {

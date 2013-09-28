@@ -42,52 +42,11 @@ public class CookGui implements Gui {
     }
 
     public void draw(Graphics2D g) {
-        g.setColor(Color.MAGENTA);
+        g.setColor(Color.WHITE);
         g.fillRect(xPos, yPos, 20, 20);
     }
 
     public boolean isPresent() {
         return true;
-    }
-
-    public void DoBringToTable(CustomerAgent customer, int tableNumber) {
-        switch(tableNumber) {
-        case 1: 
-        	xDestination = xTable + 20;
-            yDestination = yTable - 20;
-            break;
-            
-        case 2:
-        	xDestination = 2 * xTable + 20;
-            yDestination = yTable - 20;
-            break;
-        	
-        case 3:
-        	xDestination = xTable + 20;
-            yDestination = 2 * yTable - 20;
-            break;
-        	
-        case 4:
-        	xDestination = 2 * xTable + 20;
-            yDestination = 2 * yTable - 20;
-            break;
-        }
-    }
-
-    public void DoLeaveCustomer() {
-        xDestination = -20;
-        yDestination = -20;
-    }
-
-    public int getXPos() {
-        return xPos;
-    }
-
-    public int getYPos() {
-        return yPos;
-    }
-    
-    public Image getImage() {
-    	return null;
     }
 }

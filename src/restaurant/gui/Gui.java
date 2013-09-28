@@ -11,9 +11,5 @@ public interface Gui {
     public void draw(Graphics2D g);
     public boolean isPresent();
     
-    public Image getImage();
-    public int getXPos();
-    public int getYPos();
-    
     Map<Object, Dimension> tableLocations = new HashMap<Object, Dimension>();
 }

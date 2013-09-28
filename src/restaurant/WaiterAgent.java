@@ -26,8 +26,10 @@ public class WaiterAgent extends Agent {
 	private CookAgent cook;
 
 	private String name;
-	private Semaphore atTable = new Semaphore(0,true);
-	private Semaphore atCook = new Semaphore(0, true);
+	private Semaphore atDestination = new Semaphore(0, true);
+	private Semaphore customerAtTable = new Semaphore(0, true);
+	//private Semaphore atTable = new Semaphore(0,true);
+	//private Semaphore atCook = new Semaphore(0, true);
 	
 	public WaiterGui waiterGui = null;
 
@@ -62,21 +64,16 @@ public class WaiterAgent extends Agent {
 
 	public void msgImReadyToOrder(CustomerAgent c) {
 		for(MyCustomer mc : customers) {
-			if(mc.c.getName() == c.getName()) {
+			if(mc.c == c) {
 				mc.s = customerState.readyToOrder;
 			}
 		stateChanged();
 		}
 	}
-
-	public void msgAtTable() {//from animation
-		atTable.release();// = true;
-		stateChanged();
-	}
 	
 	public void msgHereIsMyChoice(CustomerAgent c, String choice) {
 		for(MyCustomer mc : customers) {
-			if(mc.c.getName() == c.getName()) {
+			if(mc.c == c) {
 				mc.s = customerState.ordered;
 				mc.choice = choice;
 				print("One " + choice + ", coming right up!");
@@ -94,18 +91,23 @@ public class WaiterAgent extends Agent {
 		}
 	}
 	
-	public void msgAtCook() {
-		atCook.release();
-		stateChanged();
-	}
-	
 	public void msgImDoneEating(CustomerAgent c) {
 		for(MyCustomer mc : customers) {
-			if(mc.c.getName() == c.getName()) {
+			if(mc.c == c) {
 				print("Table " + mc.table + " is free!");
 				mc.s = customerState.finished;
 			}
 		}
+		stateChanged();
+	}
+	
+	public void msgAtDestination() {
+		atDestination.release();
+		stateChanged();
+	}
+	
+	public void msgCustomerSatDown() {
+		customerAtTable.release();
 		stateChanged();
 	}
 
@@ -157,7 +159,15 @@ public class WaiterAgent extends Agent {
 		DoSeatCustomer(c.c, c.table);
 		
 		try {
-			atTable.acquire();
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		print("Welcome to Restaurant V2! Here is your seat.");
+		
+		try {
+			customerAtTable.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -171,7 +181,7 @@ public class WaiterAgent extends Agent {
 		waiterGui.DoGoToTable(c.table);
 		
 		try {
-			atTable.acquire();
+			atDestination.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -184,14 +194,8 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void sendOrderToCook(MyCustomer c) {
-		print("Taking " + c.c.getName() + "'s order of " + c.choice + " to cook.");
+		print("Sending " + c.c.getName() + "'s order of " + c.choice + " to cook.");
 		waiterGui.DoGoToCook();
-		
-		try {
-			atCook.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		
 		c.s = customerState.orderSentToCook;
 		cook.msgHereIsOrder(this, c.choice, c.table);
@@ -202,7 +206,7 @@ public class WaiterAgent extends Agent {
 		waiterGui.DoGoToCook();
 		
 		try {
-			atCook.acquire();
+			atDestination.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -212,7 +216,7 @@ public class WaiterAgent extends Agent {
 		print("Bringing food to table " + c.table);
 		
 		try {
-			atTable.acquire();
+			atDestination.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

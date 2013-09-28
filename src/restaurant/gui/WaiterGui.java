@@ -45,7 +45,10 @@ public class WaiterGui implements Gui {
         else if (yPos > yDestination)
             yPos--;
         
-        if(xPos == 630 && yPos == 630) {
+        if(yPos == yDestination && xPos == xDestination) {
+        	agent.msgAtDestination();
+        }
+        /*if(xPos == 630 && yPos == 630) {
         	agent.msgAtCook();
         }
         
@@ -61,16 +64,17 @@ public class WaiterGui implements Gui {
         } else if (xPos == xDestination && yPos == yDestination
         		& (xDestination == (int) tableLocations.get(4).getWidth() + 30) & (yDestination == (int) tableLocations.get(4).getHeight() - 30)) {
             agent.msgAtTable();
-        }
+        }*/
     }
-
-    /*public void draw(Graphics2D g) {
-        g.drawImage(waiterIcon.getImage(), xPos, yPos, 30, 30, (ImageObserver) g);
-    }*/
     
     public void draw(Graphics2D g) {
+        g.setColor(Color.GREEN);
+        g.fillRect(xPos, yPos, 30, 30);
+
+        Font font = new Font("Arial", Font.BOLD, 20);
+        g.setFont(font);
         g.setColor(Color.BLACK);
-        g.fillRect(xPos, yPos, 20, 20);
+        g.drawString("W", xPos + 5, yPos + 22);
     }
 
     public boolean isPresent() {
@@ -101,17 +105,5 @@ public class WaiterGui implements Gui {
     public void DoLeaveCustomer() {
         xDestination += 60;
         yDestination -= 60;
-    }
-
-    public int getXPos() {
-        return xPos;
-    }
-
-    public int getYPos() {
-        return yPos;
-    }
-    
-    public Image getImage() {
-    	return waiterIcon.getImage();
     }
 }

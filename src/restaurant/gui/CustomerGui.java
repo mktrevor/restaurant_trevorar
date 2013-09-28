@@ -14,13 +14,9 @@ public class CustomerGui implements Gui{
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 	private boolean isEating = false;
-	
-	ImageIcon foodIcon;
 
 	private WaiterGui waiterGui;
 	RestaurantGui gui;
-	
-	private ImageIcon customerIcon = new ImageIcon("images/cust.png");
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -60,7 +56,9 @@ public class CustomerGui implements Gui{
 			
 
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
+			if (command==Command.GoToSeat) {
+				agent.msgAnimationFinishedGoToSeat();
+			}
 			else if (command==Command.LeaveRestaurant) {
 				agent.msgAnimationDoneEatingFood();
 				System.out.println("about to call gui.setCustomerEnabled(agent);");
@@ -72,7 +70,13 @@ public class CustomerGui implements Gui{
 	}
 
 	public void draw(Graphics2D g) {
+        g.setColor(Color.BLACK);
+        g.fillRect(xPos, xPos, 30, 30);
         
+        Font font = new Font("Arial", Font.BOLD, 20);
+        g.setFont(font);
+        g.setColor(Color.WHITE);
+        g.drawString("C", xPos + 8, yPos + 22);
     }
 
 	public boolean isPresent() {
@@ -96,12 +100,11 @@ public class CustomerGui implements Gui{
 	}
 	
 	public void GivenTableNumber(int table) {//later you will map seatnumber to table coordinates.
-		xDestination = (int) tableLocations.get(table).getWidth();
-		yDestination = (int) tableLocations.get(table).getHeight();
+		xDestination = (int) tableLocations.get(table).getWidth(); // X coordinate of table
+		yDestination = (int) tableLocations.get(table).getHeight(); // Y coordinate of table
 	}
 
 	public void startedEating(String choice) {
-		foodIcon = new ImageIcon("images/" + choice + ".png");
 		isEating = true;
 	}
 	
