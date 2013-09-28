@@ -12,15 +12,12 @@ public class AnimationPanel extends JPanel implements ActionListener {
 
     private static final int WINDOWX = 800;
     private static final int WINDOWY = 600;
-    private static final int TABLE_LENGTH = 50, TABLE_WIDTH = 50;
-    private static final int TABLE_X_COORD = 200, TABLE_Y_COORD = 200;
     private static final int TIMER_INTERVAL = 20;
     
     //private Image bufferImage;
     //private Dimension bufferSize;
     
     private ImageIcon tableIcon = new ImageIcon("images/table.png");
-    private List<Image> tables = new ArrayList<Image>();
     private final int NUM_TABLES = 4;
 
     private List<Gui> guis = new ArrayList<Gui>();
@@ -31,10 +28,6 @@ public class AnimationPanel extends JPanel implements ActionListener {
     	setMaximumSize(new Dimension(WINDOWX, WINDOWY));
     	setMinimumSize(new Dimension(WINDOWX, WINDOWY));
         setVisible(true);
-        
-        for(int i = 0; i < NUM_TABLES; i++) {
-        	tables.add(tableIcon.getImage());
-        }
     	
         Timer timer = new Timer(TIMER_INTERVAL, this);
         timer.start();
@@ -56,14 +49,31 @@ public class AnimationPanel extends JPanel implements ActionListener {
 		//super.paintComponent(g);
 		
 		Graphics2D g2 = (Graphics2D)g;
-		g2.setColor(getBackground());
-        g2.fillRect(0, 0, WINDOWX, WINDOWY );
+		g2.setColor(new Color(190, 190, 190));
+		g2.fillRect(0, 0, WINDOWX, WINDOWY );
+		
+		g2.setColor(Color.BLACK);
+		for(int i = 0; i < 70; i++) {
+			//g2.drawLine(0, 40 * i, 800, 40 * i);
+			//g2.drawLine(40 * i, 0, 40 * i, 600);
+			g2.drawLine(20 * i, 0, 0, 20 * i);
+		}
+		for(int i = -35; i < 35; i++) {
+			g2.drawLine(0, 20 * i, 800, 20 * i + 600);
+		}
         
 		//Drawing tables
-		g2.drawImage(tables.get(0), 200, 200, 100, 60, this);
-		g2.drawImage(tables.get(1), 450, 200, 100, 60, this);
-		g2.drawImage(tables.get(2), 200, 400, 100, 60, this);
-		g2.drawImage(tables.get(3), 450, 400, 100, 60, this);
+        g2.setColor(new Color(105, 75, 35)); // RGB values for brown
+		g2.fillRect(200, 200, 100, 60);
+		g2.fillRect(450, 200, 100, 60);
+		g2.fillRect(200, 400, 100, 60);
+		g2.fillRect(450, 400, 100, 60);
+		
+		g2.setColor(Color.BLACK);
+		g2.drawRect(200, 200, 100, 60);
+		g2.drawRect(450, 200, 100, 60);
+		g2.drawRect(200, 400, 100, 60);
+		g2.drawRect(450, 400, 100, 60);
 		
 		for(Gui gui : guis) {
             if (gui.isPresent()) {

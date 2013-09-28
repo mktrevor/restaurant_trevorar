@@ -194,7 +194,6 @@ public class WaiterAgent extends Agent {
 	
 	private void sendOrderToCook(MyCustomer c) {
 		print("Sending " + c.c.getName() + "'s order of " + c.choice + " to cook wirelessly. Isn't technology great?");
-		waiterGui.DoGoToCook();
 		
 		c.s = customerState.orderSentToCook;
 		cook.msgHereIsOrder(this, c.choice, c.table);
@@ -210,6 +209,7 @@ public class WaiterAgent extends Agent {
 			e.printStackTrace();
 		}
 		
+		waiterGui.deliveringFood(c.choice);
 		waiterGui.DoGoToTable(c.table);
 		
 		print("Bringing food to table " + c.table);
@@ -222,6 +222,7 @@ public class WaiterAgent extends Agent {
 		
 		c.s = customerState.served;
 		print("Here is your " + c.choice + ".");
+		waiterGui.foodDelivered();
 		c.c.msgHereIsYourFood(c.choice);
 
 		DoLeaveCustomer();

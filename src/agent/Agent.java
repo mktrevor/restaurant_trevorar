@@ -111,9 +111,6 @@ public abstract class Agent {
 
             while (goOn) {
                 try {
-                	if(isPaused) {
-                		pause.acquire();
-                	}
                     // The agent sleeps here until someone calls, stateChanged(),
                     // which causes a call to stateChange.give(), which wakes up agent.
                     stateChange.acquire();
@@ -121,7 +118,11 @@ public abstract class Agent {
                     //When the agent wakes up it will call respondToStateChange()
                     //repeatedly until it returns FALSE.
                     //You will see that pickAndExecuteAnAction() is the agent scheduler.
-                    while (pickAndExecuteAnAction()) ;
+                    while (pickAndExecuteAnAction()) {
+                    	if(isPaused) {
+                    		pause.acquire();
+                    	}
+                    }
                 } catch (InterruptedException e) {
                     // no action - expected when stopping or when deadline changed
                 } catch (Exception e) {
@@ -180,8 +181,8 @@ public abstract class Agent {
     	}
     }
     
-    static final Food steak = new Food("steak", 20);
-    static final Food chicken = new Food("chicken", 10);
-    static final Food fish = new Food("fish", 15);
+    static final Food steak = new Food("steak", 15);
+    static final Food chicken = new Food("chicken", 5);
+    static final Food fish = new Food("fish", 10);
 }
 

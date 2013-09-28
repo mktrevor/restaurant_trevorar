@@ -38,7 +38,7 @@ public class HostAgent extends Agent {
 		// make some tables
 		tables = new ArrayList<Table>(NTABLES);
 		for (int i = 1; i <= NTABLES; i++) {
-			tables.add(new Table(i));//how you add to a collections
+			tables.add(new Table(i));
 		}
 	}
 

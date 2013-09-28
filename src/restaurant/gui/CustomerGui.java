@@ -27,7 +27,7 @@ public class CustomerGui implements Gui{
 	private enum customerState { waiting, wantsToOrder, ordered, eating, doneEating };
 	private customerState state = customerState.waiting;
 
-	public CustomerGui(CustomerAgent c, RestaurantGui gui){ //HostAgent m) {
+	public CustomerGui(CustomerAgent c, RestaurantGui gui){
 		agent = c;
 		xPos = -60;
 		yPos = -60;

@@ -16,8 +16,11 @@ public class WaiterGui implements Gui {
 	private static final int XPOS = -30, YPOS = -30;
 	
 	private boolean moving = false;
+	private boolean carryingFood = false;
 
     private WaiterAgent agent = null;
+    
+    String currentFood;
 
     private int xPos = XPOS, yPos = YPOS;//default waiter position
     private int xDestination = XPOS, yDestination = YPOS;//default start position
@@ -57,6 +60,16 @@ public class WaiterGui implements Gui {
         g.setFont(font);
         g.setColor(Color.WHITE);
         g.drawString("W", xPos + 5, yPos + 22);
+        
+        if(carryingFood) {
+        	g.setColor(Color.WHITE);
+        	g.fillRect(xPos - 20, yPos + 10, 20, 20);
+
+            g.setFont(new Font("Arial", Font.BOLD, 12));
+            g.setColor(Color.BLACK);
+            String choiceLetter = currentFood.substring(0,2); // First two letters of current food
+            g.drawString(choiceLetter, xPos -16, yPos + 25);
+        }
     }
 
     public boolean isPresent() {
@@ -83,12 +96,21 @@ public class WaiterGui implements Gui {
     
     public void DoGoToCook() {
     	xDestination = 630;
-    	yDestination = 630;
+    	yDestination = 600;
     	moving = true;
     }
 
     public void DoLeaveCustomer() {
         xDestination += 60;
         yDestination -= 60;
+    }
+    
+    public void deliveringFood(String food) {
+    	currentFood = food;
+    	carryingFood = true;
+    }
+    
+    public void foodDelivered() {
+    	carryingFood = false;
     }
 }
