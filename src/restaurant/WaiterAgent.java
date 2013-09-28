@@ -59,6 +59,7 @@ public class WaiterAgent extends Agent {
 		for(MyCustomer mc : customers) {
 			if(mc.c == c) {
 				mc.s = customerState.waiting;
+				mc.table = table;
 				stateChanged();
 				return;
 			}
