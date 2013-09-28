@@ -129,6 +129,7 @@ public class WaiterAgent extends Agent {
 		}
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.foodReady) {
+				System.out.println("FOOD READY FOR TABLE" + mc.table);
 				bringFoodToCustomer(mc);
 				return true;
 			}
@@ -226,8 +227,8 @@ public class WaiterAgent extends Agent {
 			e.printStackTrace();
 		}
 		
-		c.s = customerState.served;
 		print("Here is your " + c.choice + ".");
+		c.s = customerState.served;
 		waiterGui.foodDelivered();
 		c.c.msgHereIsYourFood(c.choice);
 
@@ -238,6 +239,7 @@ public class WaiterAgent extends Agent {
 		c.s = customerState.leftRestaurant;
 		host.msgTableIsFree(c.table, this);
 		print("Table " + c.table + " is free!");
+		c.table = 0;
 	}
 
 	// The animation DoXYZ() routines
