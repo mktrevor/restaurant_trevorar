@@ -28,8 +28,6 @@ public class WaiterAgent extends Agent {
 	private String name;
 	private Semaphore atDestination = new Semaphore(0, true);
 	private Semaphore customerAtTable = new Semaphore(0, true);
-	//private Semaphore atTable = new Semaphore(0,true);
-	//private Semaphore atCook = new Semaphore(0, true);
 	
 	public WaiterGui waiterGui = null;
 
@@ -103,6 +101,7 @@ public class WaiterAgent extends Agent {
 	
 	public void msgAtDestination() {
 		atDestination.release();
+		System.out.println("semaphore released!!!");
 		stateChanged();
 	}
 	

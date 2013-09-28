@@ -69,7 +69,7 @@ public class CustomerGui implements Gui{
 
 	public void draw(Graphics2D g) {
         g.setColor(Color.GREEN);
-        g.fillRect(xPos, xPos, 30, 30);
+        g.fillRect(xPos, yPos, 30, 30);
         
         Font font = new Font("Arial", Font.BOLD, 20);
         g.setFont(font);
@@ -82,19 +82,31 @@ public class CustomerGui implements Gui{
         	g.fillOval(xPos + 8, yPos - 22, 26, 20); // This oval becomes a border
         	g.setColor(Color.WHITE);
         	g.fillOval(xPos + 10, yPos - 20, 22, 16);
-        	
-        	
-        	Font font2 = new Font("Arial", Font.BOLD, 16);
-            g.setFont(font2);
+
+            g.setFont(new Font("Arial", Font.BOLD, 16));
             g.setColor(Color.BLACK);
             g.drawString("!", xPos + 20, yPos - 6);
+            break;
         	
         case ordered:
+        	g.setColor(Color.WHITE);
+        	g.fillRect(xPos + 10, yPos + 30, 20, 20);
+
+            g.setFont(new Font("Arial", Font.BOLD, 12));
+            g.setColor(Color.BLACK);
+            String choiceLetter = choice.substring(0,2); // First two letters of choice
+            g.drawString(choiceLetter + "?", xPos + 11, yPos + 45);
+            break;
         	
         case eating:
-        	
-        	
+        	g.setColor(Color.WHITE);
+        	g.fillRect(xPos + 10, yPos + 30, 20, 20);
 
+            g.setFont(new Font("Arial", Font.BOLD, 12));
+            g.setColor(Color.BLACK);
+            String choiceLetter2 = choice.substring(0,2); // First two letters of choice
+            g.drawString(choiceLetter2, xPos + 14, yPos + 45);
+        	break;
         }
     }
 

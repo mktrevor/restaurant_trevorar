@@ -184,6 +184,7 @@ public class CustomerAgent extends Agent {
 				break;
 		}
 		
+		customerGui.orderedFood(choice);
 		print(choice + " please!");
 		
 		waiter.msgHereIsMyChoice(this, choice);
