@@ -92,7 +92,6 @@ public class WaiterAgent extends Agent {
 	public void msgImDoneEating(CustomerAgent c) {
 		for(MyCustomer mc : customers) {
 			if(mc.c == c) {
-				print("Table " + mc.table + " is free!");
 				mc.s = customerState.finished;
 			}
 		}
@@ -101,7 +100,6 @@ public class WaiterAgent extends Agent {
 	
 	public void msgAtDestination() {
 		atDestination.release();
-		System.out.println("semaphore released!!!");
 		stateChanged();
 	}
 	
@@ -231,6 +229,7 @@ public class WaiterAgent extends Agent {
 	private void tellHostCustomerIsDone(MyCustomer c) {
 		c.s = customerState.leftRestaurant;
 		host.msgTableIsFree(c.table, this);
+		print("Table " + c.table + " is free!");
 	}
 
 	// The animation DoXYZ() routines

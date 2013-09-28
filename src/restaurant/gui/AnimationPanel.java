@@ -14,9 +14,6 @@ public class AnimationPanel extends JPanel implements ActionListener {
     private static final int WINDOWY = 600;
     private static final int TIMER_INTERVAL = 20;
     
-    //private Image bufferImage;
-    //private Dimension bufferSize;
-    
     private ImageIcon tableIcon = new ImageIcon("images/table.png");
     private final int NUM_TABLES = 4;
 
@@ -32,14 +29,6 @@ public class AnimationPanel extends JPanel implements ActionListener {
         Timer timer = new Timer(TIMER_INTERVAL, this);
         timer.start();
     }
-    /*public AnimationPanel() {
-    	setSize(WINDOWX, WINDOWY);
-        
-        bufferSize = this.getSize();
-        
-    	Timer timer = new Timer(TIMER_INTERVAL, this );
-    	timer.start();
-    }*/
 
 	public void actionPerformed(ActionEvent e) {
 		repaint();  //Will have paintComponent called
@@ -58,9 +47,18 @@ public class AnimationPanel extends JPanel implements ActionListener {
 			//g2.drawLine(40 * i, 0, 40 * i, 600);
 			g2.drawLine(20 * i, 0, 0, 20 * i);
 		}
-		for(int i = -35; i < 35; i++) {
-			g2.drawLine(0, 20 * i, 800, 20 * i + 600);
+		for(int i = -40; i < 40; i++) {
+			g2.drawLine(0, 20 * i, 800, 20 * i + 800);
 		}
+		
+		g2.setColor(Color.BLACK);
+		g2.fillRect(250,  5, 250, 40);
+		g2.setColor(Color.WHITE);
+		g2.fillRect(252, 7, 246, 36);
+		
+		g2.setColor(Color.BLACK);
+		g2.setFont(new Font("Verdana", Font.BOLD, 24));
+		g2.drawString("Restaurant V2", 275, 35);
         
 		//Drawing tables
         g2.setColor(new Color(105, 75, 35)); // RGB values for brown

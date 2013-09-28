@@ -59,7 +59,6 @@ public class CustomerGui implements Gui{
 			}
 			else if (command==Command.LeaveRestaurant) {
 				agent.msgAnimationDoneEatingFood();
-				System.out.println("about to call gui.setCustomerEnabled(agent);");
 				isHungry = false;
 				gui.setCustomerEnabled(agent);
 			}
