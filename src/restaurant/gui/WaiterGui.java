@@ -68,12 +68,12 @@ public class WaiterGui implements Gui {
     }
     
     public void draw(Graphics2D g) {
-        g.setColor(Color.GREEN);
+        g.setColor(Color.BLACK);
         g.fillRect(xPos, yPos, 30, 30);
 
         Font font = new Font("Arial", Font.BOLD, 20);
         g.setFont(font);
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         g.drawString("W", xPos + 5, yPos + 22);
     }
 

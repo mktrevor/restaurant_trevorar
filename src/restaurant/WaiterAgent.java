@@ -194,7 +194,7 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void sendOrderToCook(MyCustomer c) {
-		print("Sending " + c.c.getName() + "'s order of " + c.choice + " to cook.");
+		print("Sending " + c.c.getName() + "'s order of " + c.choice + " to cook wirelessly. Isn't technology great?");
 		waiterGui.DoGoToCook();
 		
 		c.s = customerState.orderSentToCook;

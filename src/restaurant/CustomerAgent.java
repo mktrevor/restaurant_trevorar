@@ -162,10 +162,13 @@ public class CustomerAgent extends Agent {
 	
 	private void callWaiter() {
 		waiter.msgImReadyToOrder(this);
+		customerGui.wantToOrder();
 	}
 	
 	private void orderFood() {
 		print("I'm ordering!");
+		
+		// Convert 1st letter of customer's name to a number between 0 and 2 in order to determine food choice.
 		int choiceNum = ((int) name.charAt(0)) % 3;
 		switch(choiceNum) {
 			case 0:

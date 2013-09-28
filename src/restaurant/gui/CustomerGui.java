@@ -14,6 +14,7 @@ public class CustomerGui implements Gui{
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 	private boolean isEating = false;
+	String choice;
 
 	private WaiterGui waiterGui;
 	RestaurantGui gui;
@@ -22,11 +23,9 @@ public class CustomerGui implements Gui{
 	private int xDestination, yDestination;
 	private enum Command {noCommand, GoToSeat, LeaveRestaurant};
 	private Command command=Command.noCommand;
-
-	public static final int xTable = 200;
-	public static final int yTable = 250;
-
-	private final int CUSTOMER_WIDTH = 20, CUSTOMER_LENGTH = 20;
+	
+	private enum customerState { waiting, wantsToOrder, ordered, eating, doneEating };
+	private customerState state = customerState.waiting;
 
 	public CustomerGui(CustomerAgent c, RestaurantGui gui){ //HostAgent m) {
 		agent = c;
@@ -34,7 +33,6 @@ public class CustomerGui implements Gui{
 		yPos = -60;
 		xDestination = -60;
 		yDestination = -60;
-		//maitreD = m;
 		this.gui = gui;
 		
         tableLocations.put(new Integer(1), new Dimension(200, 200));
@@ -70,23 +68,46 @@ public class CustomerGui implements Gui{
 	}
 
 	public void draw(Graphics2D g) {
-        g.setColor(Color.BLACK);
+        g.setColor(Color.GREEN);
         g.fillRect(xPos, xPos, 30, 30);
         
         Font font = new Font("Arial", Font.BOLD, 20);
         g.setFont(font);
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.drawString("C", xPos + 8, yPos + 22);
+        
+        switch(state) {
+        case wantsToOrder: 
+        	g.setColor(Color.BLACK);
+        	g.fillOval(xPos + 8, yPos - 22, 26, 20); // This oval becomes a border
+        	g.setColor(Color.WHITE);
+        	g.fillOval(xPos + 10, yPos - 20, 22, 16);
+        	
+        	
+        	Font font2 = new Font("Arial", Font.BOLD, 16);
+            g.setFont(font2);
+            g.setColor(Color.BLACK);
+            g.drawString("!", xPos + 20, yPos - 6);
+        	
+        case ordered:
+        	
+        case eating:
+        	
+        	
+
+        }
     }
 
 	public boolean isPresent() {
 		return isPresent;
 	}
+	
 	public void setHungry() {
 		isHungry = true;
 		agent.msgGotHungry();
 		setPresent(true);
 	}
+	
 	public boolean isHungry() {
 		return isHungry;
 	}
@@ -103,38 +124,27 @@ public class CustomerGui implements Gui{
 		xDestination = (int) tableLocations.get(table).getWidth(); // X coordinate of table
 		yDestination = (int) tableLocations.get(table).getHeight(); // Y coordinate of table
 	}
+	
+	public void wantToOrder() {
+		state = customerState.wantsToOrder;
+	}
+	
+	public void orderedFood(String choice) {
+		this.choice = choice;
+		state = customerState.ordered;
+	}
 
 	public void startedEating(String choice) {
-		isEating = true;
+		state = customerState.eating;
 	}
 	
 	public void doneEating() {
-		isEating = false;
+		state = customerState.doneEating;
 	}
 	
 	public void DoExitRestaurant() {
-		xDestination = -40;
-		yDestination = -40;
+		xDestination = -60;
+		yDestination = -60;
 		command = Command.LeaveRestaurant;
 	}
-	
-	public boolean getEating() {
-		return isEating;
-	}
-	
-	public Image getFoodImage() {
-		return foodIcon.getImage();
-	}
-	
-    public int getXPos() {
-        return xPos;
-    }
-
-    public int getYPos() {
-        return yPos;
-    }
-    
-    public Image getImage() {
-    	return customerIcon.getImage();
-    }
 }
