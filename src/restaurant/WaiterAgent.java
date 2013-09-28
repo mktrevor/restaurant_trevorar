@@ -56,6 +56,13 @@ public class WaiterAgent extends Agent {
 	// Messages
 	
 	public void msgPleaseSeatCustomer(HostAgent h, CustomerAgent c, int table) {
+		for(MyCustomer mc : customers) {
+			if(mc.c == c) {
+				mc.s = customerState.waiting;
+				stateChanged();
+				return;
+			}
+		}
 		customers.add(new MyCustomer(c, table, customerState.waiting));
 		stateChanged();
 	}
