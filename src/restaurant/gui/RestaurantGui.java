@@ -3,13 +3,16 @@ package restaurant.gui;
 import restaurant.CustomerAgent;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import java.awt.*;
 import java.awt.event.*;
 /**
  * Main GUI class.
  * Contains the main frame and subsequent panels
  */
-public class RestaurantGui extends JFrame implements ActionListener {
+public class RestaurantGui extends JFrame implements ActionListener, ChangeListener {
     /* The GUI has two frames, the control frame (in variable gui) 
      * and the animation frame, (in variable animationFrame within gui)
      */
@@ -33,9 +36,14 @@ public class RestaurantGui extends JFrame implements ActionListener {
     private JLabel infoLabel; //part of infoPanel
     private JCheckBox stateCB;//part of infoLabel
     
-    private JPanel pausePanel;
+    private JLabel pauseLabel;
+    private JLabel hungryLabel;
+    private JButton makeHungry;
+    private JPanel optionPanel;
     private JButton pauseButton;
     private JButton resumeButton;
+    private JLabel speedLabel;
+    private JSlider speedSlider;
     
     private Object currentPerson;/* Holds the agent that the info is about.
     								Seems like a hack */
@@ -73,7 +81,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
         add(animationPanel, BorderLayout.CENTER);
         
         // Now, setup the info panel
-        Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .25));
+        Dimension infoDim = new Dimension(WINDOWX/3, (int) (WINDOWY * .2));
         infoPanel = new JPanel();
         infoPanel.setPreferredSize(infoDim);
         infoPanel.setMinimumSize(infoDim);
@@ -93,19 +101,35 @@ public class RestaurantGui extends JFrame implements ActionListener {
         
         add(infoPanel, BorderLayout.SOUTH);
         
+        //Extra checkbox to make customer hungry again
+        makeHungry = new JButton("I'm hungry!");
+        makeHungry.setEnabled(false);
+        makeHungry.addActionListener(this);
+        
         //The pause/resume buttons;
         pauseButton = new JButton("Pause");
         pauseButton.addActionListener(this);
         resumeButton = new JButton("Resume");
         resumeButton.addActionListener(this);
         resumeButton.setEnabled(false);
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 6, 30, animationPanel.getTimerInterval());
+        speedSlider.addChangeListener(this);
         
-        pausePanel = new JPanel();
+        hungryLabel = new JLabel("Make hungry (select customer): ");
+        pauseLabel = new JLabel("                Pause/Resume: ");
+        speedLabel = new JLabel("                Animation Speed: ");
         
-        pausePanel.add(pauseButton);
-        pausePanel.add(resumeButton);
+        optionPanel = new JPanel();
         
-        add(pausePanel, BorderLayout.NORTH);
+        optionPanel.add(hungryLabel);
+        optionPanel.add(makeHungry);
+        optionPanel.add(pauseLabel);
+        optionPanel.add(pauseButton);
+        optionPanel.add(resumeButton);
+        optionPanel.add(speedLabel);
+        optionPanel.add(speedSlider);
+        
+        add(optionPanel, BorderLayout.NORTH);
     }
     /**
      * updateInfoPanel() takes the given customer (or, for v3, Host) object and
@@ -124,6 +148,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
             stateCB.setSelected(customer.getGui().isHungry());
           //Is customer hungry? Hack. Should ask customerGui
             stateCB.setEnabled(!customer.getGui().isHungry());
+            makeHungry.setEnabled(!customer.getGui().isHungry());
           // Hack. Should ask customerGui
             infoLabel.setText(
                "<html><pre>     Name: " + customer.getName() + " </pre></html>");
@@ -141,7 +166,17 @@ public class RestaurantGui extends JFrame implements ActionListener {
                 CustomerAgent c = (CustomerAgent) currentPerson;
                 c.getGui().setHungry();
                 stateCB.setEnabled(false);
+                makeHungry.setEnabled(false);
             }
+        }
+        if(e.getSource() == makeHungry) {
+        	if(currentPerson instanceof CustomerAgent) {
+        		CustomerAgent c = (CustomerAgent) currentPerson;
+        		c.getGui().setHungry();
+        		makeHungry.setEnabled(false);
+                stateCB.setSelected(c.getGui().isHungry());
+        		stateCB.setEnabled(false);
+        	}
         }
         if(e.getSource() == pauseButton) {
         	restPanel.pause();
@@ -153,6 +188,13 @@ public class RestaurantGui extends JFrame implements ActionListener {
         	resumeButton.setEnabled(false);
         	pauseButton.setEnabled(true);
         }
+    }
+    
+    public void stateChanged(ChangeEvent e) {
+    	JSlider slider = (JSlider) e.getSource();
+    	if(!slider.getValueIsAdjusting()) {
+    		animationPanel.setSpeed((int) (31 - slider.getValue())); // Sets the animation panel timer interval between 1 and 25
+    	}
     }
     /**
      * Message sent from a customer gui to enable that customer's

@@ -17,6 +17,8 @@ public class AnimationPanel extends JPanel implements ActionListener {
     private final int NUM_TABLES = 4;
 
     private List<Gui> guis = new ArrayList<Gui>();
+    
+    private Timer timer;
 
     public AnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
@@ -25,7 +27,7 @@ public class AnimationPanel extends JPanel implements ActionListener {
     	setMinimumSize(new Dimension(WINDOWX, WINDOWY));
         setVisible(true);
     	
-        Timer timer = new Timer(TIMER_INTERVAL, this);
+        timer = new Timer(TIMER_INTERVAL, this);
         timer.start();
     }
 
@@ -100,5 +102,15 @@ public class AnimationPanel extends JPanel implements ActionListener {
 	
 	public void addGui(CookGui gui) {
 		guis.add(gui);
+	}
+	
+	public int getTimerInterval() {
+		return TIMER_INTERVAL;
+	}
+	
+	public void setSpeed(int s) {
+		timer.stop();
+		timer = new Timer(s, this);
+		timer.start();
 	}
 }

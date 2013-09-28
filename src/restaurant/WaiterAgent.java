@@ -129,7 +129,6 @@ public class WaiterAgent extends Agent {
 		}
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.foodReady) {
-				System.out.println("FOOD READY FOR TABLE" + mc.table);
 				bringFoodToCustomer(mc);
 				return true;
 			}
