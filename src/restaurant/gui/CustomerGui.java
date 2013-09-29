@@ -16,6 +16,8 @@ public class CustomerGui implements Gui{
 	private boolean isEating = false;
 	String choice;
 
+	private static final int WIDTH = 30, HEIGHT = 30;
+
 	private WaiterGui waiterGui;
 	RestaurantGui gui;
 
@@ -29,12 +31,13 @@ public class CustomerGui implements Gui{
 
 	public CustomerGui(CustomerAgent c, RestaurantGui gui){
 		agent = c;
-		xPos = -60;
-		yPos = -60;
-		xDestination = -60;
-		yDestination = -60;
+		xPos = -2 * WIDTH;
+		yPos = -2 * HEIGHT;
+		xDestination = -2 * WIDTH;
+		yDestination = -2 * HEIGHT;
 		this.gui = gui;
 		
+        // Initial mapping of table locations!
         tableLocations.put(new Integer(1), new Dimension(200, 200));
         tableLocations.put(new Integer(2), new Dimension(450, 200));
         tableLocations.put(new Integer(3), new Dimension(200, 400));
@@ -68,15 +71,17 @@ public class CustomerGui implements Gui{
 
 	public void draw(Graphics2D g) {
         g.setColor(Color.GREEN);
-        g.fillRect(xPos, yPos, 30, 30);
+        g.fillRect(xPos, yPos, WIDTH, HEIGHT); // Position/size of customer gui
         
+        // This draws a "C" on the customer gui
         Font font = new Font("Arial", Font.BOLD, 20);
         g.setFont(font);
         g.setColor(Color.BLACK);
-        g.drawString("C", xPos + 8, yPos + 22);
+        g.drawString("C", xPos + 8, yPos + 22);   
         
+        // Switch statement to determine if food needs to be displayed on the table
         switch(state) {
-        case wantsToOrder: 
+        case wantsToOrder: // This case draws a white oval with a black border that contains a "!" meaning the customer wants to order
         	g.setColor(Color.BLACK);
         	g.fillOval(xPos + 8, yPos - 22, 26, 20); // This oval becomes a border
         	g.setColor(Color.WHITE);
@@ -87,7 +92,7 @@ public class CustomerGui implements Gui{
             g.drawString("!", xPos + 20, yPos - 6);
             break;
         	
-        case ordered:
+        case ordered: // This case draws a white square with the ordered food's first two letters and a question mark on the table
         	g.setColor(Color.WHITE);
         	g.fillRect(xPos + 10, yPos + 30, 20, 20);
 
@@ -97,7 +102,7 @@ public class CustomerGui implements Gui{
             g.drawString(choiceLetter + "?", xPos + 11, yPos + 45);
             break;
         	
-        case eating:
+        case eating: // This case draws a white square with the delivered food's first two letters on the table
         	g.setColor(Color.WHITE);
         	g.fillRect(xPos + 10, yPos + 30, 20, 20);
 
@@ -131,7 +136,7 @@ public class CustomerGui implements Gui{
 		command = Command.GoToSeat;
 	}
 	
-	public void GivenTableNumber(int table) {//later you will map seatnumber to table coordinates.
+	public void GivenTableNumber(int table) {
 		xDestination = (int) tableLocations.get(table).getWidth(); // X coordinate of table
 		yDestination = (int) tableLocations.get(table).getHeight(); // Y coordinate of table
 	}
@@ -154,8 +159,9 @@ public class CustomerGui implements Gui{
 	}
 	
 	public void DoExitRestaurant() {
-		xDestination = -60;
-		yDestination = -60;
+		// These coordinates are the initial off-screen coordinates
+		xDestination = -2 * WIDTH;
+		yDestination = -2 * HEIGHT;
 		command = Command.LeaveRestaurant;
 	}
 }

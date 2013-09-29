@@ -36,6 +36,7 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
     private JLabel infoLabel; //part of infoPanel
     private JCheckBox stateCB;//part of infoLabel
     
+    //Components of an option panel that allows the user to make customers hungry, pause/resume, and change the animation speed
     private JLabel pauseLabel;
     private JLabel hungryLabel;
     private JButton makeHungry;
@@ -112,7 +113,7 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         resumeButton = new JButton("Resume");
         resumeButton.addActionListener(this);
         resumeButton.setEnabled(false);
-        speedSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, animationPanel.getTimerInterval());
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, animationPanel.getTimerInterval()); // A slider for animation speed
         speedSlider.addChangeListener(this);
         
         hungryLabel = new JLabel("Make hungry (select customer): ");
@@ -144,12 +145,12 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         if (person instanceof CustomerAgent) {
             CustomerAgent customer = (CustomerAgent) person;
             stateCB.setText("Hungry?");
-          //Should checkmark be there? 
+
             stateCB.setSelected(customer.getGui().isHungry());
-          //Is customer hungry? Hack. Should ask customerGui
+
             stateCB.setEnabled(!customer.getGui().isHungry());
             makeHungry.setEnabled(!customer.getGui().isHungry());
-          // Hack. Should ask customerGui
+
             infoLabel.setText(
                "<html><pre>     Name: " + customer.getName() + " </pre></html>");
         }

@@ -8,7 +8,7 @@ import java.util.concurrent.*;
  * Base class for simple agents
  */
 public abstract class Agent {
-    Semaphore stateChange = new Semaphore(1, true);//binary semaphore, fair
+    Semaphore stateChange = new Semaphore(1, true);
     Semaphore pause = new Semaphore(0, true);
     boolean isPaused = false;
     private AgentThread agentThread;
@@ -181,8 +181,8 @@ public abstract class Agent {
     	}
     }
     
-    static final Food steak = new Food("steak", 10);
-    static final Food chicken = new Food("chicken", 5);
-    static final Food fish = new Food("fish", 8);
+    static final Food steak = new Food("steak", 8); // Steak cooks in 8 seconds
+    static final Food chicken = new Food("chicken", 3); // Chicken cooks in 3 seconds
+    static final Food fish = new Food("fish", 5); // Fish cooks in 5 seconds
 }
 

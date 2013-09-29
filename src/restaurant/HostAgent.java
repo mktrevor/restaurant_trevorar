@@ -83,16 +83,6 @@ public class HostAgent extends Agent {
 		}
 		stateChanged();
 	}
-
-	/*public void msgLeavingTable(CustomerAgent cust) {
-		for (Table table : tables) {
-			if (table.getOccupant() == cust) {
-				print(cust + " leaving " + table);
-				table.setUnoccupied();
-				stateChanged();
-			}
-		}
-	}*/
 	
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -127,6 +117,7 @@ public class HostAgent extends Agent {
 	
 	private void seatCustomer(MyCustomer mc, Table table) {
 		MyWaiter leastBusyWaiter = waiters.get(0);
+		// This loop finds the waiter that is currently dealing with the least number of customers
 		for(MyWaiter mw : waiters) {
 			if(mw.numCustomers < leastBusyWaiter.numCustomers) {
 				leastBusyWaiter = mw;
@@ -135,19 +126,12 @@ public class HostAgent extends Agent {
 
 		leastBusyWaiter.w.msgPleaseSeatCustomer(this, mc.c, table.tableNumber);
 		print(leastBusyWaiter.w.getName() + ", could you please seat customer " + mc.c.getName() + "?");
-		leastBusyWaiter.numCustomers++; //Assigned a new customer to the least busy waiter
+		leastBusyWaiter.numCustomers++; // Assigned a new customer to the least busy waiter
 		mc.waiting = false;
 		table.occupied = true;
 	}
 
 	// The animation DoXYZ() routines
-	private void DoSeatCustomer(CustomerAgent customer, Table table) {
-		//Notice how we print "customer" directly. It's toString method will do it.
-		//Same with "table"
-		print("Seating " + customer + " at " + table);
-		hostGui.DoBringToTable(customer, table.tableNumber);
-
-	}
 
 	//utilities
 
@@ -160,7 +144,6 @@ public class HostAgent extends Agent {
 	}
 
 	private class Table {
-		//CustomerAgent occupiedBy; (Waiter)
 		int tableNumber;
 		
 		boolean occupied;
@@ -168,24 +151,7 @@ public class HostAgent extends Agent {
 		Table(int tableNumber) {
 			this.tableNumber = tableNumber;
 		}
-
-		//Waiter code!
-		/*void setOccupant(CustomerAgent cust) {
-			occupiedBy = cust;
-		}
-
-		void setUnoccupied() {
-			occupiedBy = null;
-		}
-
-		CustomerAgent getOccupant() {
-			return occupiedBy;
-		}
-
-		boolean isOccupied() {
-			return occupiedBy != null;
-		}*/
-
+		
 		public String toString() {
 			return "table " + tableNumber;
 		}
@@ -197,7 +163,7 @@ public class HostAgent extends Agent {
 		
 		MyWaiter(WaiterAgent w) {
 			this.w = w;
-			numCustomers = 0;
+			numCustomers = 0; // Waiters start out with no customers
 		}
 	}
 	
@@ -211,7 +177,3 @@ public class HostAgent extends Agent {
 		}
 	}
 }
-
-
-
-

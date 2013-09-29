@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 public class WaiterGui implements Gui {
 	
 	private static final int XPOS = -30, YPOS = -30;
+	private static final int WIDTH = 30, HEIGHT = 30;
+	private final int COOK_X = 630, COOK_Y = 600;
 	
 	private boolean moving = false;
 	private boolean carryingFood = false;
@@ -27,8 +29,8 @@ public class WaiterGui implements Gui {
 
     public WaiterGui(WaiterAgent agent) {
         this.agent = agent;
-        
-        //Map for table locations
+
+        // Initial mapping of table locations!
         tableLocations.put(new Integer(1), new Dimension(200, 200));
         tableLocations.put(new Integer(2), new Dimension(450, 200));
         tableLocations.put(new Integer(3), new Dimension(200, 400));
@@ -53,15 +55,17 @@ public class WaiterGui implements Gui {
     }
     
     public void draw(Graphics2D g) {
-        g.setColor(Color.BLACK);
-        g.fillRect(xPos, yPos, 30, 30);
+        g.setColor(Color.BLACK); // Waiter gui is a black 30x30 square
+        g.fillRect(xPos, yPos, WIDTH, HEIGHT);
 
+        // This draws a "W" on the waiter gui
         Font font = new Font("Arial", Font.BOLD, 20);
         g.setFont(font);
         g.setColor(Color.WHITE);
         g.drawString("W", xPos + 5, yPos + 22);
         
         if(carryingFood) {
+        	// If the waiter is delivering food, this code adds the food to the waiter's animation
         	g.setColor(Color.WHITE);
         	g.fillRect(xPos - 20, yPos + 10, 20, 20);
 
@@ -77,8 +81,8 @@ public class WaiterGui implements Gui {
     }
 
     public void DoBringToTable(CustomerAgent c, int table) {
-    	xDestination = (int) tableLocations.get(table).getWidth() + 30;
-		yDestination = (int) tableLocations.get(table).getHeight() - 30;
+    	xDestination = (int) tableLocations.get(table).getWidth() + WIDTH;
+		yDestination = (int) tableLocations.get(table).getHeight() - HEIGHT;
 		moving = true;
         
         GiveTableNumberToCustomerGui(c, table);
@@ -89,20 +93,20 @@ public class WaiterGui implements Gui {
     }
     
     public void DoGoToTable(int table) {
-    	xDestination = (int) tableLocations.get(table).getWidth() + 30;
-		yDestination = (int) tableLocations.get(table).getHeight() - 30;
+    	xDestination = (int) tableLocations.get(table).getWidth() + WIDTH;
+		yDestination = (int) tableLocations.get(table).getHeight() - HEIGHT;
 		moving = true;
     }
     
     public void DoGoToCook() {
-    	xDestination = 630;
-    	yDestination = 600;
+    	xDestination = COOK_X;
+    	yDestination = COOK_Y;
     	moving = true;
     }
 
     public void DoLeaveCustomer() {
-        xDestination += 60;
-        yDestination -= 60;
+        xDestination += 2 * WIDTH;
+        yDestination -= 2 * HEIGHT;
     }
     
     public void deliveringFood(String food) {

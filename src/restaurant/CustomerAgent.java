@@ -240,8 +240,6 @@ public class CustomerAgent extends Agent {
 
 	public void setHungerLevel(int hungerLevel) {
 		this.hungerLevel = hungerLevel;
-		//could be a state change. Maybe you don't
-		//need to eat until hunger lever is > 5?
 	}
 
 	public String toString() {

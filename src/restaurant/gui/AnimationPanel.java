@@ -36,11 +36,10 @@ public class AnimationPanel extends JPanel implements ActionListener {
 	}
 	
 	public void paintComponent(Graphics g) {
-		//super.paintComponent(g);
+		super.paintComponent(g);
 		
-		// Background color = gray
 		Graphics2D g2 = (Graphics2D)g;
-		g2.setColor(new Color(190, 190, 190));
+		g2.setColor(new Color(190, 190, 190)); // Background color = gray
 		g2.fillRect(0, 0, WINDOWX, WINDOWY );
 		
 		// Drawing a pattern on the ground
@@ -51,8 +50,9 @@ public class AnimationPanel extends JPanel implements ActionListener {
 		for(int i = -40; i < 40; i++) {
 			g2.drawLine(0, 20 * i, 800, 20 * i + 800);
 		}
+		// End of floor pattern code
         
-		// Drawing tables
+		// Drawing tables at the correct locations
         g2.setColor(new Color(105, 75, 35)); // RGB values for brown
 		g2.fillRect(200, 200, 100, 60);
 		g2.fillRect(450, 200, 100, 60);
@@ -78,13 +78,13 @@ public class AnimationPanel extends JPanel implements ActionListener {
 		
 		// This draws a rectangular "Restaurant V2" sign
 		g2.setColor(Color.BLACK);
-		g2.fillRect(250,  5, 250, 40);
+		g2.fillRect(250,  5, 250, 40); // Size and position of restaurant sign border
 		g2.setColor(Color.WHITE);
-		g2.fillRect(252, 7, 246, 36);
+		g2.fillRect(252, 7, 246, 36); // Size and position of restaurant sign
 		
 		g2.setColor(Color.BLACK);
 		g2.setFont(new Font("Verdana", Font.BOLD, 24));
-		g2.drawString("Restaurant V2", 275, 35);
+		g2.drawString("Restaurant V2", 275, 35); // Position of text on restaurant sign
 	}
 
     public void addGui(CustomerGui gui) {

@@ -43,7 +43,7 @@ public class ListPanel extends JPanel implements ActionListener {
 
 		nameLabel = new JLabel("Enter name here:");
 		enterName = new JTextField();
-		enterName.setMaximumSize(new Dimension(200, 10));
+		enterName.setMaximumSize(new Dimension(200, 10)); // Size of text field to enter customer/waiter names
 		hungryChk = new JCheckBox("Hungry?");
 		hungryChk.setEnabled(false);
 
@@ -77,10 +77,8 @@ public class ListPanel extends JPanel implements ActionListener {
 	 * Method from the ActionListener interface.
 	 * Handles the event of the add button being pressed
 	 */
-	public void actionPerformed(ActionEvent e) { //HERE TOO
+	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addPersonB) {
-			// Chapter 2.19 describes showInputDialog()
-			//addPerson(JOptionPane.showInputDialog("Please enter a name:")); FINISH THIS
 			if(enterName.getText().trim().length() != 0) {
 				addPerson(enterName.getText().trim(), hungryChk.isSelected());
 				enterName.setText("");
@@ -96,9 +94,6 @@ public class ListPanel extends JPanel implements ActionListener {
 			hungryChk.setEnabled(true);
 		}
 		else {
-			// Isn't the second for loop more beautiful?
-			/*for (int i = 0; i < list.size(); i++) {
-                JButton temp = list.get(i);*/
 			for (JButton temp:list){
 				if (e.getSource() == temp)
 					restPanel.showInfo(type, temp.getText());

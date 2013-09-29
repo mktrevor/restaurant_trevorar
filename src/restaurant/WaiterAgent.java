@@ -40,10 +40,6 @@ public class WaiterAgent extends Agent {
 	public String getName() {
 		return name;
 	}
-
-	public List getCustomers() {
-		return customers;
-	}
 	
 	public void setHost(HostAgent h) {
 		this.host = h;
@@ -238,13 +234,11 @@ public class WaiterAgent extends Agent {
 		c.s = customerState.leftRestaurant;
 		host.msgTableIsFree(c.table, this);
 		print("Table " + c.table + " is free!");
-		c.table = 0;
+		c.table = 0; // Customer is no longer at one of the 4 tables
 	}
 
 	// The animation DoXYZ() routines
 	private void DoSeatCustomer(CustomerAgent customer, int table) {
-		//Notice how we print "customer" directly. It's toString method will do it.
-		//Same with "table"
 		print("Seating " + customer + " at " + table);
 		waiterGui.DoBringToTable(customer, table);
 	}

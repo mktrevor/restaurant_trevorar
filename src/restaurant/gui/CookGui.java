@@ -7,9 +7,11 @@ import restaurant.CookAgent;
 
 import java.awt.*;
 
+/* NOTE: This code is not used in Restaurant V2 */
+
 public class CookGui implements Gui {
 	
-	private static final int XPOS = -20, YPOS = -20;
+	private static final int XPOS = -30, YPOS = -30;
 	private static final int XTABLE = 200, YTABLE = 250;
 
     private CookAgent agent = null;
@@ -23,6 +25,7 @@ public class CookGui implements Gui {
     public CookGui(CookAgent agent) {
         this.agent = agent;
         
+        // Initial mapping of table locations!
         tableLocations.put(new Integer(1), new Dimension(200, 200));
         tableLocations.put(new Integer(2), new Dimension(450, 200));
         tableLocations.put(new Integer(3), new Dimension(200, 400));
@@ -43,7 +46,7 @@ public class CookGui implements Gui {
 
     public void draw(Graphics2D g) {
         g.setColor(Color.WHITE);
-        g.fillRect(xPos, yPos, 20, 20);
+        g.fillRect(xPos, yPos, 30, 30); // Size/position of gui
     }
 
     public boolean isPresent() {
