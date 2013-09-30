@@ -1,5 +1,8 @@
 #Restaurant V2 Agent Documentation
 
+##Interaction Diagram
+The interaction diagram can be found at http://www-scf.usc.edu/~csci201/readings/v2-interaction-diagram.gif
+
 ##Waiter Agent
 
 ###DATA
