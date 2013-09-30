@@ -67,6 +67,7 @@ public class HostAgent extends Agent {
 
 	public void msgImHungry(CustomerAgent c) {
 		customers.add(new MyCustomer(c));
+		print("Welcome to Restaurant V2, " + c.getName() + "!");
 		stateChanged();
 	}
 	

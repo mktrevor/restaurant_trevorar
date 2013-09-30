@@ -182,7 +182,7 @@ public abstract class Agent {
     }
     
     static final Food steak = new Food("steak", 8); // Steak cooks in 8 seconds
-    static final Food chicken = new Food("chicken", 3); // Chicken cooks in 3 seconds
-    static final Food fish = new Food("fish", 5); // Fish cooks in 5 seconds
+    static final Food chicken = new Food("chicken", 4); // Chicken cooks in 4 seconds
+    static final Food fish = new Food("fish", 6); // Fish cooks in 6 seconds
 }
 
