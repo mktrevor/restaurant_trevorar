@@ -187,9 +187,9 @@ public class WaiterAgent extends Agent {
 			e.printStackTrace();
 		}
 		
-		c.s = customerState.askedForOrder;
 		print("Taking order from: " + c.c.getName());
 		c.c.msgWhatDoYouWant();
+		c.s = customerState.askedForOrder;
 
 		DoLeaveCustomer();
 	}

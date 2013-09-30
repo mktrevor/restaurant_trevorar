@@ -66,6 +66,14 @@ public class HostAgent extends Agent {
 	// Messages
 
 	public void msgImHungry(CustomerAgent c) {
+		for(MyCustomer mc : customers) {
+			if(mc.c == c) {
+				mc.waiting = true;
+				print("Welcome to Restaurant V2, " + c.getName() + "!");
+				stateChanged();
+				return;
+			}
+		}
 		customers.add(new MyCustomer(c));
 		print("Welcome to Restaurant V2, " + c.getName() + "!");
 		stateChanged();
@@ -146,7 +154,6 @@ public class HostAgent extends Agent {
 
 	private class Table {
 		int tableNumber;
-		
 		boolean occupied;
 
 		Table(int tableNumber) {

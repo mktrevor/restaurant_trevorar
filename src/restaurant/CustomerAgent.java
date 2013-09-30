@@ -15,7 +15,6 @@ public class CustomerAgent extends Agent {
 	private String name;
 	private String choice;
 	private int hungerLevel = 8; // determines length of meal
-	private int tableNumber; // Variable to hold number of table to eat at
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
 
@@ -53,6 +52,7 @@ public class CustomerAgent extends Agent {
 	public String getCustomerName() {
 		return name;
 	}
+	
 	// Messages
 
 	public void msgGotHungry() {//from animation
