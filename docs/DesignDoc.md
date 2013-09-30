@@ -33,8 +33,10 @@ PleaseSeatCustomer(Customer c, int table) {
 }
 
 ImReadyToOrder(Customer c) {
+
 	MyCustomer mc = customers.find(c);
 	mc.s = readyToOrder;
+
 }
 
 HereIsMyChoice(Customer c, string choice) {
