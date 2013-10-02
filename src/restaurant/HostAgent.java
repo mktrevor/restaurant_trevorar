@@ -162,21 +162,13 @@ public class HostAgent extends Agent {
 	}
 	
 	private void giveWaiterABreak(MyWaiter w) {
+		w.iWantABreak = false;
 		if(waiters.size() == 1) {
 			w.w.msgSorryNoBreakNow();
 			print("Sorry, there's no one else to cover for you!");
-			w.iWantABreak = false;
 			return;
 		}
 		
-		for(MyWaiter mw : waiters) {
-			if(mw.state == waiterState.onBreak) {
-				w.w.msgSorryNoBreakNow();
-				print("Someone else is already on break!");
-				w.iWantABreak = false;
-				return;
-			}
-		}
 		w.w.msgFinishUpAndTakeABreak();
 		print("Alright, " + w.w.getName() + ", take a break!");
 		w.state = waiterState.onBreak;

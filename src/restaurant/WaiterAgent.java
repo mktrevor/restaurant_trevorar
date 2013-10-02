@@ -32,6 +32,9 @@ public class WaiterAgent extends Agent {
 	private enum waiterState { working, onBreak };
 	private waiterState state;
 	
+	private enum waiterEvent { none, backToWork, takeABreak };
+	private waiterEvent event = waiterEvent.none;
+	
 	public WaiterGui waiterGui = null;
 
 	public WaiterAgent(String name) {
@@ -120,7 +123,8 @@ public class WaiterAgent extends Agent {
 	}
 	
 	public void msgFinishUpAndTakeABreak() {
-		state = waiterState.onBreak;
+		event = waiterEvent.takeABreak;
+		stateChanged();
 	}
 	
 	public void msgAtDestination() {
@@ -176,8 +180,15 @@ public class WaiterAgent extends Agent {
 			}
 		}
 		
-		if(state == waiterState.onBreak) {
+		if(event == waiterEvent.takeABreak && state == waiterState.working) {
+			state = waiterState.onBreak;
 			takeABreak();
+			return true;
+		}
+		
+		if(event == waiterEvent.backToWork && state == waiterState.onBreak) {
+			state = waiterState.working;
+			return true;
 		}
 
 		return false;
@@ -309,8 +320,6 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void takeABreak() {
-		state = waiterState.onBreak;
-		
 		waiterGui.DoGoToBreakZone();
 		try {
 			atDestination.acquire();
@@ -327,7 +336,8 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void finishBreak() {
-		state = waiterState.working;
+		event = waiterEvent.backToWork;
+		print("Alright, I finished my break!");
 		host.msgImDoneWithMyBreak(this);
 	}
 
