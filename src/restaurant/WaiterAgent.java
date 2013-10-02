@@ -311,7 +311,7 @@ public class WaiterAgent extends Agent {
 	private void takeABreak() {
 		state = waiterState.onBreak;
 		
-		waiterGui.goToBreakZone();
+		waiterGui.DoGoToBreakZone();
 		try {
 			atDestination.acquire();
 		} catch (InterruptedException e) {
