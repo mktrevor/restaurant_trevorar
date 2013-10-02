@@ -148,8 +148,8 @@ public abstract class Agent {
     }
     
   //Code for food and menu classes    
-    public static class Menu {
-    	static List<Choice> choices = new ArrayList<Choice>();
+    public class Menu {
+    	private List<Choice> choices = new ArrayList<Choice>();
     	
     	public Menu() {
     		choices.add(new Choice("steak", 15.99));
@@ -165,7 +165,7 @@ public abstract class Agent {
     		return choices.size();
     	}
     	
-    	public void remove(String choice) {
+    	public void removeChoice(String choice) {
     		for(Choice c : choices) {
     			if(c.type == choice) {
     				choices.remove(c);

@@ -113,7 +113,7 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         resumeButton = new JButton("Resume");
         resumeButton.addActionListener(this);
         resumeButton.setEnabled(false);
-        speedSlider = new JSlider(JSlider.HORIZONTAL, 1, 35, animationPanel.getTimerInterval()); // A slider for animation speed
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, animationPanel.getTimerInterval()); // A slider for animation speed
         speedSlider.addChangeListener(this);
         
         hungryLabel = new JLabel("Make hungry (select customer): ");
@@ -194,7 +194,7 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
     public void stateChanged(ChangeEvent e) {
     	JSlider slider = (JSlider) e.getSource();
     	if(!slider.getValueIsAdjusting()) {
-    		animationPanel.setSpeed((int) (36 - slider.getValue())); // Sets the animation panel timer interval between 1 and 35
+    		animationPanel.setSpeed((int) (31 - slider.getValue())); // Sets the animation panel timer interval between 1 and 30
     	}
     }
     /**

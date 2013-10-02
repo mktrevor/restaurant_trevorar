@@ -41,6 +41,7 @@ public class CustomerAgent extends Agent {
 	 */
 	public CustomerAgent(String name){
 		super();
+		
 		this.name = name;
 	}
 
@@ -81,8 +82,14 @@ public class CustomerAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgPleaseReorder() {
+		state = AgentState.seated;
+		event = AgentEvent.askedToOrder;
+		stateChanged();
+	}
+	
 	public void msgRemoveFromMenu(String choice) {
-		m.removeChoice(choice);
+		menu.removeChoice(choice);
 	}
 	
 	public void msgHereIsYourFood(String choice) {
@@ -174,30 +181,18 @@ public class CustomerAgent extends Agent {
 	
 	private void orderFood() {
 		print("I'm ordering!");
-		
+
 		// Convert 1st letter of customer's name to a number between 0 and 2 in order to determine food choice.
-		int choiceNum = ((int) name.charAt(0)) % 3;
-		switch(choiceNum) {
-			case 0:
-				choice = "steak";
-				break;
-	
-			case 1:
-				choice = "chicken";
-				break;
-	
-			case 2:
-				choice = "fish";
-				break;
-		}
+		int choiceNum = ((int) name.charAt(0)) % menu.getMenuSize();
+		choice = menu.getChoice(choiceNum).getType();
 		
-		if(name == "steak") {
+		if(name.equals("steak")) {
 			choice = "steak";
 		}
-		if(name == "fish") {
+		if(name.equals("fish")) {
 			choice = "fish";
 		}
-		if(name == "chicken") {
+		if(name.equals("chicken")) {
 			choice = "chicken";
 		}
 		

@@ -98,6 +98,12 @@ public class WaiterGui implements Gui {
 		moving = true;
     }
     
+    public void DoGoToLobby() {
+    	xDestination = XPOS;
+    	yDestination = YPOS;
+    	moving = true;
+    }
+    
     public void DoGoToCook() {
     	xDestination = COOK_X;
     	yDestination = COOK_Y;

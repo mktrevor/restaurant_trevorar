@@ -29,11 +29,15 @@ public class WaiterAgent extends Agent {
 	private Semaphore atDestination = new Semaphore(0, true);
 	private Semaphore customerAtTable = new Semaphore(0, true);
 	
+	private enum waiterState { working, onBreak };
+	private waiterState state;
+	
 	public WaiterGui waiterGui = null;
 
 	public WaiterAgent(String name) {
 		super();
 
+		this.state = waiterState.working;
 		this.name = name;
 	}
 
@@ -87,7 +91,7 @@ public class WaiterAgent extends Agent {
 	public void msgOutOf(String choice, int table) {
 		for(MyCustomer mc : customers) {
 			if(mc.table == table) {
-				mc.s = customerState.readyToOrder;
+				mc.s = customerState.orderOut;
 			}
 			stateChanged();
 		}
@@ -96,7 +100,7 @@ public class WaiterAgent extends Agent {
 	public void msgOrderDone(String choice, int table) {
 		for(MyCustomer mc : customers) {
 			if(mc.table == table) {
-				mc.s = customerState.orderOut;
+				mc.s = customerState.foodReady;
 			}
 			stateChanged();
 		}
@@ -109,6 +113,14 @@ public class WaiterAgent extends Agent {
 			}
 		}
 		stateChanged();
+	}
+	
+	public void msgSorryNoBreakNow() {
+		print("This is inhumane!!! I deserve a raise!");
+	}
+	
+	public void msgFinishUpAndTakeABreak() {
+		state = waiterState.onBreak;
 	}
 	
 	public void msgAtDestination() {
@@ -152,6 +164,7 @@ public class WaiterAgent extends Agent {
 		}
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.orderOut) {
+				removeChoice(mc);
 				askToReorder(mc);
 				return true;
 			}
@@ -162,6 +175,10 @@ public class WaiterAgent extends Agent {
 				return true;
 			}
 		}
+		
+		if(state == waiterState.onBreak) {
+			takeABreak();
+		}
 
 		return false;
 	}
@@ -169,6 +186,19 @@ public class WaiterAgent extends Agent {
 	// Actions
 
 	private void seatCustomer(MyCustomer c) {
+
+		//HACK - always wants a break!
+		host.msgIWantABreak(this);
+		print("Give me a break!");
+		//******//
+		
+		waiterGui.DoGoToLobby();
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		c.c.msgFollowMe(this, new Menu());
 		
@@ -208,6 +238,12 @@ public class WaiterAgent extends Agent {
 
 		DoLeaveCustomer();
 	}
+
+	private void removeChoice(MyCustomer c) {
+		
+		print("Sorry, we're out of " + c.choice + ".");
+		c.c.msgRemoveFromMenu(c.choice);
+	}
 	
 	private void askToReorder(MyCustomer c) {
 		waiterGui.DoGoToTable(c.table);
@@ -219,10 +255,9 @@ public class WaiterAgent extends Agent {
 		}
 		
 		c.s = customerState.askedForOrder;
-		print("Sorry, we're out of " + c.choice + ".");
-		c.c.msgRemoveFromMenu(c.choice);
+		
 		print("Taking order from: " + c.c.getName());
-		c.c.msgWhatDoYouWant();
+		c.c.msgPleaseReorder();
 
 		DoLeaveCustomer();
 	}
@@ -268,6 +303,19 @@ public class WaiterAgent extends Agent {
 		host.msgTableIsFree(c.table, this);
 		print("Table " + c.table + " is free!");
 		c.table = 0; // Customer is no longer at one of the 4 tables
+	}
+	
+	private void takeABreak() {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			public void run() {
+				 finishBreak();
+			}
+		}, 10000 );
+	}
+	
+	private void finishBreak() {
+		host.msgImDoneWithMyBreak(this);
 	}
 
 	// The animation DoXYZ() routines

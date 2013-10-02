@@ -79,6 +79,23 @@ public class HostAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgIWantABreak(WaiterAgent w) {
+		for(MyWaiter mw : waiters) {
+			if(mw.w == w) {
+				mw.iWantABreak = true;
+			}
+		}
+	}
+	
+	public void msgImDoneWithMyBreak(WaiterAgent w) {
+		for(MyWaiter mw : waiters) {
+			if(mw.w == w) {
+				mw.iWantABreak = false;
+				mw.state = waiterState.working;
+			}
+		}
+	}
+	
 	public void msgTableIsFree(int table, WaiterAgent w) {
 		for (Table t : tables) {
 			if (t.tableNumber == table) {
@@ -97,11 +114,11 @@ public class HostAgent extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-		/* Think of this next rule as:
-            Does there exist a table and customer,
-            so that table is unoccupied and customer is waiting.
-            If so seat him at the table.
-		 */
+		for(MyWaiter w : waiters) {
+			if (w.iWantABreak) {
+				giveWaiterABreak(w);
+			}
+		}		
 		for (Table table : tables) {
 			if (!table.occupied) {
 				for(MyCustomer mc : customers) {
@@ -126,9 +143,13 @@ public class HostAgent extends Agent {
 	
 	private void seatCustomer(MyCustomer mc, Table table) {
 		MyWaiter leastBusyWaiter = waiters.get(0);
+		if(leastBusyWaiter.state == waiterState.onBreak) {
+			leastBusyWaiter = waiters.get(1);
+		}
+		
 		// This loop finds the waiter that is currently dealing with the least number of customers
 		for(MyWaiter mw : waiters) {
-			if(mw.numCustomers < leastBusyWaiter.numCustomers) {
+			if(mw.numCustomers < leastBusyWaiter.numCustomers && mw.state != waiterState.onBreak) {
 				leastBusyWaiter = mw;
 			}
 		}
@@ -138,6 +159,27 @@ public class HostAgent extends Agent {
 		leastBusyWaiter.numCustomers++; // Assigned a new customer to the least busy waiter
 		mc.waiting = false;
 		table.occupied = true;
+	}
+	
+	private void giveWaiterABreak(MyWaiter w) {
+		if(waiters.size() == 1) {
+			w.w.msgSorryNoBreakNow();
+			print("Sorry, there's no one else to cover for you!");
+			w.iWantABreak = false;
+			return;
+		}
+		
+		for(MyWaiter mw : waiters) {
+			if(mw.state == waiterState.onBreak) {
+				w.w.msgSorryNoBreakNow();
+				print("Someone else is already on break!");
+				w.iWantABreak = false;
+				return;
+			}
+		}
+		w.w.msgFinishUpAndTakeABreak();
+		print("Alright, " + w.w.getName() + ", take a break!");
+		w.state = waiterState.onBreak;
 	}
 
 	// The animation DoXYZ() routines
@@ -168,12 +210,17 @@ public class HostAgent extends Agent {
 	private class MyWaiter {
 		WaiterAgent w;
 		int numCustomers;
+		boolean iWantABreak;
+		waiterState state;
 		
 		MyWaiter(WaiterAgent w) {
 			this.w = w;
 			numCustomers = 0; // Waiters start out with no customers
+			state = waiterState.working;
 		}
 	}
+	
+	private enum waiterState { working, onBreak };
 	
 	private class MyCustomer {
 		CustomerAgent c;
