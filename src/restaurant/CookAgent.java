@@ -89,11 +89,28 @@ public class CookAgent extends Agent {
 		//Animation
 		//DoCooking(o) 
 		
+		Food thisFood = foods.get(o.choice);
+		
+		if(thisFood.amount == 0) {
+			print("We're all out of " + o.choice + "!");
+			
+			if(thisFood.state != orderingState.ordered) {
+				//Order more of this food!
+			}
+			
+			
+			return;
+		}
+		
+		if(thisFood.amount <= thisFood.low) {
+			
+		}
+		
 		print("Cooking up an order of " + o.choice + "!");
 		
 		o.s = orderState.cooking;
-		int cookTime = foods.get(o.choice).cookingTime * 1000;
-		
+		int cookTime = thisFood.cookingTime * 1000;
+				
 		timer.schedule(new TimerTask() {
 							public void run() {
 								 msgFoodDoneCooking(o);
