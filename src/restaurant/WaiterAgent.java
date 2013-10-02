@@ -19,7 +19,7 @@ public class WaiterAgent extends Agent {
 	= new ArrayList<MyCustomer>();
 	
 	private static enum customerState { waiting, seated, readyToOrder, 
-		askedForOrder, ordered, orderSentToCook, foodReady, served, finished, 
+		askedForOrder, ordered, orderSentToCook, orderOut, foodReady, served, finished, 
 		leftRestaurant };
 		
 	private HostAgent host;
@@ -84,10 +84,19 @@ public class WaiterAgent extends Agent {
 		}
 	}
 	
+	public void msgOutOf(String choice, int table) {
+		for(MyCustomer mc : customers) {
+			if(mc.table == table) {
+				mc.s = customerState.readyToOrder;
+			}
+			stateChanged();
+		}
+	}
+	
 	public void msgOrderDone(String choice, int table) {
 		for(MyCustomer mc : customers) {
 			if(mc.table == table) {
-				mc.s = customerState.foodReady;
+				mc.s = customerState.orderOut;
 			}
 			stateChanged();
 		}
@@ -142,6 +151,12 @@ public class WaiterAgent extends Agent {
 			}
 		}
 		for(MyCustomer mc : customers) {
+			if(mc.s == customerState.orderOut) {
+				askToReorder(mc);
+				return true;
+			}
+		}
+		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.ordered) {
 				sendOrderToCook(mc);
 				return true;
@@ -188,6 +203,24 @@ public class WaiterAgent extends Agent {
 		}
 		
 		c.s = customerState.askedForOrder;
+		print("Taking order from: " + c.c.getName());
+		c.c.msgWhatDoYouWant();
+
+		DoLeaveCustomer();
+	}
+	
+	private void askToReorder(MyCustomer c) {
+		waiterGui.DoGoToTable(c.table);
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		c.s = customerState.askedForOrder;
+		print("Sorry, we're out of " + c.choice + ".");
+		c.c.msgRemoveFromMenu(c.choice);
 		print("Taking order from: " + c.c.getName());
 		c.c.msgWhatDoYouWant();
 

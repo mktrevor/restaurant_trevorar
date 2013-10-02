@@ -21,6 +21,8 @@ public class CustomerAgent extends Agent {
 	// agent correspondents
 	private WaiterAgent waiter;
 	private HostAgent host;
+	
+	private Menu menu;
 
 	//    private boolean isHungry = false; //hack for gui
 	public enum AgentState
@@ -63,6 +65,7 @@ public class CustomerAgent extends Agent {
 	
 	public void msgFollowMe(WaiterAgent w, Menu m) {
 		waiter = w;
+		menu = m;
 		event = AgentEvent.followWaiter;
 		stateChanged();
 	}
@@ -76,6 +79,10 @@ public class CustomerAgent extends Agent {
 	public void msgWhatDoYouWant() {
 		event = AgentEvent.askedToOrder;
 		stateChanged();
+	}
+	
+	public void msgRemoveFromMenu(String choice) {
+		m.removeChoice(choice);
 	}
 	
 	public void msgHereIsYourFood(String choice) {

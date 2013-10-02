@@ -164,6 +164,14 @@ public abstract class Agent {
     	public int getMenuSize() {
     		return choices.size();
     	}
+    	
+    	public void remove(String choice) {
+    		for(Choice c : choices) {
+    			if(c.type == choice) {
+    				choices.remove(c);
+    			}
+    		}
+    	}
     }
     
     public static class Choice {

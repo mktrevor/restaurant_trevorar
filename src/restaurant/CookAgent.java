@@ -30,9 +30,9 @@ public class CookAgent extends Agent {
 	public CookAgent(String name) {
 		super();
 
-		foods.put("steak", new Food("steak", 8, 5, 3, 10));
-		foods.put("fish", new Food("fish", 6, 5, 3, 10));
-		foods.put("chicken", new Food("chicken", 4, 5, 3, 10));
+		foods.put("steak", new Food("steak", 8, 2, 3, 10));
+		foods.put("fish", new Food("fish", 6, 2, 3, 10));
+		foods.put("chicken", new Food("chicken", 4, 2, 3, 10));
 		/*foods.put("pizza", new Food("pizza", 7, 5, 3, 10));
 		foods.put("salad", new Food("salad", 4, 5, 3, 10));*/
 		
@@ -94,6 +94,8 @@ public class CookAgent extends Agent {
 		if(thisFood.amount == 0) {
 			print("We're all out of " + o.choice + "!");
 			
+			o.w.msgOutOf(o.choice, o.table);
+			
 			if(thisFood.state != orderingState.ordered) {
 				//Order more of this food!
 			}
@@ -103,7 +105,7 @@ public class CookAgent extends Agent {
 		}
 		
 		if(thisFood.amount <= thisFood.low) {
-			
+			//Order more of this food!
 		}
 		
 		print("Cooking up an order of " + o.choice + "!");
