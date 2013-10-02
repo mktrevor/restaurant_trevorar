@@ -23,11 +23,19 @@ public class CookAgent extends Agent {
 	
 	Timer timer = new Timer();
 	
+	private Map<String, Food> foods = new HashMap<String, Food>();
+	
 	//public cookGui cookGui = null;
 
 	public CookAgent(String name) {
 		super();
 
+		foods.put("steak", new Food("steak", 8, 5, 3, 10));
+		foods.put("fish", new Food("fish", 6, 5, 3, 10));
+		foods.put("chicken", new Food("chicken", 4, 5, 3, 10));
+		/*foods.put("pizza", new Food("pizza", 7, 5, 3, 10));
+		foods.put("salad", new Food("salad", 4, 5, 3, 10));*/
+		
 		this.name = name;
 	}
 
@@ -84,12 +92,7 @@ public class CookAgent extends Agent {
 		print("Cooking up an order of " + o.choice + "!");
 		
 		o.s = orderState.cooking;
-		int cookTime = 0;
-		for(Food f : Menu.getFoods()) {
-			if(f.getType() == o.choice) {
-				cookTime = f.getTime() * 1000;
-			}
-		}
+		int cookTime = foods.get(o.choice).cookingTime * 1000;
 		
 		timer.schedule(new TimerTask() {
 							public void run() {
@@ -133,5 +136,25 @@ public class CookAgent extends Agent {
 			this.s = s;
 		}
 	}	
+	
+	private class Food {
+		String type;
+		int cookingTime;
+		int amount;
+		int low;
+		int capacity;
+		orderingState state;
+		
+		Food(String type, int cookingTime, int amount, int low, int capacity) {
+			this.type = type;
+			this.cookingTime = cookingTime;
+			this.amount = amount;
+			this.low = low;
+			this.capacity = capacity;
+			state = orderingState.notYetOrdered;
+		}
+	}
+	
+	private enum orderingState {notYetOrdered, ordered};
 }
 

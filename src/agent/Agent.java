@@ -149,40 +149,39 @@ public abstract class Agent {
     
   //Code for food and menu classes    
     public static class Menu {
-    	private static List<Food> foods = new ArrayList<Food>();
+    	static List<Choice> choices = new ArrayList<Choice>();
     	
     	public Menu() {
-    		foods.add(steak);
-    		foods.add(chicken);
-    		foods.add(fish);
+    		choices.add(new Choice("steak", 15.99));
+    		choices.add(new Choice("fish", 13.99));
+    		choices.add(new Choice("chicken", 10.99));
     	}
     	
-    	public static List<Food> getFoods() {
-    		return foods;
+    	public Choice getChoice(int index) {
+    		return choices.get(index);
+    	}
+    	
+    	public int getMenuSize() {
+    		return choices.size();
     	}
     }
     
-    public static class Food {
-    	private String type;
-    	private int cookingTime;
-    	//int price;
+    public static class Choice {
+    	String type;
+    	double price;
     	
-    	public Food(String type, int cookingTime) {
+    	public Choice(String type, double price) {
     		this.type = type;
-    		this.cookingTime = cookingTime;
+    		this.price = price;
     	}
     	
     	public String getType() {
     		return type;
     	}
     	
-    	public int getTime() {
-    		return cookingTime;
+    	public double getPrice() {
+    		return price;
     	}
     }
-    
-    static final Food steak = new Food("steak", 8); // Steak cooks in 8 seconds
-    static final Food chicken = new Food("chicken", 4); // Chicken cooks in 4 seconds
-    static final Food fish = new Food("fish", 6); // Fish cooks in 6 seconds
 }
 
