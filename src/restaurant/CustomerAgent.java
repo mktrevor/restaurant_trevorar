@@ -184,6 +184,16 @@ public class CustomerAgent extends Agent {
 				break;
 		}
 		
+		if(name == "steak") {
+			choice = "steak";
+		}
+		if(name == "fish") {
+			choice = "fish";
+		}
+		if(name == "chicken") {
+			choice = "chicken";
+		}
+		
 		customerGui.orderedFood(choice);
 		print(choice + " please!");
 		
