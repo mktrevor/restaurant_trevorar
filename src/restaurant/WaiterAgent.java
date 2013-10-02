@@ -186,11 +186,6 @@ public class WaiterAgent extends Agent {
 	// Actions
 
 	private void seatCustomer(MyCustomer c) {
-
-		//HACK - always wants a break!
-		host.msgIWantABreak(this);
-		print("Give me a break!");
-		//******//
 		
 		waiterGui.DoGoToLobby();
 		
@@ -303,9 +298,26 @@ public class WaiterAgent extends Agent {
 		host.msgTableIsFree(c.table, this);
 		print("Table " + c.table + " is free!");
 		c.table = 0; // Customer is no longer at one of the 4 tables
+		
+
+		//HACK - always wants a break!
+		if(name.equals("break") && state != waiterState.onBreak) {
+			host.msgIWantABreak(this);
+			print("Give me a break!");
+		}
+		//******//
 	}
 	
 	private void takeABreak() {
+		state = waiterState.onBreak;
+		
+		waiterGui.goToBreakZone();
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}		
+		
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			public void run() {
@@ -315,6 +327,7 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void finishBreak() {
+		state = waiterState.working;
 		host.msgImDoneWithMyBreak(this);
 	}
 
