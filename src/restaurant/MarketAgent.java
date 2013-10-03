@@ -30,11 +30,11 @@ public class MarketAgent extends Agent {
 	public MarketAgent(String name) {
 		super();
 
-		foods.put("steak", new Food("steak", 8, 1, 3, 10));
-		foods.put("fish", new Food("fish", 6, 1, 3, 10));
-		foods.put("chicken", new Food("chicken", 4, 1, 3, 10));
-		/*foods.put("pizza", new Food("pizza", 7, 5, 3, 10));
-		foods.put("salad", new Food("salad", 4, 5, 3, 10));*/
+		foods.put("steak", new Food("steak", 100, 5.50));
+		foods.put("fish", new Food("fish", 100, 4.50));
+		foods.put("chicken", new Food("chicken", 100, 3.50));
+		/*foods.put("pizza", new Food("pizza", 100, 6.00));
+		foods.put("salad", new Food("salad", 100, 3.50));*/
 		
 		this.name = name;
 	}
@@ -49,14 +49,8 @@ public class MarketAgent extends Agent {
 
 	// Messages
 
-	public void msgHereIsOrder(WaiterAgent w, String choice, int table) {
-		orders.add(new Order(w, choice, table, orderState.pending));
-		stateChanged();
-	}
-	
-	public void msgFoodDoneCooking(Order o) {
-		o.s = orderState.cooked;
-		stateChanged();
+	public void msgINeedMoreFood(CookAgent c, String food, int amount) {
+		orders.add( new Order(c, food, amount, orderState.ordered));
 	}
 
 	/**
@@ -85,10 +79,32 @@ public class MarketAgent extends Agent {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} */
+		Food orderedFood = foods.get(o.foodType);
+			
+		if(orderedFood.inventory == 0) {
+			print("Sorry, we're all out of " + o.foodType + "!");
+			
+			o.c.msgSorryWeAreOutOf(o.foodType);
+			o.s = orderState.delivered;
+		} 
 		
-		print("Here is your delivery of " + o.foodType + "!");
+		else if(orderedFood.inventory > o.amount) {
+			print("Here is your delivery of " + o.foodType + "!");
+			
+			o.c.msgFoodDelivery(o.foodType, o.amount);
+			
+			orderedFood.inventory -= o.amount;
+			o.s = orderState.delivered;
+		}
 		
-		
+		else if(orderedFood.inventory < o.amount) {
+			print("We don't have that much " + o.foodType + ". We'll send you all that we have!");
+			
+			o.c.msgFoodDelivery(o.foodType, orderedFood.inventory);
+			
+			orderedFood.inventory = 0;
+			o.s = orderState.delivered;
+		}		
 	}
 
 	// The animation DoXYZ() routines
@@ -113,9 +129,9 @@ public class MarketAgent extends Agent {
 	private class Food {
 		String type;
 		int inventory;
-		int unitPrice;
+		double unitPrice;
 		
-		Food(String type, int cookingTime, int inventory, int unitPrice) {
+		Food(String type, int inventory, double unitPrice) {
 			this.type = type;
 			this.inventory = inventory;
 			this.unitPrice = unitPrice;

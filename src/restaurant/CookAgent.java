@@ -58,6 +58,14 @@ public class CookAgent extends Agent {
 		o.s = orderState.cooked;
 		stateChanged();
 	}
+	
+	public void msgFoodDelivery(String food, int amount) {
+		
+	}
+	
+	public void msgSorryWeAreOutOf(String food) {
+		
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
