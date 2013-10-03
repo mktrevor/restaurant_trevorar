@@ -83,8 +83,8 @@ public class CustomerAgent extends Agent {
 	}
 	
 	public void msgPleaseReorder() {
-		state = AgentState.seated;
-		event = AgentEvent.askedToOrder;
+		state = AgentState.beingSeated;
+		event = AgentEvent.seated;
 		stateChanged();
 	}
 	
@@ -186,7 +186,7 @@ public class CustomerAgent extends Agent {
 		int choiceNum = ((int) name.charAt(0)) % menu.getMenuSize();
 		choice = menu.getChoice(choiceNum).getType();
 		
-		if(name.equals("steak")) {
+		/*if(name.equals("steak")) {
 			choice = "steak";
 		}
 		if(name.equals("fish")) {
@@ -194,7 +194,7 @@ public class CustomerAgent extends Agent {
 		}
 		if(name.equals("chicken")) {
 			choice = "chicken";
-		}
+		}*/
 		
 		customerGui.orderedFood(choice);
 		print(choice + " please!");

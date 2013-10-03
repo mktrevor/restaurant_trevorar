@@ -1,0 +1,125 @@
+package restaurant;
+
+import agent.Agent;
+import restaurant.gui.HostGui;
+
+import java.util.*;
+import java.util.concurrent.Semaphore;
+
+/**
+ * Restaurant Host Agent
+ */
+//We only have 2 types of agents in this prototype. A customer and an agent that
+//does all the rest. Rather than calling the other agent a waiter, we called him
+//the HostAgent. A Host is the manager of a restaurant who sees that all
+//is proceeded as he wishes.
+public class MarketAgent extends Agent {
+	
+	public List<Order> orders = new ArrayList<Order>();
+	
+	public enum orderState { ordered, delivered };
+
+	private String name;
+	
+	Timer timer = new Timer();
+	
+	private Map<String, Food> foods = new HashMap<String, Food>();
+	
+	//public cookGui cookGui = null;
+
+	public MarketAgent(String name) {
+		super();
+
+		foods.put("steak", new Food("steak", 8, 1, 3, 10));
+		foods.put("fish", new Food("fish", 6, 1, 3, 10));
+		foods.put("chicken", new Food("chicken", 4, 1, 3, 10));
+		/*foods.put("pizza", new Food("pizza", 7, 5, 3, 10));
+		foods.put("salad", new Food("salad", 4, 5, 3, 10));*/
+		
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public List getOrders() {
+		return orders;
+	}
+
+	// Messages
+
+	public void msgHereIsOrder(WaiterAgent w, String choice, int table) {
+		orders.add(new Order(w, choice, table, orderState.pending));
+		stateChanged();
+	}
+	
+	public void msgFoodDoneCooking(Order o) {
+		o.s = orderState.cooked;
+		stateChanged();
+	}
+
+	/**
+	 * Scheduler.  Determine what action is called for, and do it.
+	 */
+	protected boolean pickAndExecuteAnAction() {
+		for(Order o : orders) {
+			if(o.s == orderState.ordered) {
+				sendShipment(o);
+				return true;
+			}
+		}
+
+		return false;
+		//we have tried all our rules and found
+		//nothing to do. So return false to main loop of abstract agent
+		//and wait.
+	}
+
+	// Actions
+
+	private void sendShipment(Order o) {
+		/*DoGoToRestaurant()*/
+		/* try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} */
+		
+		print("Here is your delivery of " + o.foodType + "!");
+		
+		
+	}
+
+	// The animation DoXYZ() routines
+	
+
+	//utilities
+
+	private class Order {
+		CookAgent c;
+		String foodType;
+		int amount;
+		orderState s;
+		
+		Order(CookAgent c, String foodType, int amount, orderState s) {
+			this.c = c;
+			this.foodType = foodType;
+			this.amount = amount;
+			this.s = s;
+		}
+	}	
+	
+	private class Food {
+		String type;
+		int inventory;
+		int unitPrice;
+		
+		Food(String type, int cookingTime, int inventory, int unitPrice) {
+			this.type = type;
+			this.inventory = inventory;
+			this.unitPrice = unitPrice;
+		}
+	}
+}
+
