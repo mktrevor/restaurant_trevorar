@@ -11,7 +11,7 @@ public class Menu {
 		choices.add(new Choice("fish", 13.99));
 		choices.add(new Choice("chicken", 10.99));
 	}
-
+	
 	Choice getChoice(int index) {
 		return choices.get(index);
 	}
@@ -27,7 +27,6 @@ public class Menu {
 			}
 		}
 	}
-
 
 	public class Choice {
 		String type;

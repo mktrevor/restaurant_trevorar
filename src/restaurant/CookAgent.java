@@ -17,7 +17,7 @@ public class CookAgent extends Agent {
 	
 	public List<Order> orders = new ArrayList<Order>();
 	
-	private List<MarketAgent> markets = new ArrayList<MarketAgent>();
+	private List<MyMarket> markets = new ArrayList<MyMarket>();
 	
 	public enum orderState { pending, cooking, cooked, finished };
 
@@ -155,7 +155,7 @@ public class CookAgent extends Agent {
 	}*/
 	
 	public void addMarket(MarketAgent m) {
-		markets.add(m);
+		markets.add(new MyMarket(m));
 	}
 
 	private class Order {
@@ -191,5 +191,17 @@ public class CookAgent extends Agent {
 	}
 	
 	private enum orderingState {notYetOrdered, ordered};
+	
+	private class MyMarket {
+		MarketAgent m;
+		
+		boolean hasSteak = true;
+		boolean hasFish = true;
+		boolean hasChicken = true;
+		
+		MyMarket(MarketAgent m) {
+			this.m = m;
+		}
+	}
 }
 

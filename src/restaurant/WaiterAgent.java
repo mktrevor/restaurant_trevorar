@@ -188,6 +188,7 @@ public class WaiterAgent extends Agent {
 		
 		if(event == waiterEvent.backToWork && state == waiterState.onBreak) {
 			state = waiterState.working;
+			event = waiterEvent.none;
 			return true;
 		}
 
