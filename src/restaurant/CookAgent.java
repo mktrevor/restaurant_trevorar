@@ -17,6 +17,8 @@ public class CookAgent extends Agent {
 	
 	public List<Order> orders = new ArrayList<Order>();
 	
+	private List<MarketAgent> markets = new ArrayList<MarketAgent>();
+	
 	public enum orderState { pending, cooking, cooked, finished };
 
 	private String name;
@@ -151,6 +153,10 @@ public class CookAgent extends Agent {
 	public HostGui getGui() {
 		return hostGui;
 	}*/
+	
+	public void addMarket(MarketAgent m) {
+		markets.add(m);
+	}
 
 	private class Order {
 		WaiterAgent w;
