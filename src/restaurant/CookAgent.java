@@ -20,6 +20,8 @@ public class CookAgent extends Agent {
 	private List<MyMarket> markets = new ArrayList<MyMarket>();
 	
 	public enum orderState { pending, cooking, cooked, finished };
+	
+	private enum foodOrderingState { notYetOrdered, ordered };
 
 	private String name;
 	
@@ -65,8 +67,12 @@ public class CookAgent extends Agent {
 		
 	}
 	
-	public void msgSorryWeAreOutOf(String food) {
-		
+	public void msgSorryWeAreOutOf(MarketAgent m, String food) {
+		for(MyMarket mm : markets) {
+			if(mm.m == m) {
+				
+			}
+		}
 	}
 
 	/**
@@ -108,7 +114,7 @@ public class CookAgent extends Agent {
 			
 			o.s = orderState.finished;
 			
-			if(thisFood.state != orderingState.ordered) {
+			if(thisFood.state != foodOrderingState.ordered) {
 				//Order more of this food!
 			}
 
@@ -178,7 +184,7 @@ public class CookAgent extends Agent {
 		int amount;
 		int low;
 		int capacity;
-		orderingState state;
+		foodOrderingState state;
 		
 		Food(String type, int cookingTime, int amount, int low, int capacity) {
 			this.type = type;
@@ -186,11 +192,9 @@ public class CookAgent extends Agent {
 			this.amount = amount;
 			this.low = low;
 			this.capacity = capacity;
-			state = orderingState.notYetOrdered;
+			state = foodOrderingState.notYetOrdered;
 		}
 	}
-	
-	private enum orderingState {notYetOrdered, ordered};
 	
 	private class MyMarket {
 		MarketAgent m;

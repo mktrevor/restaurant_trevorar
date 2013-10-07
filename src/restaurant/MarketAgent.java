@@ -84,7 +84,7 @@ public class MarketAgent extends Agent {
 		if(orderedFood.inventory == 0) {
 			print("Sorry, we're all out of " + o.foodType + "!");
 			
-			o.c.msgSorryWeAreOutOf(o.foodType);
+			o.c.msgSorryWeAreOutOf(this, o.foodType);
 			o.s = orderState.delivered;
 		} 
 		
