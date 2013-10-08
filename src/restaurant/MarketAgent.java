@@ -24,8 +24,6 @@ public class MarketAgent extends Agent {
 	Timer timer = new Timer();
 	
 	private Map<String, Food> foods = new HashMap<String, Food>();
-	
-	//public cookGui cookGui = null;
 
 	public MarketAgent(String name, int steakAmount, int fishAmount, int chickenAmount) {
 		super();
@@ -51,6 +49,8 @@ public class MarketAgent extends Agent {
 
 	public void msgINeedMoreFood(CookAgent c, String food, int amount) {
 		orders.add( new Order(c, food, amount, orderState.ordered));
+		print("COOK NEEDS FOOD");
+		stateChanged();
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class MarketAgent extends Agent {
 	protected boolean pickAndExecuteAnAction() {
 		for(Order o : orders) {
 			if(o.s == orderState.ordered) {
-				sendShipment(o);
+				processOrder(o);
 				return true;
 			}
 		}
@@ -72,7 +72,7 @@ public class MarketAgent extends Agent {
 
 	// Actions
 
-	private void sendShipment(Order o) {
+	private void processOrder(Order o) {
 		/*DoGoToRestaurant()*/
 		/* try {
 			atDestination.acquire();
