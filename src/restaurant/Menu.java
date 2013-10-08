@@ -27,6 +27,16 @@ public class Menu {
 			}
 		}
 	}
+	
+	public double getPrice(String choice) {
+		for(Choice c : choices) {
+			if(c.type == choice) {
+				return c.price;
+			}
+		}
+		
+		return 0;
+	}
 
 	public class Choice {
 		String type;
