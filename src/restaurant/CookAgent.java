@@ -15,9 +15,12 @@ import java.util.concurrent.Semaphore;
 //is proceeded as he wishes.
 public class CookAgent extends Agent {
 	
+	boolean foodInventoryChecked = false;
+	
 	public List<Order> orders = new ArrayList<Order>();
 	
-	private List<MyMarket> markets = new ArrayList<MyMarket>();
+	private List<MarketAgent> markets = new ArrayList<MarketAgent>();
+	int marketChooser = 0; //This will allow the cook to try a different market if one market runs out of a food
 	
 	public enum orderState { pending, cooking, cooked, finished };
 	
@@ -63,16 +66,27 @@ public class CookAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgFoodDelivery(String food, int amount) {
-		
+	public void msgWeWillDeliver(String food, int amount) { //Market will notify the cook how much they are able to deliver
+		Food thisFood = foods.get(food);
+		if(amount < (thisFood.capacity - thisFood.amount)) {
+			marketChooser = (marketChooser + 1) % markets.size(); //Try a different market!
+			orderFood(thisFood);
+		}
+		else {
+			thisFood.state = foodOrderingState.ordered;
+		}
 	}
 	
-	public void msgSorryWeAreOutOf(MarketAgent m, String food) {
-		for(MyMarket mm : markets) {
-			if(mm.m == m) {
-				
-			}
-		}
+	public void msgFoodDelivery(String food, int amount) { //Actual delivery of food
+		Food thisFood = foods.get(food);
+		thisFood.state = foodOrderingState.notYetOrdered;
+		
+		thisFood.amount += amount;
+	}
+	
+	public void msgSorryWeAreOutOf(String food) { //Market sends this message if they're out of a food.
+		marketChooser = (marketChooser + 1) % markets.size(); //Try a different market!
+		orderFood(foods.get(food));
 	}
 
 	/**
@@ -115,7 +129,7 @@ public class CookAgent extends Agent {
 			o.s = orderState.finished;
 			
 			if(thisFood.state != foodOrderingState.ordered) {
-				//Order more of this food!
+				orderFood(thisFood);
 			}
 
 			return;
@@ -145,6 +159,10 @@ public class CookAgent extends Agent {
 		print(o.choice + " done cooking, time to plate it!");
 		o.w.msgOrderDone(o.choice, o.table);
 	}
+	
+	private void orderFood(Food food) {
+		markets.get(marketChooser).msgINeedMoreFood(this, food.type, food.capacity - food.amount);
+	}
 
 	// The animation DoXYZ() routines
 	
@@ -161,7 +179,7 @@ public class CookAgent extends Agent {
 	}*/
 	
 	public void addMarket(MarketAgent m) {
-		markets.add(new MyMarket(m));
+		markets.add(m);
 	}
 
 	private class Order {
@@ -193,18 +211,6 @@ public class CookAgent extends Agent {
 			this.low = low;
 			this.capacity = capacity;
 			state = foodOrderingState.notYetOrdered;
-		}
-	}
-	
-	private class MyMarket {
-		MarketAgent m;
-		
-		boolean hasSteak = true;
-		boolean hasFish = true;
-		boolean hasChicken = true;
-		
-		MyMarket(MarketAgent m) {
-			this.m = m;
 		}
 	}
 }

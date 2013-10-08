@@ -27,12 +27,12 @@ public class MarketAgent extends Agent {
 	
 	//public cookGui cookGui = null;
 
-	public MarketAgent(String name) {
+	public MarketAgent(String name, int steakAmount, int fishAmount, int chickenAmount) {
 		super();
 
-		foods.put("steak", new Food("steak", 100, 5.50));
-		foods.put("fish", new Food("fish", 100, 4.50));
-		foods.put("chicken", new Food("chicken", 100, 3.50));
+		foods.put("steak", new Food("steak", steakAmount));
+		foods.put("fish", new Food("fish", fishAmount));
+		foods.put("chicken", new Food("chicken", chickenAmount));
 		/*foods.put("pizza", new Food("pizza", 100, 6.00));
 		foods.put("salad", new Food("salad", 100, 3.50));*/
 		
@@ -84,7 +84,7 @@ public class MarketAgent extends Agent {
 		if(orderedFood.inventory == 0) {
 			print("Sorry, we're all out of " + o.foodType + "!");
 			
-			o.c.msgSorryWeAreOutOf(this, o.foodType);
+			o.c.msgSorryWeAreOutOf(o.foodType);
 			o.s = orderState.delivered;
 		} 
 		
@@ -129,12 +129,11 @@ public class MarketAgent extends Agent {
 	private class Food {
 		String type;
 		int inventory;
-		double unitPrice;
+		//double unitPrice;
 		
-		Food(String type, int inventory, double unitPrice) {
+		Food(String type, int inventory) {
 			this.type = type;
 			this.inventory = inventory;
-			this.unitPrice = unitPrice;
 		}
 	}
 }

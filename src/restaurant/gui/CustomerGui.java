@@ -158,6 +158,10 @@ public class CustomerGui implements Gui{
 		state = customerState.doneEating;
 	}
 	
+	public void clearOrder() {
+		state = customerState.waiting;
+	}
+	
 	public void DoExitRestaurant() {
 		// These coordinates are the initial off-screen coordinates
 		xDestination = -2 * WIDTH;

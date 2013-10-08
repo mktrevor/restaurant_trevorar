@@ -26,11 +26,11 @@ public class CustomerAgent extends Agent {
 
 	//    private boolean isHungry = false; //hack for gui
 	public enum AgentState
-	{doingNothing, waitingInRestaurant, beingSeated, seated, ordering, eating, doneEating, leaving};
+	{doingNothing, waitingInRestaurant, beingSeated, seated, ordering, reordering, eating, doneEating, leaving};
 	private AgentState state = AgentState.doingNothing;//The start state
 
 	public enum AgentEvent 
-	{none, gotHungry, followWaiter, seated, askedToOrder, ordered, startedEating, doneEating, doneLeaving};
+	{none, gotHungry, followWaiter, seated, askedToOrder, ordered, reordering, startedEating, doneEating, doneLeaving};
 	AgentEvent event = AgentEvent.none;
 
 	/**
@@ -43,6 +43,34 @@ public class CustomerAgent extends Agent {
 		super();
 		
 		this.name = name;
+		
+		Random ranGenerator = new Random();
+		
+		int randNum = ranGenerator.nextInt(3);
+		
+		switch(randNum) {
+		case 0:
+			choice = "steak";
+			break;
+			
+		case 1:
+			choice = "fish";
+			break;
+			
+		case 2:
+			choice = "chicken";
+			break;
+		}
+		
+		if(name.equals("steak")) {
+			choice = "steak";
+		}
+		if(name.equals("fish")) {
+			choice = "fish";
+		}
+		if(name.equals("chicken")) {
+			choice = "chicken";
+		}
 	}
 
 	/**
@@ -83,8 +111,7 @@ public class CustomerAgent extends Agent {
 	}
 	
 	public void msgPleaseReorder() {
-		state = AgentState.beingSeated;
-		event = AgentEvent.seated;
+		event = AgentEvent.reordering;
 		stateChanged();
 	}
 	
@@ -128,6 +155,21 @@ public class CustomerAgent extends Agent {
 			orderFood();
 			return true;
 		}
+		if (state == AgentState.ordering && event == AgentEvent.reordering) {
+			state = AgentState.reordering;
+			readyToOrder();
+			return true;
+		}
+		if (state == AgentState.reordering && event == AgentEvent.askedToOrder) {
+			state = AgentState.ordering;
+			reorderFood();
+			return true;
+		}
+		if(state == AgentState.ordering && event == AgentEvent.doneLeaving) {
+			state = AgentState.leaving;
+			leaveRestaurant();
+			return true;
+		}
 		if (state == AgentState.ordering && event == AgentEvent.startedEating){
 			state = AgentState.eating;
 			eatFood();
@@ -165,6 +207,7 @@ public class CustomerAgent extends Agent {
 	
 	private void readyToOrder() {
 		waiter.msgCustomerSatDown();
+		customerGui.clearOrder();
 		
 		timer.schedule(new TimerTask() {
 			public void run() {
@@ -180,26 +223,31 @@ public class CustomerAgent extends Agent {
 	}
 	
 	private void orderFood() {
-		print("I'm ordering!");
-
-		// Convert 1st letter of customer's name to a number between 0 and 2 in order to determine food choice.
-		int choiceNum = ((int) name.charAt(0)) % menu.getMenuSize();
-		choice = menu.getChoice(choiceNum).getType();
-		
-		/*if(name.equals("steak")) {
-			choice = "steak";
-		}
-		if(name.equals("fish")) {
-			choice = "fish";
-		}
-		if(name.equals("chicken")) {
-			choice = "chicken";
-		}*/
+		print("I would like an order of " + choice + " please!");
 		
 		customerGui.orderedFood(choice);
 		print(choice + " please!");
 		
 		waiter.msgHereIsMyChoice(this, choice);
+	}
+	
+	private void reorderFood() {
+		if(menu.getMenuSize() > 0) {			
+			// Convert 1st letter of customer's name to a number in order to choose a food.
+			int choiceNum = ((int) name.charAt(0)) % menu.getMenuSize();
+			choice = menu.getChoice(choiceNum).getType();
+
+			print("I would like an order of " + choice + " please!");
+			customerGui.orderedFood(choice);
+			
+			waiter.msgHereIsMyChoice(this, choice);
+		} else {
+			print("There's nothing left for me to order! I'm leaving!");
+
+			customerGui.doneEating();
+			waiter.msgImDoneEating(this);
+			event = AgentEvent.doneLeaving;
+		}
 	}
 
 	private void eatFood() {
