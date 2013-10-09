@@ -53,11 +53,15 @@ public class CashierAgent extends Agent {
 	}
 	
 	public void msgPayBill(Check check, double money) {
-		MyCheck thisCheck;
 		for(MyCheck c : checks) {
 			if(c.c == check) {
-				thisCheck = c;
-				c.state = checkState.beingPaid;
+				if(money > c.c.amount) {
+					c.state = checkState.fullyPaid;
+				}
+				else if(money < c.c.amount) {
+					c.c.amount -= money;
+					c.state = checkState.partiallyPaid;
+				}
 			}
 		}
 	}
@@ -67,8 +71,18 @@ public class CashierAgent extends Agent {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		for(MyCheck c : checks) {
+			if(c.state == checkState.fullyPaid) {
+				giveChange(c);
+			}
+		}
+		for(MyCheck c : checks) {
+			if(c.state == checkState.partiallyPaid) {
+				addCustomerToOweList(c);
+			}
+		}
+		for(MyCheck c : checks) {
 			if(c.state == checkState.requested) {
-				tellWaiterCheckIsReady(c);
+				giveCheckToWaiter(c);
 			}
 		}
 		
@@ -84,10 +98,19 @@ public class CashierAgent extends Agent {
 
 	// Actions
 
-	private void tellWaiterCheckIsReady(MyCheck c) {
+	private void giveCheckToWaiter(MyCheck c) {
+		c.w.msgHereIsCheck(c.c);
+		c.state = checkState.givenToWaiter;
 	}
 	
-	private void plateIt() {
+	private void giveChange(MyCheck c) {
+		print("Here is your change! Please come again!");
+		c.state = checkState.finished;
+	}
+	
+	private void addCustomerToOweList(MyCheck c) {
+		customersWhoOweMoney.add(new MyCustomer(c.c.cust, c.c.amount));
+		c.state = checkState.finished;
 	}
 
 	// The animation DoXYZ() routines

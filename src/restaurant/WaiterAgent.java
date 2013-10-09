@@ -376,6 +376,7 @@ public class WaiterAgent extends Agent {
 			this.s = state;
 		}
 	}
+	
 	public class Check {
 		CustomerAgent cust;
 		String choice;
