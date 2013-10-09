@@ -71,6 +71,10 @@ public class CashierAgent extends Agent {
 				tellWaiterCheckIsReady(c);
 			}
 		}
+		
+		for(MyCheck c : checks) {
+			
+		}
 
 		return false;
 		//we have tried all our rules and found
