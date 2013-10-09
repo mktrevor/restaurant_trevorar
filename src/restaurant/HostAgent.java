@@ -85,6 +85,7 @@ public class HostAgent extends Agent {
 				mw.iWantABreak = true;
 			}
 		}
+		stateChanged();
 	}
 	
 	public void msgImDoneWithMyBreak(WaiterAgent w) {
@@ -94,6 +95,7 @@ public class HostAgent extends Agent {
 				mw.state = waiterState.working;
 			}
 		}
+		stateChanged();
 	}
 	
 	public void msgTableIsFree(int table, WaiterAgent w) {
