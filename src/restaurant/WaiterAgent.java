@@ -368,12 +368,18 @@ public class WaiterAgent extends Agent {
 		customerState s;
 		String choice;
 		
+		Check check;
+		
 		MyCustomer(CustomerAgent c, int table, customerState state) {
 			this.c = c;
 			this.table = table;
 			this.s = state;
 		}
 	}
-	
+	public class Check {
+		CustomerAgent cust;
+		String choice;
+		double amount;
+	}
 }
 

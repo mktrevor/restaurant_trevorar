@@ -288,6 +288,12 @@ public class CustomerAgent extends Agent {
 		customerGui.DoExitRestaurant();
 	}
 
+	public class Check {
+		CustomerAgent cust;
+		String choice;
+		double amount;
+	}
+
 	// Accessors, etc.
 
 	public String getName() {

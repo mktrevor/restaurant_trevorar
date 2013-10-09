@@ -49,7 +49,7 @@ public class MarketAgent extends Agent {
 
 	public void msgINeedMoreFood(CookAgent c, String food, int amount) {
 		orders.add( new Order(c, food, amount, orderState.ordered));
-		print("COOK NEEDS FOOD");
+		print("Received order for " + food + " from the cook.");
 		stateChanged();
 	}
 
@@ -98,7 +98,7 @@ public class MarketAgent extends Agent {
 		}
 		
 		else if(orderedFood.inventory < o.amount) {
-			print("We don't have that much " + o.foodType + ". We'll send you all that we have!");
+			print("We don't have enough " + o.foodType + ". We'll send you all that we have!");
 			
 			o.c.msgFoodDelivery(o.foodType, orderedFood.inventory);
 			

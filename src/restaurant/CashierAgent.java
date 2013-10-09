@@ -59,7 +59,7 @@ public class CashierAgent extends Agent {
 	protected boolean pickAndExecuteAnAction() {
 		for(MyCheck c : checks) {
 			if(c.state == checkState.requested) {
-				giveCheckToWaiter(c);
+				tellWaiterCheckIsReady(c);
 			}
 		}
 
@@ -71,7 +71,7 @@ public class CashierAgent extends Agent {
 
 	// Actions
 
-	private void cookIt() {
+	private void tellWaiterCheckIsReady(MyCheck c) {
 	}
 	
 	private void plateIt() {
