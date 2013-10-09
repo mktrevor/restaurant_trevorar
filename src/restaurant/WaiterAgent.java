@@ -19,11 +19,13 @@ public class WaiterAgent extends Agent {
 	= new ArrayList<MyCustomer>();
 	
 	private static enum customerState { waiting, seated, readyToOrder, 
-		askedForOrder, ordered, orderSentToCook, orderOut, foodReady, served, finished, 
+		askedForOrder, ordered, orderSentToCook, orderOut, foodReady, served, checkReady, checkGiven, finished, 
 		leftRestaurant };
 		
 	private HostAgent host;
 	private CookAgent cook;
+	
+	private CashierAgent cashier;
 
 	private String name;
 	private Semaphore atDestination = new Semaphore(0, true);
@@ -54,6 +56,10 @@ public class WaiterAgent extends Agent {
 	
 	public void setCook(CookAgent c) {
 		this.cook = c;
+	}
+	
+	public void setCashier(CashierAgent c) {
+		this.cashier = c;
 	}
 	
 	// Messages
@@ -89,6 +95,16 @@ public class WaiterAgent extends Agent {
 			}
 			stateChanged();
 		}
+	}
+	
+	public void msgHereIsCheck(Check c) {
+		for(MyCustomer mc : customers) {
+			if(mc.c == c.cust) {
+				mc.check = c;
+				mc.s = customerState.checkReady;
+			}
+		}
+		stateChanged();
 	}
 	
 	public void msgOutOf(String choice, int table) {
@@ -152,6 +168,11 @@ public class WaiterAgent extends Agent {
 			if(mc.s == customerState.foodReady) {
 				bringFoodToCustomer(mc);
 				return true;
+			}
+		}
+		for(MyCustomer mc : customers) {
+			if(mc.s == customerState.checkReady) {
+				giveCustomerCheck(mc);
 			}
 		}
 		for(MyCustomer mc : customers) {
@@ -302,6 +323,9 @@ public class WaiterAgent extends Agent {
 		waiterGui.foodDelivered();
 		c.c.msgHereIsYourFood(c.choice);
 
+		cashier.msgProduceCheck(this, c.c, c.choice);
+		print("Cashier, can you prepare a check for this customer?");
+
 		DoLeaveCustomer();
 	}
 	
@@ -341,6 +365,21 @@ public class WaiterAgent extends Agent {
 		print("Alright, I finished my break!");
 		host.msgImDoneWithMyBreak(this);
 	}
+	
+	private void giveCustomerCheck(MyCustomer c) {
+		waiterGui.DoGoToTable(c.table);
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}	
+		
+		print("Here is your check!");
+		c.c.msgHereIsYourBill(c.check);
+		c.s = customerState.checkGiven;
+		
+		waiterGui.DoLeaveCustomer();
+	}
 
 	// The animation DoXYZ() routines
 	private void DoSeatCustomer(CustomerAgent customer, int table) {
@@ -375,12 +414,6 @@ public class WaiterAgent extends Agent {
 			this.table = table;
 			this.s = state;
 		}
-	}
-	
-	public class Check {
-		CustomerAgent cust;
-		String choice;
-		double amount;
 	}
 }
 

@@ -14,6 +14,9 @@ import java.util.TimerTask;
 public class CustomerAgent extends Agent {
 	private String name;
 	private String choice;
+	private double money;
+	private Check check;
+	
 	private int hungerLevel = 8; // determines length of meal
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
@@ -26,11 +29,11 @@ public class CustomerAgent extends Agent {
 
 	//    private boolean isHungry = false; //hack for gui
 	public enum AgentState
-	{doingNothing, waitingInRestaurant, beingSeated, seated, ordering, reordering, eating, doneEating, leaving};
+	{doingNothing, waitingInRestaurant, beingSeated, seated, ordering, reordering, eating, doneEating, payingBill, leaving};
 	private AgentState state = AgentState.doingNothing;//The start state
 
 	public enum AgentEvent 
-	{none, gotHungry, followWaiter, seated, askedToOrder, ordered, reordering, startedEating, doneEating, doneLeaving};
+	{none, gotHungry, followWaiter, seated, askedToOrder, ordered, reordering, startedEating, doneEating, payBill, leaving};
 	AgentEvent event = AgentEvent.none;
 
 	/**
@@ -119,6 +122,15 @@ public class CustomerAgent extends Agent {
 		menu.removeChoice(choice);
 	}
 	
+	public void msgHereIsYourBill(Check c) {
+		check = c;
+		stateChanged();
+	}
+	
+	/*public void msgHereIsYourChange(double money) {
+		this.money += money;
+	}*/
+	
 	public void msgHereIsYourFood(String choice) {
 		event = AgentEvent.startedEating;
 		stateChanged();
@@ -165,7 +177,7 @@ public class CustomerAgent extends Agent {
 			reorderFood();
 			return true;
 		}
-		if(state == AgentState.ordering && event == AgentEvent.doneLeaving) {
+		if(state == AgentState.ordering && event == AgentEvent.leaving) {
 			state = AgentState.leaving;
 			leaveRestaurant();
 			return true;
@@ -180,12 +192,16 @@ public class CustomerAgent extends Agent {
 			tellWaiterImDone();
 			return true;
 		}
-		if (state == AgentState.doneEating && event == AgentEvent.doneLeaving){
+		if (state == AgentState.doneEating && event == AgentEvent.payBill && check != null) {
+			state = AgentState.payingBill;
+			payBill();	
+		}
+		if (state == AgentState.payingBill && event == AgentEvent.leaving){
 			state = AgentState.leaving;
 			leaveRestaurant();
 			return true;
 		}
-		if (state == AgentState.leaving && event == AgentEvent.doneLeaving){
+		if (state == AgentState.leaving && event == AgentEvent.leaving){
 			state = AgentState.doingNothing;
 			//no action
 			return true;
@@ -246,7 +262,7 @@ public class CustomerAgent extends Agent {
 
 			customerGui.doneEating();
 			waiter.msgImDoneEating(this);
-			event = AgentEvent.doneLeaving;
+			event = AgentEvent.leaving;
 		}
 	}
 
@@ -280,18 +296,27 @@ public class CustomerAgent extends Agent {
 	//Combine last two???
 	private void tellWaiterImDone() {
 		waiter.msgImDoneEating(this);
-		event = AgentEvent.doneLeaving;
+		event = AgentEvent.payBill;
 	}
 
 	private void leaveRestaurant() {
 		print("Leaving.");
 		customerGui.DoExitRestaurant();
 	}
-
-	public class Check {
-		CustomerAgent cust;
-		String choice;
-		double amount;
+	
+	private void payBill() {
+		//customerGui.DoGoToCashier();
+		//ADD A TRY/CATCH WITH A SEMAPHORE HERE
+		print("Here is my payment!");
+		if(money > check.amount) {
+			check.cashier.msgPayBill(check, check.amount);
+			money -= check.amount;
+		}
+		else {
+			check.cashier.msgPayBill(check, money);
+			money = 0;
+		}
+		event = AgentEvent.leaving;
 	}
 
 	// Accessors, etc.

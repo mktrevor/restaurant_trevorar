@@ -1,5 +1,6 @@
 package restaurant.gui;
 
+import restaurant.CashierAgent;
 import restaurant.CookAgent;
 import restaurant.CustomerAgent;
 import restaurant.HostAgent;
@@ -29,6 +30,9 @@ public class RestaurantPanel extends JPanel {
     private CookAgent cook = new CookAgent("Chef");
     private CookGui cookGui = new CookGui(cook);
     
+    private CashierAgent cashier = new CashierAgent("Moneybags");
+    private CashierGui cashierGui = new CashierGui(cashier);
+    
     private MarketAgent market1 = new MarketAgent("Market 1", 5, 5, 5);
     private MarketAgent market2 = new MarketAgent("Market 2", 2, 2, 2);
     private MarketAgent market3 = new MarketAgent("Market 3", 10, 10, 10);
@@ -51,6 +55,7 @@ public class RestaurantPanel extends JPanel {
         //gui.animationPanel.addGui(hostGui);
         host.startThread();
         cook.startThread();
+        cashier.startThread();
         
         market1.startThread();
         market2.startThread();
@@ -149,6 +154,7 @@ public class RestaurantPanel extends JPanel {
     		gui.animationPanel.addGui(g);
     		w.setHost(host);
     		w.setCook(cook);
+    		w.setCashier(cashier);
     		w.setGui(g);
     		host.addWaiter(w);
     		agents.add(w);

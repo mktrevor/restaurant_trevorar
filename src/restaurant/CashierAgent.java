@@ -41,7 +41,8 @@ public class CashierAgent extends Agent {
 
 	// Messages
 	public void msgProduceCheck(WaiterAgent w, CustomerAgent c, String choice) {
-		Check check = new Check(c, choice);
+		Check check = new Check(this, c, choice);
+		check.amount = menu.getPrice(choice);
 		
 		for(MyCustomer mc : customersWhoOweMoney) {
 			if(mc.c == c) {
@@ -50,6 +51,7 @@ public class CashierAgent extends Agent {
 		}
 		
 		checks.add(new MyCheck(w, check));
+		stateChanged();
 	}
 	
 	public void msgPayBill(Check check, double money) {
@@ -64,6 +66,7 @@ public class CashierAgent extends Agent {
 				}
 			}
 		}
+		stateChanged();
 	}
 
 	/**
@@ -126,19 +129,6 @@ public class CashierAgent extends Agent {
 	public HostGui getGui() {
 		return hostGui;
 	}*/
-	
-	public class Check {
-		CustomerAgent cust;
-		String choice;
-		double amount;
-		
-		Check(CustomerAgent cust, String choice) {
-			this.cust = cust;
-			this.choice = choice;
-			
-			amount = menu.getPrice(choice);
-		}
-	}
 	
 	private class MyCheck {
 		WaiterAgent w;
