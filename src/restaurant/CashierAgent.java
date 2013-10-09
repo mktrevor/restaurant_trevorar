@@ -21,7 +21,7 @@ public class CashierAgent extends Agent {
 	
 	private Menu menu = new Menu();
 
-	private enum checkState { requested, givenToWaiter, fullyPaid, partiallyPaid, finished };
+	private enum checkState { requested, givenToWaiter, beingPaid, fullyPaid, partiallyPaid, finished };
 
 	private String name;
 	
@@ -52,6 +52,15 @@ public class CashierAgent extends Agent {
 		checks.add(new MyCheck(w, check));
 	}
 	
+	public void msgPayBill(Check check, double money) {
+		MyCheck thisCheck;
+		for(MyCheck c : checks) {
+			if(c.c == check) {
+				thisCheck = c;
+				c.state = checkState.beingPaid;
+			}
+		}
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
