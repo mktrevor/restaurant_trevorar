@@ -80,6 +80,10 @@ public class WaiterGui implements Gui {
     public boolean isPresent() {
         return true;
     }
+    
+    public void takeBreak() {
+    	
+    }
 
     public void DoBringToTable(CustomerAgent c, int table) {
     	xDestination = (int) tableLocations.get(table).getWidth() + WIDTH;

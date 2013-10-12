@@ -26,6 +26,9 @@ public class WaiterAgent extends Agent {
 	private CookAgent cook;
 	
 	private CashierAgent cashier;
+	
+	private enum breakState { none, wantABreak, askedForBreak, onBreak, doneWithBreak };
+	breakState breakStatus = breakState.none;
 
 	private String name;
 	private Semaphore atDestination = new Semaphore(0, true);
@@ -134,12 +137,24 @@ public class WaiterAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgIWantABreak() {
+		breakStatus = breakState.wantABreak;
+		stateChanged();
+	}
+	
 	public void msgSorryNoBreakNow() {
-		print("This is inhumane!!! I deserve a raise!");
+		print("No break?! This is inhumane!");
+		breakStatus = breakState.none;
+		stateChanged();
 	}
 	
 	public void msgFinishUpAndTakeABreak() {
 		event = waiterEvent.takeABreak;
+		stateChanged();
+	}
+	
+	public void msgBreakIsFinished() {
+		breakStatus = breakState.doneWithBreak;
 		stateChanged();
 	}
 	
@@ -156,7 +171,15 @@ public class WaiterAgent extends Agent {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {		
+	protected boolean pickAndExecuteAnAction() {
+		
+		if(breakStatus == breakState.doneWithBreak) {
+			finishBreak();
+		}
+		
+		if(breakStatus == breakState.wantABreak) {
+			askForBreak();
+		}
 	
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.finished) {
@@ -201,7 +224,7 @@ public class WaiterAgent extends Agent {
 			}
 		}
 		
-		if(event == waiterEvent.takeABreak && state == waiterState.working) {
+		if(event == waiterEvent.takeABreak && state == waiterState.working && allCustomersDone()) {
 			state = waiterState.onBreak;
 			takeABreak();
 			return true;
@@ -267,8 +290,7 @@ public class WaiterAgent extends Agent {
 		DoLeaveCustomer();
 	}
 
-	private void removeChoice(MyCustomer c) {
-		
+	private void removeChoice(MyCustomer c) {		
 		print("Sorry, we're out of " + c.choice + ".");
 		c.c.msgRemoveFromMenu(c.choice);
 	}
@@ -334,34 +356,27 @@ public class WaiterAgent extends Agent {
 		host.msgTableIsFree(c.table, this);
 		print("Table " + c.table + " is free!");
 		c.table = 0; // Customer is no longer at one of the 4 tables
-		
-
-		//HACK - always wants a break!
-		if(name.equals("break") && state != waiterState.onBreak) {
-			host.msgIWantABreak(this);
-			print("Give me a break!");
-		}
-		//******//
+	}
+	
+	private void askForBreak() {
+		host.msgIWantABreak(this);
+		print("Could I please have a break?!");
+		breakStatus = breakState.askedForBreak;
 	}
 	
 	private void takeABreak() {
 		waiterGui.DoGoToBreakZone();
+		breakStatus = breakState.onBreak;
 		try {
 			atDestination.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}		
-		
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			public void run() {
-				 finishBreak();
-			}
-		}, 10000 );
+		}
 	}
 	
 	private void finishBreak() {
 		event = waiterEvent.backToWork;
+		breakStatus = breakState.none;
 		print("Alright, I finished my break!");
 		host.msgImDoneWithMyBreak(this);
 	}
@@ -393,6 +408,15 @@ public class WaiterAgent extends Agent {
 
 	//utilities
 
+	private boolean allCustomersDone() {
+		for(MyCustomer c : customers) {
+			if(c.s != customerState.finished && c.s != customerState.leftRestaurant) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public void setGui(WaiterGui gui) {
 		waiterGui = gui;
 	}
@@ -401,6 +425,10 @@ public class WaiterAgent extends Agent {
 		return waiterGui;
 	}
 
+	public boolean isOnBreak() {
+		return state == waiterState.onBreak;
+	}
+	
 	private class MyCustomer {
 		CustomerAgent c;
 		int table;

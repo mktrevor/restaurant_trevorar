@@ -1,6 +1,7 @@
 package restaurant.gui;
 
 import restaurant.CustomerAgent;
+import restaurant.WaiterAgent;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -154,6 +155,25 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
             infoLabel.setText(
                "<html><pre>     Name: " + customer.getName() + " </pre></html>");
         }
+        if(person instanceof WaiterAgent) {
+        	WaiterAgent waiter = (WaiterAgent) person;
+        	if(!waiter.isOnBreak()) {
+        		stateCB.setText("Want a break?");
+
+        		stateCB.setSelected(waiter.isOnBreak());
+
+        		stateCB.setEnabled(!waiter.isOnBreak());
+        	}
+        	else {
+        		stateCB.setText("Done with break?");
+        		
+        		stateCB.setSelected(!waiter.isOnBreak());
+        		
+        		stateCB.setEnabled(waiter.isOnBreak()); 
+        	}
+        	infoLabel.setText(
+        			"<html><pre>     Name: " + waiter.getName() + " </pre></html>");
+        }
         infoPanel.validate();
     }
     /**
@@ -168,6 +188,15 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
                 c.getGui().setHungry();
                 stateCB.setEnabled(false);
                 makeHungry.setEnabled(false);
+            }
+            if(currentPerson instanceof WaiterAgent) {
+            	WaiterAgent w = (WaiterAgent) currentPerson;
+            	if(!w.isOnBreak()) {
+            		w.msgIWantABreak();
+            	}
+            	else {
+            		w.msgBreakIsFinished();
+            	}
             }
         }
         if(e.getSource() == makeHungry) {

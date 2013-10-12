@@ -44,6 +44,7 @@ public class ListPanel extends JPanel implements ActionListener {
 		nameLabel = new JLabel("Enter name here:");
 		enterName = new JTextField();
 		enterName.setMaximumSize(new Dimension(200, 10)); // Size of text field to enter customer/waiter names
+
 		hungryChk = new JCheckBox("Hungry?");
 		hungryChk.setEnabled(false);
 
@@ -63,8 +64,10 @@ public class ListPanel extends JPanel implements ActionListener {
 
 		add(nameLabel);
 		add(enterName);
-		if(type == "Customers")
+		if(type == "Customers") {
 			add(hungryChk);
+		}
+		
 		addPersonB.addActionListener(this);
 		add(addPersonB);
 

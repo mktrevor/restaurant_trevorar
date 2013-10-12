@@ -29,6 +29,8 @@ public class HostAgent extends Agent {
 
 	private String name;
 	
+	private int numberOfWorkingWaiters = 0;
+	
 	public HostGui hostGui = null;
 
 	public HostAgent(String name) {
@@ -60,6 +62,7 @@ public class HostAgent extends Agent {
 	
 	public void addWaiter(WaiterAgent w) {
 		waiters.add(new MyWaiter(w));
+		numberOfWorkingWaiters++;
 		stateChanged();
 	}
 	
@@ -93,6 +96,7 @@ public class HostAgent extends Agent {
 			if(mw.w == w) {
 				mw.iWantABreak = false;
 				mw.state = waiterState.working;
+				numberOfWorkingWaiters++;
 			}
 		}
 		stateChanged();
@@ -145,8 +149,11 @@ public class HostAgent extends Agent {
 	
 	private void seatCustomer(MyCustomer mc, Table table) {
 		MyWaiter leastBusyWaiter = waiters.get(0);
-		if(leastBusyWaiter.state == waiterState.onBreak) {
-			leastBusyWaiter = waiters.get(1);
+		for(int i = 0; i < waiters.size(); i++) {
+			if(waiters.get(i).state == waiterState.onBreak) {
+				leastBusyWaiter = waiters.get(i+1);
+			}
+			else { break; }
 		}
 		
 		// This loop finds the waiter that is currently dealing with the least number of customers
@@ -165,15 +172,16 @@ public class HostAgent extends Agent {
 	
 	private void giveWaiterABreak(MyWaiter w) {
 		w.iWantABreak = false;
-		if(waiters.size() == 1) {
+		if(waiters.size() == 1 || numberOfWorkingWaiters == 1) {
 			w.w.msgSorryNoBreakNow();
 			print("Sorry, there's no one else to cover for you!");
 			return;
 		}
-		
+				
 		w.w.msgFinishUpAndTakeABreak();
-		print("Alright, " + w.w.getName() + ", take a break!");
+		print("Alright, " + w.w.getName() + ", finish up and take a break.");
 		w.state = waiterState.onBreak;
+		numberOfWorkingWaiters--;
 	}
 
 	// The animation DoXYZ() routines
