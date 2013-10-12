@@ -28,9 +28,8 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
      * 2) the Animation Panel
      * 3) the infoPanel about the clicked Customer (created just below)
      */    
-    private RestaurantPanel restPanel = new RestaurantPanel(this);
-    
     AnimationPanel animationPanel = new AnimationPanel();
+    private RestaurantPanel restPanel = new RestaurantPanel(this);
     
     /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel;
@@ -193,9 +192,11 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
             	WaiterAgent w = (WaiterAgent) currentPerson;
             	if(!w.isOnBreak()) {
             		w.msgIWantABreak();
+            		stateCB.setEnabled(false);
             	}
             	else {
             		w.msgBreakIsFinished();
+            		stateCB.setEnabled(false);
             	}
             }
         }

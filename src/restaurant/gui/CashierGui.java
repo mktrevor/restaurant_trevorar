@@ -12,16 +12,12 @@ import java.awt.*;
 
 public class CashierGui implements Gui {
 	
-	private static final int XPOS = -30, YPOS = -30;
-	private static final int XTABLE = 200, YTABLE = 250;
+	private static final int XPOS = 50, YPOS = 300;
 
     private CashierAgent agent = null;
 
     private int xPos = XPOS, yPos = YPOS;//default waiter position
     private int xDestination = XPOS, yDestination = YPOS;//default start position
-
-    public static final int xTable = XTABLE;
-    public static final int yTable = YTABLE;
 
     public CashierGui(CashierAgent agent) {
         this.agent = agent;
@@ -40,8 +36,14 @@ public class CashierGui implements Gui {
     }
 
     public void draw(Graphics2D g) {
-        g.setColor(Color.WHITE);
+        g.setColor(Color.YELLOW);
         g.fillRect(xPos, yPos, 30, 30); // Size/position of gui
+        
+        // This draws "$$$" on the customer gui
+        Font font = new Font("Arial", Font.BOLD, 20);
+        g.setFont(font);
+        g.setColor(Color.BLACK);
+        g.drawString("$", xPos + 8, yPos + 22);
     }
 
     public boolean isPresent() {
