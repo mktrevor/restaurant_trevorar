@@ -195,9 +195,10 @@ public class WaiterAgent extends Agent {
 		}
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.checkReady) {
-				giveCustomerCheck(mc);
+				getCheckFromCashier(mc);
 			}
 		}
+		
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.waiting) {
 				seatCustomer(mc);
@@ -381,6 +382,17 @@ public class WaiterAgent extends Agent {
 		host.msgImDoneWithMyBreak(this);
 	}
 	
+	private void getCheckFromCashier(MyCustomer c) {
+		waiterGui.DoGoToCashier();
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		giveCustomerCheck(c);
+	}
+	
 	private void giveCustomerCheck(MyCustomer c) {
 		waiterGui.DoGoToTable(c.table);
 		try {
@@ -393,7 +405,7 @@ public class WaiterAgent extends Agent {
 		c.c.msgHereIsYourBill(c.check);
 		c.s = customerState.checkGiven;
 		
-		waiterGui.DoLeaveCustomer();
+		DoLeaveCustomer();
 	}
 
 	// The animation DoXYZ() routines
@@ -425,6 +437,10 @@ public class WaiterAgent extends Agent {
 		return waiterGui;
 	}
 
+	public boolean wantsToTakeBreak() {
+		return event == waiterEvent.takeABreak || breakStatus == breakState.wantABreak;
+	}
+	
 	public boolean isOnBreak() {
 		return state == waiterState.onBreak;
 	}

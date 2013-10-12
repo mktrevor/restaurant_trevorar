@@ -159,9 +159,9 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         	if(!waiter.isOnBreak()) {
         		stateCB.setText("Want a break?");
 
-        		stateCB.setSelected(waiter.isOnBreak());
+        		stateCB.setSelected(waiter.wantsToTakeBreak());
 
-        		stateCB.setEnabled(!waiter.isOnBreak());
+        		stateCB.setEnabled(!waiter.wantsToTakeBreak());
         	}
         	else {
         		stateCB.setText("Done with break?");
@@ -190,12 +190,15 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
             }
             if(currentPerson instanceof WaiterAgent) {
             	WaiterAgent w = (WaiterAgent) currentPerson;
-            	if(!w.isOnBreak()) {
+            	if(!w.wantsToTakeBreak()) {
             		w.msgIWantABreak();
             		stateCB.setEnabled(false);
             	}
-            	else {
+            	else if(w.isOnBreak()) {
             		w.msgBreakIsFinished();
+            		stateCB.setEnabled(false);
+            	}
+            	else {
             		stateCB.setEnabled(false);
             	}
             }

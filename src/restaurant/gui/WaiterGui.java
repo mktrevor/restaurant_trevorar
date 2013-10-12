@@ -16,7 +16,8 @@ public class WaiterGui implements Gui {
 	private static final int XPOS = -30, YPOS = -30;
 	private static final int WIDTH = 30, HEIGHT = 30;
 	private final int COOK_X = 630, COOK_Y = 600;
-	private final int BREAK_X = 600, BREAK_Y = 50;
+	private final int CASHIER_X = 80, CASHIER_Y = 300;
+	private final int BREAK_X = 50, BREAK_Y = 150;
 	
 	private boolean moving = false;
 	private boolean carryingFood = false;
@@ -118,6 +119,12 @@ public class WaiterGui implements Gui {
     public void DoGoToCook() {
     	xDestination = COOK_X;
     	yDestination = COOK_Y;
+    	moving = true;
+    }
+    
+    public void DoGoToCashier() {
+    	xDestination = CASHIER_X;
+    	yDestination = CASHIER_Y;
     	moving = true;
     }
 
