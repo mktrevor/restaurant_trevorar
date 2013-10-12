@@ -17,13 +17,14 @@ public class CustomerGui implements Gui{
 	String choice;
 
 	private static final int WIDTH = 30, HEIGHT = 30;
+	private final int CASHIER_X = 80, CASHIER_Y = 300;
 
 	private WaiterGui waiterGui;
 	RestaurantGui gui;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, GoToSeat, LeaveRestaurant};
+	private enum Command {noCommand, GoToSeat, GoToCashier, LeaveRestaurant};
 	private Command command=Command.noCommand;
 	
 	private enum customerState { waiting, wantsToOrder, ordered, eating, doneEating };
@@ -56,9 +57,12 @@ public class CustomerGui implements Gui{
 			yPos--;
 			
 
-		if (xPos == xDestination && yPos == yDestination) {
+		if (xPos == xDestination && yPos == yDestination) {			
 			if (command==Command.GoToSeat) {
 				agent.msgAnimationFinishedGoToSeat();
+			} 
+			else if(command==Command.GoToCashier) {
+				agent.msgAtDestination();
 			}
 			else if (command==Command.LeaveRestaurant) {
 				agent.msgAnimationDoneEatingFood();
@@ -135,6 +139,12 @@ public class CustomerGui implements Gui{
 	public void DoGoToSeat() {
 		command = Command.GoToSeat;
 	}
+	
+	public void DoGoToCashier() {
+    	command = Command.GoToCashier;
+    	xDestination = CASHIER_X;
+    	yDestination = CASHIER_Y;
+    }
 	
 	public void GivenTableNumber(int table) {
 		xDestination = (int) tableLocations.get(table).getWidth(); // X coordinate of table

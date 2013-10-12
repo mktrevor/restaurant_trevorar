@@ -7,6 +7,7 @@ import agent.Agent;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 /**
  * Restaurant customer agent.
@@ -20,6 +21,8 @@ public class CustomerAgent extends Agent {
 	private int hungerLevel = 8; // determines length of meal
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
+	
+	private Semaphore atDestination = new Semaphore(0, true);
 
 	// agent correspondents
 	private WaiterAgent waiter;
@@ -138,6 +141,11 @@ public class CustomerAgent extends Agent {
 	
 	public void msgAnimationDoneEatingFood() {
 		event = AgentEvent.doneEating;
+		stateChanged();
+	}
+	
+	public void msgAtDestination() {
+		atDestination.release();
 		stateChanged();
 	}
 
@@ -305,8 +313,14 @@ public class CustomerAgent extends Agent {
 	}
 	
 	private void payBill() {
-		//customerGui.DoGoToCashier();
-		//ADD A TRY/CATCH WITH A SEMAPHORE HERE
+		customerGui.DoGoToCashier();
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		print("Here is my payment!");
 		if(money > check.amount) {
 			check.cashier.msgPayBill(check, check.amount);
