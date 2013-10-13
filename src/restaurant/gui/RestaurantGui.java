@@ -36,6 +36,9 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
     private JLabel infoLabel; //part of infoPanel
     private JCheckBox stateCB;//part of infoLabel
     
+    private JButton addMoney;
+    private JButton removeMoney;
+    
     //Components of an option panel that allows the user to make customers hungry, pause/resume, and change the animation speed
     private JLabel pauseLabel;
     private JLabel hungryLabel;
@@ -92,20 +95,27 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         stateCB = new JCheckBox();
         stateCB.setVisible(false);
         stateCB.addActionListener(this);
+        
+        addMoney = new JButton("+ $10");
+        addMoney.setVisible(false);
+        addMoney.addActionListener(this);
+        
+        removeMoney = new JButton("- $10");
+        removeMoney.setVisible(false);
+        removeMoney.addActionListener(this);
 
-        infoPanel.setLayout(new GridLayout(1, 2, 30, 0));
+        //infoPanel.setLayout(new GridLayout(1, 2, 30, 0));
+        
+        infoPanel.setLayout(new FlowLayout());
         
         infoLabel = new JLabel(); 
         infoLabel.setText("<html><pre><i>Click Add to make customers</i></pre></html>");
         infoPanel.add(infoLabel);
         infoPanel.add(stateCB);
+        infoPanel.add(addMoney);
+        infoPanel.add(removeMoney);
         
         add(infoPanel, BorderLayout.SOUTH);
-        
-        //Extra checkbox to make customer hungry again
-        makeHungry = new JButton("I'm hungry!");
-        makeHungry.setEnabled(false);
-        makeHungry.addActionListener(this);
         
         //The pause/resume buttons;
         pauseButton = new JButton("Pause");
@@ -116,14 +126,11 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         speedSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, animationPanel.getTimerInterval()); // A slider for animation speed
         speedSlider.addChangeListener(this);
         
-        hungryLabel = new JLabel("Make hungry (select customer): ");
         pauseLabel = new JLabel("                Pause/Resume: ");
         speedLabel = new JLabel("                Animation Speed: ");
         
         optionPanel = new JPanel();
         
-        optionPanel.add(hungryLabel);
-        optionPanel.add(makeHungry);
         optionPanel.add(pauseLabel);
         optionPanel.add(pauseButton);
         optionPanel.add(resumeButton);
@@ -149,13 +156,21 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
             stateCB.setSelected(customer.getGui().isHungry());
 
             stateCB.setEnabled(!customer.getGui().isHungry());
-            makeHungry.setEnabled(!customer.getGui().isHungry());
+            
+            addMoney.setVisible(true);
+            addMoney.setEnabled(true);
+           	removeMoney.setVisible(true);
+            removeMoney.setEnabled(true);
 
             infoLabel.setText(
-               "<html><pre>     Name: " + customer.getName() + " </pre></html>");
+               "<html><pre>     Name: " + customer.getName() + "    Money: " + customer.getMoney() + " </pre></html>");
         }
         if(person instanceof WaiterAgent) {
         	WaiterAgent waiter = (WaiterAgent) person;
+        	
+        	addMoney.setVisible(false);
+        	removeMoney.setVisible(false);
+        	
         	if(!waiter.isOnBreak()) {
         		stateCB.setText("Want a break?");
 
@@ -186,7 +201,6 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
                 CustomerAgent c = (CustomerAgent) currentPerson;
                 c.getGui().setHungry();
                 stateCB.setEnabled(false);
-                makeHungry.setEnabled(false);
             }
             if(currentPerson instanceof WaiterAgent) {
             	WaiterAgent w = (WaiterAgent) currentPerson;
@@ -203,13 +217,18 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
             	}
             }
         }
-        if(e.getSource() == makeHungry) {
+        if(e.getSource() == addMoney) {
         	if(currentPerson instanceof CustomerAgent) {
         		CustomerAgent c = (CustomerAgent) currentPerson;
-        		c.getGui().setHungry();
-        		makeHungry.setEnabled(false);
-                stateCB.setSelected(c.getGui().isHungry());
-        		stateCB.setEnabled(false);
+        		c.addTenDollars();
+        		updateInfoPanel(c);
+        	}
+        }
+        if(e.getSource() == removeMoney) {
+        	if(currentPerson instanceof CustomerAgent) {
+        		CustomerAgent c = (CustomerAgent) currentPerson;
+        		c.removeTenDollars();
+        		updateInfoPanel(c);
         	}
         }
         if(e.getSource() == pauseButton) {

@@ -39,6 +39,8 @@ public class CustomerAgent extends Agent {
 	{none, gotHungry, followWaiter, seated, askedToOrder, ordered, reordering, startedEating, doneEating, payBill, leaving};
 	AgentEvent event = AgentEvent.none;
 
+	Random ranGenerator = new Random(); //Random number generator for money and choice
+	
 	/**
 	 * Constructor for CustomerAgent class
 	 *
@@ -50,12 +52,13 @@ public class CustomerAgent extends Agent {
 		
 		this.name = name;
 		
-		Random ranGenerator = new Random();
-		
 		money = (double) ranGenerator.nextInt(50);
 		
 		if(name.equals("broke")) {
 			money = 0.0;
+		}
+		if(name.equals("moneybags")) {
+			money = 1000.0;
 		}
 		
 		int randNum = ranGenerator.nextInt(3);
@@ -328,8 +331,8 @@ public class CustomerAgent extends Agent {
 		}
 		
 		if(money > check.amount) {
-			check.cashier.msgPayBill(check, check.amount);
 			print("Here is my payment of $" + check.amount + ".");
+			check.cashier.msgPayBill(check, check.amount);
 			money -= check.amount;
 		}
 		else {
@@ -344,6 +347,22 @@ public class CustomerAgent extends Agent {
 
 	public String getName() {
 		return name;
+	}
+	
+	public double getMoney() {
+		return money;
+	}
+	
+	public void addTenDollars() {
+		money += 10.0;
+	}
+	
+	public void removeTenDollars() {
+		if(money < 10) {
+			money = 0.0;
+			return;
+		}
+		money -= 10.0;
 	}
 	
 	public int getHungerLevel() {

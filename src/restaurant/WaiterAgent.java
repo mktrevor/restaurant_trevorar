@@ -360,8 +360,8 @@ public class WaiterAgent extends Agent {
 	}
 	
 	private void askForBreak() {
-		host.msgIWantABreak(this);
 		print("Could I please have a break?!");
+		host.msgIWantABreak(this);
 		breakStatus = breakState.askedForBreak;
 	}
 	
@@ -373,9 +373,11 @@ public class WaiterAgent extends Agent {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		waiterGui.msgBreakStarted();
 	}
 	
 	private void finishBreak() {
+		waiterGui.msgBreakFinished();
 		event = waiterEvent.backToWork;
 		breakStatus = breakState.none;
 		print("Alright, I finished my break!");

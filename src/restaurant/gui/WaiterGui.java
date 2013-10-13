@@ -21,6 +21,9 @@ public class WaiterGui implements Gui {
 	
 	private boolean moving = false;
 	private boolean carryingFood = false;
+	private boolean onBreak = false;
+	
+	private int cycleCount = 0;
 
     private WaiterAgent agent = null;
     
@@ -75,6 +78,26 @@ public class WaiterGui implements Gui {
             g.setColor(Color.BLACK);
             String choiceLetter = currentFood.substring(0,2); // First two letters of current food
             g.drawString(choiceLetter, xPos -16, yPos + 25);
+        }
+        
+        if(onBreak) {
+        	g.setColor(Color.WHITE);
+        	g.fillOval(xPos - 10, yPos - 15, 50, 20);
+        	
+        	g.setFont(new Font("Arial", Font.BOLD, 14));
+            g.setColor(Color.BLACK);
+            
+            if(cycleCount <= 25) {
+            	g.drawString("zzz", xPos, yPos);
+            } else if(cycleCount > 25 && cycleCount <= 50) {
+            	g.drawString("zzz.", xPos, yPos);
+            } else if(cycleCount > 50 && cycleCount <= 75) {
+            	g.drawString("zzz..", xPos, yPos);
+            } else if(cycleCount < 100) {
+            	g.drawString("zzz...", xPos, yPos);
+            }
+            
+            cycleCount = (cycleCount + 1) % 100;
         }
     }
 
@@ -131,6 +154,14 @@ public class WaiterGui implements Gui {
     public void DoLeaveCustomer() {
         xDestination += 2 * WIDTH;
         yDestination -= 2 * HEIGHT;
+    }
+    
+    public void msgBreakStarted() {
+    	onBreak = true;
+    }
+    
+    public void msgBreakFinished() {
+    	onBreak = false;
     }
     
     public void deliveringFood(String food) {
