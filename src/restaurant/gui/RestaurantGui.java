@@ -48,6 +48,8 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
     private JButton resumeButton;
     private JLabel speedLabel;
     private JSlider speedSlider;
+    private JButton emptyMarkets;
+    private JButton noMoreSteak;
     
     private Object currentPerson;/* Holds the agent that the info is about.
     								Seems like a hack */
@@ -128,6 +130,11 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         
         pauseLabel = new JLabel("                Pause/Resume: ");
         speedLabel = new JLabel("                Animation Speed: ");
+                
+        emptyMarkets = new JButton("Empty all markets");
+        emptyMarkets.addActionListener(this);
+        noMoreSteak = new JButton("No more steak");
+        noMoreSteak.addActionListener(this);
         
         optionPanel = new JPanel();
         
@@ -136,6 +143,8 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         optionPanel.add(resumeButton);
         optionPanel.add(speedLabel);
         optionPanel.add(speedSlider);
+        optionPanel.add(emptyMarkets);
+        optionPanel.add(noMoreSteak);
         
         add(optionPanel, BorderLayout.NORTH);
     }
@@ -240,6 +249,12 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         	restPanel.resume();
         	resumeButton.setEnabled(false);
         	pauseButton.setEnabled(true);
+        }
+        if(e.getSource() == emptyMarkets) {
+        	restPanel.emptyMarkets();
+        }
+        if(e.getSource() == noMoreSteak) {
+        	restPanel.noMoreSteak();
         }
     }
     

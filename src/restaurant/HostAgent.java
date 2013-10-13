@@ -150,7 +150,7 @@ public class HostAgent extends Agent {
 		}
 		
 		for(MyCustomer mc : customers) {
-			if(mc.waiting && !mc.toldRestaurantIsFull) {
+			if(mc.waiting && !mc.toldRestaurantIsFull && !waiters.isEmpty()) {
 				tellCustomerRestaurantIsFull(mc);
 			}
 		}

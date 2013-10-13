@@ -285,7 +285,7 @@ public class CustomerAgent extends Agent {
 	private void reorderFood() {
 		if(menu.getMenuSize() > 0) {			
 			// Convert 1st letter of customer's name to a number in order to choose a food.
-			int choiceNum = ((int) name.charAt(0)) % menu.getMenuSize();
+			int choiceNum = ranGenerator.nextInt(menu.getMenuSize());
 			choice = menu.getChoice(choiceNum).getType();
 
 			print("I would like an order of " + choice + " please!");

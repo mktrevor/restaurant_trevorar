@@ -21,9 +21,9 @@ public class Menu {
 	}
 
 	public void removeChoice(String choice) {
-		for(Choice c : choices) {
-			if(c.type == choice) {
-				choices.remove(c);
+		for(int i = 0; i < choices.size(); i++) {
+			if(choices.get(i).type == choice) {
+				choices.remove(choices.get(i));
 			}
 		}
 	}

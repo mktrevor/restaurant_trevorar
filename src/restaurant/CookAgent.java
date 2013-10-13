@@ -40,9 +40,9 @@ public class CookAgent extends Agent {
 		super();
 		
 					//usage: new Food(String type, int cookTime, int amount, int low, int capacity);
-		foods.put("steak", new Food("steak", 8, 2, 5, 6));
-		foods.put("fish", new Food("fish", 6, 2, 5, 6));
-		foods.put("chicken", new Food("chicken", 4, 2, 5, 6));
+		foods.put("steak", new Food("steak", 8, 6, 5, 8));
+		foods.put("fish", new Food("fish", 6, 4, 5, 8));
+		foods.put("chicken", new Food("chicken", 4, 4, 5, 8));
 		/*foods.put("pizza", new Food("pizza", 7, 5, 3, 10));
 		foods.put("salad", new Food("salad", 4, 5, 3, 10));*/
 		

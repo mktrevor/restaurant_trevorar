@@ -181,5 +181,15 @@ public class RestaurantPanel extends JPanel {
     		a.resume();
     	}
     }
+    
+    public void emptyMarkets() {
+    	market1.clearInventory();
+    	market2.clearInventory();
+    	market3.clearInventory();
+    }
+    
+    public void noMoreSteak() {
+    	cook.clearSteak();
+    }
 
 }
