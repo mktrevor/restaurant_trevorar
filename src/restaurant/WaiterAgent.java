@@ -128,7 +128,7 @@ public class WaiterAgent extends Agent {
 		}
 	}
 	
-	public void msgImDoneEating(CustomerAgent c) {
+	public void msgImFinished(CustomerAgent c) {
 		for(MyCustomer mc : customers) {
 			if(mc.c == c) {
 				mc.s = customerState.finished;
@@ -188,17 +188,16 @@ public class WaiterAgent extends Agent {
 			}
 		}
 		for(MyCustomer mc : customers) {
+			if(mc.s == customerState.checkReady) {
+				getCheckFromCashier(mc);
+			}
+		}
+		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.foodReady) {
 				bringFoodToCustomer(mc);
 				return true;
 			}
 		}
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.checkReady) {
-				getCheckFromCashier(mc);
-			}
-		}
-		
 		for(MyCustomer mc : customers) {
 			if(mc.s == customerState.waiting) {
 				seatCustomer(mc);

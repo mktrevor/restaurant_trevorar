@@ -238,7 +238,7 @@ public class CustomerAgent extends Agent {
 		}
 		if (state == AgentState.eating && event == AgentEvent.doneEating){
 			state = AgentState.doneEating;
-			tellWaiterImDone();
+			timeToPayBill();
 			return true;
 		}
 		if (state == AgentState.doneEating && event == AgentEvent.payBill && check != null) {
@@ -323,7 +323,7 @@ public class CustomerAgent extends Agent {
 				print("Everything is too expensive, I'm going to leave.");
 				
 				customerGui.doneEating();
-				waiter.msgImDoneEating(this);
+				waiter.msgImFinished(this);
 				event = AgentEvent.leaving;
 			}
 		}
@@ -356,7 +356,7 @@ public class CustomerAgent extends Agent {
 				print("Everything is too expensive, I'm going to leave.");
 				
 				customerGui.doneEating();
-				waiter.msgImDoneEating(this);
+				waiter.msgImFinished(this);
 				event = AgentEvent.leaving;
 			}
 		} 
@@ -364,7 +364,7 @@ public class CustomerAgent extends Agent {
 			print("There's nothing left for me to order! I'm leaving!");
 
 			customerGui.doneEating();
-			waiter.msgImDoneEating(this);
+			waiter.msgImFinished(this);
 			event = AgentEvent.leaving;
 		}
 	}
@@ -396,8 +396,7 @@ public class CustomerAgent extends Agent {
 		customerGui.doneEating();
 	}
 	
-	private void tellWaiterImDone() {
-		waiter.msgImDoneEating(this);
+	private void timeToPayBill() {
 		event = AgentEvent.payBill;
 	}
 
@@ -413,6 +412,8 @@ public class CustomerAgent extends Agent {
 	}
 	
 	private void payBill() {
+		waiter.msgImFinished(this);
+		
 		customerGui.DoGoToCashier();
 		
 		try {
