@@ -24,7 +24,11 @@ public class CookAgent extends Agent {
 	
 	public enum orderState { pending, cooking, cooked, finished };
 	
-	private enum foodOrderingState { notYetOrdered, ordered };
+	private enum foodOrderingState { notYetOrdered, notFulfilled, ordered };
+	
+	boolean needToReorder = false;
+	
+	boolean restaurantOpening = true; // A bool to deal with the initial inventory check when restaurant opens.
 
 	private String name;
 	
@@ -66,33 +70,46 @@ public class CookAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgWeWillDeliver(String food, int amount) { //Market will notify the cook how much they are able to deliver
-		Food thisFood = foods.get(food);
-		if(amount < (thisFood.capacity - thisFood.amount)) {
-			marketChooser = (marketChooser + 1) % markets.size(); //Try a different market!
-			orderFood(thisFood);
+	public void msgWeWillDeliver(MarketAgent m, List<FoodOrder> orders) { //Market will notify the cook how much they are able to deliver
+		for(int i = 0; i < orders.size(); i++) {
+			FoodOrder tempOrder = orders.get(i);
+			Food thisFood = foods.get(tempOrder.foodType);
+			if(tempOrder.amount < (thisFood.capacity - thisFood.amount)) {	
+				thisFood.state = foodOrderingState.notFulfilled;
+				needToReorder = true;
+			}
+			else {
+				thisFood.state = foodOrderingState.ordered;
+			}
 		}
-		else {
-			thisFood.state = foodOrderingState.ordered;
-		}
+		stateChanged();
 	}
 	
-	public void msgFoodDelivery(String food, int amount) { //Actual delivery of food
-		Food thisFood = foods.get(food);
-		thisFood.state = foodOrderingState.notYetOrdered;
-		print("Received shipment of: " + food + "!");
-		thisFood.amount += amount;
-	}
-	
-	public void msgSorryWeAreOutOf(String food) { //Market sends this message if they're out of a food.
-		marketChooser = (marketChooser + 1) % markets.size(); //Try a different market!
-		orderFood(foods.get(food));
+	public void msgFoodDelivery(MarketAgent m, List<FoodOrder> orders) { //Actual delivery of food
+		for(int i = 0; i < orders.size(); i++) {
+			FoodOrder tempOrder = orders.get(i);
+			Food thisFood = foods.get(tempOrder.foodType);
+			thisFood.state = foodOrderingState.notYetOrdered;
+			print("Received delivery of " + tempOrder.amount + " units of " + tempOrder.foodType);
+			thisFood.amount += tempOrder.amount;
+		}
+		stateChanged();
 	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
+		if(restaurantOpening) {
+			initialInventoryCheck();
+			return true;
+		}
+		
+		if(needToReorder) {
+			marketChooser = (marketChooser + 1) % markets.size();
+			orderMoreFood();
+		}
+		
 		for(Order o : orders) {
 			if(o.s == orderState.cooked) {
 				plateIt(o);
@@ -129,14 +146,14 @@ public class CookAgent extends Agent {
 			o.s = orderState.finished;
 			
 			if(thisFood.state != foodOrderingState.ordered) {
-				orderFood(thisFood);
+				orderMoreFood();
 			}
 
 			return;
 		}
 		
 		if(thisFood.amount <= thisFood.low) {
-			orderFood(thisFood);
+			orderMoreFood();
 		}
 		
 		print("Cooking up an order of " + o.choice + "!");
@@ -160,9 +177,41 @@ public class CookAgent extends Agent {
 		o.w.msgOrderDone(o.choice, o.table);
 	}
 	
-	private void orderFood(Food food) {
-		markets.get(marketChooser).msgINeedMoreFood(this, food.type, food.capacity - food.amount);
+	private void initialInventoryCheck() {
+		Food steak = foods.get("steak");
+		Food chicken = foods.get("chicken");
+		Food fish = foods.get("fish");
+		
+		if((steak.amount < steak.low) || (chicken.amount < chicken.low) || (fish.amount < fish.low)) {
+			orderMoreFood();
+		}
+		restaurantOpening = false;
 	}
+	
+	private void orderMoreFood() {
+		List<FoodOrder> orderList = new ArrayList<FoodOrder>();
+		
+		Food temp = foods.get("steak");
+		if(temp.amount < temp.low) {
+			orderList.add(new FoodOrder(temp.type, temp.capacity - temp.amount));
+		}
+		
+		temp = foods.get("chicken");
+		if(temp.amount < temp.low) {
+			orderList.add(new FoodOrder(temp.type, temp.capacity - temp.amount));
+		}
+		
+		temp = foods.get("fish");
+		if(temp.amount < temp.low) {
+			orderList.add(new FoodOrder(temp.type, temp.capacity - temp.amount));
+		}
+		
+		markets.get(marketChooser).msgFoodOrder(this, orderList);
+	}
+	
+	/*private void orderFood(Food food) {
+		markets.get(marketChooser).msgINeedMoreFood(this, food.type, food.capacity - food.amount);
+	}*/
 
 	// The animation DoXYZ() routines
 	

@@ -17,7 +17,7 @@ public class MarketAgent extends Agent {
 	
 	public List<Order> orders = new ArrayList<Order>();
 	
-	public enum orderState { ordered, delivered };
+	public enum orderState { received, processed, delivered };
 
 	private String name;
 	
@@ -47,9 +47,14 @@ public class MarketAgent extends Agent {
 
 	// Messages
 
-	public void msgINeedMoreFood(CookAgent c, String food, int amount) {
+	/*public void msgINeedMoreFood(CookAgent c, String food, int amount) {
 		orders.add( new Order(c, food, amount, orderState.ordered));
 		print("Received order for " + food + " from the cook.");
+		stateChanged();
+	}*/
+	
+	public void msgFoodOrder(CookAgent c, List<FoodOrder> order) {
+		orders.add( new Order(c, order));
 		stateChanged();
 	}
 
@@ -58,8 +63,15 @@ public class MarketAgent extends Agent {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		for(Order o : orders) {
-			if(o.s == orderState.ordered) {
+			if(o.s == orderState.received) {
 				processOrder(o);
+				return true;
+			}
+		}
+		
+		for(Order o : orders) {
+			if(o.s == orderState.processed) {
+				deliverFood(o);
 				return true;
 			}
 		}
@@ -73,38 +85,36 @@ public class MarketAgent extends Agent {
 	// Actions
 
 	private void processOrder(Order o) {
+		print("Received order from cook. Now processing to see what we can fulfill.");
 		/*DoGoToRestaurant()*/
 		/* try {
 			atDestination.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} */
-		Food orderedFood = foods.get(o.foodType);
-			
-		if(orderedFood.inventory == 0) {
-			print("Sorry, we're all out of " + o.foodType + "!");
-			
-			o.c.msgSorryWeAreOutOf(o.foodType);
-			o.s = orderState.delivered;
-		} 
-		
-		else if(orderedFood.inventory > o.amount) {
-			print("Here is your delivery of " + o.foodType + "!");
-			
-			o.c.msgFoodDelivery(o.foodType, o.amount);
-			
-			orderedFood.inventory -= o.amount;
-			o.s = orderState.delivered;
+		for(int i = 0; i < o.orders.size(); i++) {
+			FoodOrder tempOrder = o.orders.get(i);
+			Food tempFood = foods.get(tempOrder.foodType);
+
+			if(tempFood.inventory == 0) {
+				tempOrder.amount = 0;
+			} 
+
+			else if(tempFood.inventory > tempOrder.amount) {				
+				tempFood.inventory -= tempOrder.amount;
+			}
+
+			else if(tempFood.inventory < tempOrder.amount) {
+				tempOrder.amount = tempFood.inventory;
+				tempFood.inventory = 0;
+			}	
 		}
+		o.c.msgWeWillDeliver(this, o.orders);
+		o.s = orderState.processed;
+	}
+	
+	deliverFood(Order o) {
 		
-		else if(orderedFood.inventory < o.amount) {
-			print("We don't have enough " + o.foodType + ". We'll send you all that we have!");
-			
-			o.c.msgFoodDelivery(o.foodType, orderedFood.inventory);
-			
-			orderedFood.inventory = 0;
-			o.s = orderState.delivered;
-		}		
 	}
 
 	// The animation DoXYZ() routines
@@ -114,15 +124,13 @@ public class MarketAgent extends Agent {
 
 	private class Order {
 		CookAgent c;
-		String foodType;
-		int amount;
+		List<FoodOrder> orders;
 		orderState s;
 		
-		Order(CookAgent c, String foodType, int amount, orderState s) {
+		Order(CookAgent c, List<FoodOrder> orders) {
 			this.c = c;
-			this.foodType = foodType;
-			this.amount = amount;
-			this.s = s;
+			this.orders = orders;
+			this.s = orderState.received;
 		}
 	}	
 	
