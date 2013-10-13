@@ -15,8 +15,6 @@ import java.util.concurrent.Semaphore;
 //is proceeded as he wishes.
 public class CookAgent extends Agent {
 	
-	boolean foodInventoryChecked = false;
-	
 	public List<Order> orders = new ArrayList<Order>();
 	
 	private List<MarketAgent> markets = new ArrayList<MarketAgent>();

@@ -46,12 +46,6 @@ public class MarketAgent extends Agent {
 	}
 
 	// Messages
-
-	/*public void msgINeedMoreFood(CookAgent c, String food, int amount) {
-		orders.add( new Order(c, food, amount, orderState.ordered));
-		print("Received order for " + food + " from the cook.");
-		stateChanged();
-	}*/
 	
 	public void msgFoodOrder(CookAgent c, List<FoodOrder> order) {
 		orders.add( new Order(c, order));
@@ -165,7 +159,6 @@ public class MarketAgent extends Agent {
 	private class Food {
 		String type;
 		int inventory;
-		//double unitPrice;
 		
 		Food(String type, int inventory) {
 			this.type = type;

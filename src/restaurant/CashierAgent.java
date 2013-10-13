@@ -14,7 +14,7 @@ public class CashierAgent extends Agent {
 	
 	private Menu menu = new Menu();
 
-	private enum checkState { requested, givenToWaiter, beingPaid, fullyPaid, partiallyPaid, finished };
+	private enum checkState { requested, givenToWaiter, fullyPaid, partiallyPaid, finished };
 
 	private String name;
 	

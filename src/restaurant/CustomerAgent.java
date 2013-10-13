@@ -18,7 +18,7 @@ public class CustomerAgent extends Agent {
 	private double money;
 	private Check check;
 	
-	private int hungerLevel = 8; // determines length of meal
+	private int hungerLevel = 6; // determines length of meal
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
 	
@@ -165,10 +165,6 @@ public class CustomerAgent extends Agent {
 		check = c;
 		stateChanged();
 	}
-	
-	/*public void msgHereIsYourChange(double money) {
-		this.money += money;
-	}*/
 	
 	public void msgHereIsYourFood(String choice) {
 		event = AgentEvent.startedEating;
@@ -404,10 +400,6 @@ public class CustomerAgent extends Agent {
 	private void leaveRestaurant() {
 		print("I'm leaving! Goodbye!");
 		customerGui.DoExitRestaurant();
-		
-		if(name.equals("cheap")) {
-			money = 11.0;
-		}
 	}
 	
 	private void impatientLeaveRestaurant() {

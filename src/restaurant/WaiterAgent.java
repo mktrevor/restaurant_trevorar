@@ -35,7 +35,7 @@ public class WaiterAgent extends Agent {
 	private Semaphore customerAtTable = new Semaphore(0, true);
 	
 	private enum waiterState { working, onBreak };
-	private waiterState state;
+	private waiterState state = waiterState.working;
 	
 	private enum waiterEvent { none, backToWork, takeABreak };
 	private waiterEvent event = waiterEvent.none;
