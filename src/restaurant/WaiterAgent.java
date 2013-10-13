@@ -262,7 +262,7 @@ public class WaiterAgent extends Agent {
 			e.printStackTrace();
 		}
 		
-		print("Welcome to Restaurant V2! Here is your seat.");
+		print("Welcome to Restaurant V2.1! Here is your seat.");
 		
 		try {
 			customerAtTable.acquire();

@@ -29,7 +29,7 @@ public class HostAgent extends Agent {
 
 	private String name;
 	
-	private int numberOfWorkingWaiters = 0;
+	private int numberOfWorkingWaiters = 0; //To make sure there's always at least 1 waiter not on break.
 	
 	public HostGui hostGui = null;
 
@@ -72,13 +72,14 @@ public class HostAgent extends Agent {
 		for(MyCustomer mc : customers) {
 			if(mc.c == c) {
 				mc.waiting = true;
-				print("Welcome to Restaurant V2, " + c.getName() + "!");
+				mc.toldRestaurantIsFull = false;
+				print("Welcome to Restaurant V2.1, " + c.getName() + "!");
 				stateChanged();
 				return;
 			}
 		}
 		customers.add(new MyCustomer(c));
-		print("Welcome to Restaurant V2, " + c.getName() + "!");
+		print("Welcome to Restaurant V2.1, " + c.getName() + "!");
 		stateChanged();
 	}
 	
@@ -97,6 +98,15 @@ public class HostAgent extends Agent {
 				mw.iWantABreak = false;
 				mw.state = waiterState.working;
 				numberOfWorkingWaiters++;
+			}
+		}
+		stateChanged();
+	}
+	
+	public void msgImLeaving(CustomerAgent c) {
+		for(MyCustomer mc : customers) {
+			if(mc.c == c) {
+				mc.waiting = false;
 			}
 		}
 		stateChanged();
@@ -138,7 +148,12 @@ public class HostAgent extends Agent {
 				}
 			}
 		}
-
+		
+		for(MyCustomer mc : customers) {
+			if(mc.waiting && !mc.toldRestaurantIsFull) {
+				tellCustomerRestaurantIsFull(mc);
+			}
+		}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -182,6 +197,12 @@ public class HostAgent extends Agent {
 		print("Alright, " + w.w.getName() + ", finish up and take a break.");
 		w.state = waiterState.onBreak;
 		numberOfWorkingWaiters--;
+	}
+	
+	private void tellCustomerRestaurantIsFull(MyCustomer c) {
+		print("The restaurant is currently full. Feel free to wait for an opening or leave!");
+		c.toldRestaurantIsFull = true;
+		c.c.msgRestaurantFull();
 	}
 
 	// The animation DoXYZ() routines
@@ -227,10 +248,12 @@ public class HostAgent extends Agent {
 	private class MyCustomer {
 		CustomerAgent c;
 		boolean waiting;
+		boolean toldRestaurantIsFull; 
 		
 		MyCustomer(CustomerAgent c) {
 			this.c = c;
 			this.waiting = true;
+			this.toldRestaurantIsFull = false;
 		}
 	}
 }

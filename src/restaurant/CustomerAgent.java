@@ -100,6 +100,18 @@ public class CustomerAgent extends Agent {
 	}
 	
 	// Messages
+	
+	public void msgRestaurantFull() {
+		int randomChoice = ranGenerator.nextInt(2);
+		if(randomChoice == 0) {
+			print("I don't have time to wait around!");
+			event = AgentEvent.leaving;
+		}
+		else if(randomChoice == 1) {
+			print("I'm in no hurry, I'll wait around.");
+		}
+		stateChanged();
+	}
 
 	public void msgGotHungry() {//from animation
 		print("I'm hungry");
@@ -169,6 +181,11 @@ public class CustomerAgent extends Agent {
 			goToRestaurant();
 			return true;
 		}
+		if(state == AgentState.waitingInRestaurant && event == AgentEvent.leaving) {
+			state = AgentState.leaving;
+			impatientLeaveRestaurant();
+			return true;
+		}
 		if (state == AgentState.waitingInRestaurant && event == AgentEvent.followWaiter ){
 			state = AgentState.beingSeated;
 			sitDown();
@@ -211,7 +228,8 @@ public class CustomerAgent extends Agent {
 		}
 		if (state == AgentState.doneEating && event == AgentEvent.payBill && check != null) {
 			state = AgentState.payingBill;
-			payBill();	
+			payBill();
+			return true;
 		}
 		if (state == AgentState.payingBill && event == AgentEvent.leaving){
 			state = AgentState.leaving;
@@ -318,6 +336,12 @@ public class CustomerAgent extends Agent {
 
 	private void leaveRestaurant() {
 		print("I'm leaving! Goodbye!");
+		customerGui.DoExitRestaurant();
+	}
+	
+	private void impatientLeaveRestaurant() {
+		print("I'm leaving! Goodbye!");
+		host.msgImLeaving(this);
 		customerGui.DoExitRestaurant();
 	}
 	
