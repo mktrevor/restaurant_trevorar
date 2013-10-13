@@ -46,18 +46,19 @@ public class CashierAgent extends Agent {
 		
 		for(MyCustomer mc : customersWhoOweMoney) {
 			if(mc.c == c) {
+				print("Well, look who's back! This customer will have to repay their previous bill of " + mc.amountOwed + " as well.");
 				check.amount += mc.amountOwed;
 			}
 		}
-		
 		checks.add(new MyCheck(w, check));
+		
 		stateChanged();
 	}
 	
 	public void msgPayBill(Check check, double money) {
 		for(MyCheck c : checks) {
 			if(c.c == check) {
-				if(money > c.c.amount) {
+				if(money == c.c.amount) {
 					c.state = checkState.fullyPaid;
 				}
 				else if(money < c.c.amount) {
@@ -75,7 +76,7 @@ public class CashierAgent extends Agent {
 	protected boolean pickAndExecuteAnAction() {
 		for(MyCheck c : checks) {
 			if(c.state == checkState.fullyPaid) {
-				giveChange(c);
+				thankCustomer(c);
 			}
 		}
 		for(MyCheck c : checks) {
@@ -87,10 +88,6 @@ public class CashierAgent extends Agent {
 			if(c.state == checkState.requested) {
 				giveCheckToWaiter(c);
 			}
-		}
-		
-		for(MyCheck c : checks) {
-			
 		}
 
 		return false;
@@ -106,12 +103,20 @@ public class CashierAgent extends Agent {
 		c.state = checkState.givenToWaiter;
 	}
 	
-	private void giveChange(MyCheck c) {
-		print("Here is your change! Please come again!");
+	private void thankCustomer(MyCheck c) {
+		print("Thank you! Please come again!");
 		c.state = checkState.finished;
 	}
 	
 	private void addCustomerToOweList(MyCheck c) {
+		print("Your bill is for $" + c.c.amount + "! You'll have to pay it back next time!");
+		for(MyCustomer mc : customersWhoOweMoney) { //If customer is already on the "owe money" list, add the money to the amount they owe
+			if(mc.c == c.c.cust) {
+				c.state = checkState.finished;
+				return;
+			}
+		}
+		
 		customersWhoOweMoney.add(new MyCustomer(c.c.cust, c.c.amount));
 		c.state = checkState.finished;
 	}

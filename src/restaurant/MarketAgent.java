@@ -102,7 +102,7 @@ public class MarketAgent extends Agent {
 			}	
 		}
 		
-		boolean cannotFulfillOrder = true;;
+		boolean cannotFulfillOrder = true;
 
 		for(int i = 0; i < o.orders.size(); i++) {
 			FoodOrder tempOrder = o.orders.get(i);
@@ -113,7 +113,7 @@ public class MarketAgent extends Agent {
 		
 		if(cannotFulfillOrder) {
 			print("Sorry, we are unable to fulfill any part of your order.");
-			o.c.msgCannotFulfillOrder();
+			o.c.msgCannotFulfillOrder(o.orders);
 			o.s = orderState.none;
 			return;
 		}

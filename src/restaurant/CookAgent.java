@@ -82,19 +82,26 @@ public class CookAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgCannotFulfillOrder() {
+	public void msgCannotFulfillOrder(List<FoodOrder> orders) {
 		marketChooser = (marketChooser + 1) % markets.size(); //Start ordering from a different market.
+		for(int i = 0; i < orders.size(); i++) {
+			FoodOrder tempOrder = orders.get(i);
+			Food tempFood = foods.get(tempOrder.foodType);
+			tempFood.state = foodOrderingState.notYetOrdered;
+		}
+		stateChanged();
 	}
 	
 	public void msgFoodDelivery(MarketAgent m, List<FoodOrder> orders) { //Actual delivery of food
 		for(int i = 0; i < orders.size(); i++) {
 			FoodOrder tempOrder = orders.get(i);
-			Food thisFood = foods.get(tempOrder.foodType);
-			thisFood.state = foodOrderingState.notYetOrdered;
+			Food tempFood = foods.get(tempOrder.foodType);
+			tempFood.state = foodOrderingState.notYetOrdered;
 			print("Received delivery of " + tempOrder.amount + " units of " + tempOrder.foodType);
-			thisFood.amount += tempOrder.amount;
+			tempFood.amount += tempOrder.amount;
 		}
 		stateChanged();
+		
 	}
 
 	/**
@@ -230,6 +237,10 @@ public class CookAgent extends Agent {
 	public HostGui getGui() {
 		return hostGui;
 	}*/
+	
+	public void clearSteak() {
+		foods.get("steak").amount = 0;
+	}
 	
 	public void addMarket(MarketAgent m) {
 		markets.add(m);

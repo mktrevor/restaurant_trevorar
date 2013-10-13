@@ -52,6 +52,12 @@ public class CustomerAgent extends Agent {
 		
 		Random ranGenerator = new Random();
 		
+		money = (double) ranGenerator.nextInt(50);
+		
+		if(name.equals("broke")) {
+			money = 0.0;
+		}
+		
 		int randNum = ranGenerator.nextInt(3);
 		
 		switch(randNum) {
@@ -308,7 +314,7 @@ public class CustomerAgent extends Agent {
 	}
 
 	private void leaveRestaurant() {
-		print("Leaving.");
+		print("I'm leaving! Goodbye!");
 		customerGui.DoExitRestaurant();
 	}
 	
@@ -321,13 +327,14 @@ public class CustomerAgent extends Agent {
 			e.printStackTrace();
 		}
 		
-		print("Here is my payment!");
 		if(money > check.amount) {
 			check.cashier.msgPayBill(check, check.amount);
+			print("Here is my payment of $" + check.amount + ".");
 			money -= check.amount;
 		}
 		else {
 			check.cashier.msgPayBill(check, money);
+			print("This is all I have. Take $" + money + ".");
 			money = 0;
 		}
 		event = AgentEvent.leaving;
