@@ -128,9 +128,6 @@ public class CookAgent extends Agent {
 		}
 
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
 	}
 
 	// Actions
@@ -219,24 +216,6 @@ public class CookAgent extends Agent {
 		print("Sending order for more food to the market!");
 		markets.get(marketChooser).msgFoodOrder(this, orderList);
 	}
-	
-	/*private void orderFood(Food food) {
-		markets.get(marketChooser).msgINeedMoreFood(this, food.type, food.capacity - food.amount);
-	}*/
-
-	// The animation DoXYZ() routines
-	
-
-	//utilities
-
-	//Stuff for cook GUi
-	/*public void setGui(HostGui gui) {
-		hostGui = gui;
-	}
-
-	public HostGui getGui() {
-		return hostGui;
-	}*/
 	
 	public void clearSteak() {
 		foods.get("steak").amount = 0;
