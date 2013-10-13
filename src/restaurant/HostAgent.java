@@ -188,8 +188,8 @@ public class HostAgent extends Agent {
 	private void giveWaiterABreak(MyWaiter w) {
 		w.iWantABreak = false;
 		if(waiters.size() == 1 || numberOfWorkingWaiters == 1) {
-			w.w.msgSorryNoBreakNow();
 			print("Sorry, there's no one else to cover for you!");
+			w.w.msgSorryNoBreakNow();
 			return;
 		}
 				

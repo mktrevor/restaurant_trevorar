@@ -15,6 +15,15 @@ public class Menu {
 	Choice getChoice(int index) {
 		return choices.get(index);
 	}
+	
+	Choice getChoice(String choice) {
+		for(Choice c : choices) {
+			if(c.type == choice) {
+				return c;
+			}
+		}
+		return null;
+	}
 
 	public int getMenuSize() {
 		return choices.size();

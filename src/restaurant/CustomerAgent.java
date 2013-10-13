@@ -54,11 +54,8 @@ public class CustomerAgent extends Agent {
 		
 		money = (double) ranGenerator.nextInt(50);
 		
-		if(name.equals("broke")) {
+		if(name.equals("broke") || name.equals("flake")) {
 			money = 0.0;
-		}
-		if(name.equals("moneybags")) {
-			money = 1000.0;
 		}
 		
 		int randNum = ranGenerator.nextInt(3);
@@ -85,6 +82,10 @@ public class CustomerAgent extends Agent {
 		}
 		if(name.equals("chicken")) {
 			choice = "chicken";
+		}
+		
+		if(name.equals("cheap")) {
+			money = 11.0;
 		}
 	}
 
@@ -274,25 +275,78 @@ public class CustomerAgent extends Agent {
 	}
 	
 	private void orderFood() {
-		print("I would like an order of " + choice + " please!");
-		
-		customerGui.orderedFood(choice);
-		print(choice + " please!");
-		
-		waiter.msgHereIsMyChoice(this, choice);
+		if(menu.getChoice(choice).price < money) {
+			print("I would like an order of " + choice + " please!");
+
+			customerGui.orderedFood(choice);
+			print(choice + " please!");
+
+			waiter.msgHereIsMyChoice(this, choice);
+		}
+		else {
+			for(int i = 0; i < menu.getMenuSize(); i++) { //Try to find a choice the customer can afford
+				if(menu.getChoice(i).price < money) {
+					choice = menu.getChoice(i).type;
+
+					print("I would like an order of " + choice + " please!");
+
+					customerGui.orderedFood(choice);
+					print(choice + " please!");
+
+					waiter.msgHereIsMyChoice(this, choice);
+					return;
+				}
+			}
+			if(name.equals("flake")) { //This customer will buy food he/she can't afford
+				print("I would like an order of " + choice + " please!");
+
+				customerGui.orderedFood(choice);
+				print(choice + " please!");
+
+				waiter.msgHereIsMyChoice(this, choice);
+			}
+			else {
+				print("Everything is too expensive, I'm going to leave.");
+				
+				customerGui.doneEating();
+				waiter.msgImDoneEating(this);
+				event = AgentEvent.leaving;
+			}
+		}
 	}
 	
 	private void reorderFood() {
-		if(menu.getMenuSize() > 0) {			
-			// Convert 1st letter of customer's name to a number in order to choose a food.
-			int choiceNum = ranGenerator.nextInt(menu.getMenuSize());
-			choice = menu.getChoice(choiceNum).getType();
+		if(menu.getMenuSize() > 0) {		
+			for(int i = 0; i < menu.getMenuSize(); i++) { //Try to find a choice the customer can afford
+				if(menu.getChoice(i).price < money) {
+					choice = menu.getChoice(i).type;
 
-			print("I would like an order of " + choice + " please!");
-			customerGui.orderedFood(choice);
-			
-			waiter.msgHereIsMyChoice(this, choice);
-		} else {
+					print("I would like an order of " + choice + " please!");
+
+					customerGui.orderedFood(choice);
+					print(choice + " please!");
+
+					waiter.msgHereIsMyChoice(this, choice);
+					return;
+				}
+			}
+			if(name.equals("flake")) { //This customer will buy food he/she can't afford
+				print("I would like an order of " + choice + " please!");
+
+				customerGui.orderedFood(choice);
+				print(choice + " please!");
+
+				waiter.msgHereIsMyChoice(this, choice);
+			}
+			else { // Customer leaves if everything is too expensive
+				print("Everything is too expensive, I'm going to leave.");
+				
+				customerGui.doneEating();
+				waiter.msgImDoneEating(this);
+				event = AgentEvent.leaving;
+			}
+		} 
+		else {
 			print("There's nothing left for me to order! I'm leaving!");
 
 			customerGui.doneEating();
@@ -328,7 +382,6 @@ public class CustomerAgent extends Agent {
 		customerGui.doneEating();
 	}
 	
-	//Combine last two???
 	private void tellWaiterImDone() {
 		waiter.msgImDoneEating(this);
 		event = AgentEvent.payBill;
@@ -368,7 +421,6 @@ public class CustomerAgent extends Agent {
 	}
 
 	// Accessors, etc.
-
 	public String getName() {
 		return name;
 	}

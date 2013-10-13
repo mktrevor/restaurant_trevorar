@@ -48,8 +48,12 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
     private JButton resumeButton;
     private JLabel speedLabel;
     private JSlider speedSlider;
-    private JButton emptyMarkets;
+    private JButton emptyMarket1;
+    private JButton emptyMarket2;
+    private JButton emptyMarket3;
     private JButton noMoreSteak;
+    private JButton noMoreFish;
+    private JButton noMoreChicken;
     
     private Object currentPerson;/* Holds the agent that the info is about.
     								Seems like a hack */
@@ -87,7 +91,7 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         add(animationPanel, BorderLayout.CENTER);
         
         // Now, setup the info panel
-        Dimension infoDim = new Dimension(WINDOWX/3, (int) (WINDOWY * .2));
+        Dimension infoDim = new Dimension(WINDOWX/3, (int) (WINDOWY * .15));
         infoPanel = new JPanel();
         infoPanel.setPreferredSize(infoDim);
         infoPanel.setMinimumSize(infoDim);
@@ -105,8 +109,6 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         removeMoney = new JButton("- $10");
         removeMoney.setVisible(false);
         removeMoney.addActionListener(this);
-
-        //infoPanel.setLayout(new GridLayout(1, 2, 30, 0));
         
         infoPanel.setLayout(new FlowLayout());
         
@@ -131,20 +133,38 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         pauseLabel = new JLabel("                Pause/Resume: ");
         speedLabel = new JLabel("                Animation Speed: ");
                 
-        emptyMarkets = new JButton("Empty all markets");
-        emptyMarkets.addActionListener(this);
-        noMoreSteak = new JButton("No more steak");
+        emptyMarket1 = new JButton("Empty Market 1");
+        emptyMarket1.addActionListener(this);
+        emptyMarket2 = new JButton("Empty Market 2");
+        emptyMarket2.addActionListener(this);
+        emptyMarket3 = new JButton("Empty Market 3");
+        emptyMarket3.addActionListener(this);
+        noMoreSteak = new JButton("steak = 0");
         noMoreSteak.addActionListener(this);
+        noMoreFish = new JButton("fish = 0");
+        noMoreFish.addActionListener(this);
+        noMoreChicken = new JButton("chicken = 0");
+        noMoreChicken.addActionListener(this);
         
+        Dimension optionDim = new Dimension(WINDOWX, (int) (WINDOWY * .1));
         optionPanel = new JPanel();
+        optionPanel.setPreferredSize(optionDim);
+        optionPanel.setMinimumSize(optionDim);
+        optionPanel.setMaximumSize(optionDim);
         
+        optionPanel.setLayout(new GridLayout(2, 6));
+        
+        optionPanel.add(emptyMarket1);
+        optionPanel.add(emptyMarket2);
+        optionPanel.add(emptyMarket3);
+        optionPanel.add(noMoreSteak);
+        optionPanel.add(noMoreFish);
+        optionPanel.add(noMoreChicken);
         optionPanel.add(pauseLabel);
         optionPanel.add(pauseButton);
         optionPanel.add(resumeButton);
         optionPanel.add(speedLabel);
         optionPanel.add(speedSlider);
-        optionPanel.add(emptyMarkets);
-        optionPanel.add(noMoreSteak);
         
         add(optionPanel, BorderLayout.NORTH);
     }
@@ -250,11 +270,23 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         	resumeButton.setEnabled(false);
         	pauseButton.setEnabled(true);
         }
-        if(e.getSource() == emptyMarkets) {
-        	restPanel.emptyMarkets();
+        if(e.getSource() == emptyMarket1) {
+        	restPanel.emptyMarket1();
+        }
+        if(e.getSource() == emptyMarket2) {
+        	restPanel.emptyMarket2();
+        }
+        if(e.getSource() == emptyMarket3) {
+        	restPanel.emptyMarket3();
         }
         if(e.getSource() == noMoreSteak) {
         	restPanel.noMoreSteak();
+        }
+        if(e.getSource() == noMoreFish) {
+        	restPanel.noMoreFish();
+        }
+        if(e.getSource() == noMoreChicken) {
+        	restPanel.noMoreChicken();
         }
     }
     

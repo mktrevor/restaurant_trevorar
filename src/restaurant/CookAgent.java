@@ -27,7 +27,7 @@ public class CookAgent extends Agent {
 	private enum foodOrderingState { notYetOrdered, ordered };
 	
 	boolean restaurantOpening = true; // A bool to deal with the initial inventory check when restaurant opens.
-
+	
 	private String name;
 	
 	Timer timer = new Timer();
@@ -240,6 +240,14 @@ public class CookAgent extends Agent {
 	
 	public void clearSteak() {
 		foods.get("steak").amount = 0;
+	}
+	
+	public void clearFish() {
+		foods.get("fish").amount = 0;
+	}
+	
+	public void clearChicken() {
+		foods.get("chicken").amount = 0;
 	}
 	
 	public void addMarket(MarketAgent m) {
