@@ -99,6 +99,7 @@ public class CashierAgent extends Agent {
 	// Actions
 
 	private void giveCheckToWaiter(MyCheck c) {
+		print("The check for " + c.c.cust + " is ready!");
 		c.w.msgHereIsCheck(c.c);
 		c.state = checkState.givenToWaiter;
 	}
@@ -109,7 +110,7 @@ public class CashierAgent extends Agent {
 	}
 	
 	private void addCustomerToOweList(MyCheck c) {
-		print("Your bill is for $" + c.c.amount + "! You'll have to pay it back next time!");
+		print("You still owe $" + c.c.amount + "! You'll have to pay it back next time!");
 		for(MyCustomer mc : customersWhoOweMoney) { //If customer is already on the "owe money" list, add the money to the amount they owe
 			if(mc.c == c.c.cust) {
 				c.state = checkState.finished;
@@ -125,15 +126,6 @@ public class CashierAgent extends Agent {
 	
 
 	//utilities
-
-	//Stuff for cook GUi
-	/*public void setGui(HostGui gui) {
-		hostGui = gui;
-	}
-
-	public HostGui getGui() {
-		return hostGui;
-	}*/
 	
 	private class MyCheck {
 		WaiterAgent w;
