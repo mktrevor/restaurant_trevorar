@@ -380,7 +380,7 @@ public class WaiterAgent extends Agent {
 		waiterGui.msgBreakFinished();
 		event = waiterEvent.backToWork;
 		breakStatus = breakState.none;
-		print("Alright, I finished my break!");
+		print("Alright, break time is over. Back to work!");
 		host.msgImDoneWithMyBreak(this);
 	}
 	
