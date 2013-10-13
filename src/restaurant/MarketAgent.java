@@ -143,6 +143,12 @@ public class MarketAgent extends Agent {
 	
 
 	//utilities
+	
+	public void clearInventory() {
+		foods.get("steak").inventory = 0;
+		foods.get("fish").inventory = 0;
+		foods.get("chicken").inventory = 0;
+	}
 
 	private class Order {
 		CookAgent c;
