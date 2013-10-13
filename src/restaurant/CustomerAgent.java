@@ -112,10 +112,14 @@ public class CustomerAgent extends Agent {
 		//Hacks to demonstrate working code. "patient" will always wait while "impatient" will leave
 		if(name.equals("patient")) {
 			print("I'm in no hurry, I'll wait around.");
+			stateChanged();
+			return;
 		}
 		if(name.equals("impatient")) {
 			print("I don't have time to wait around!");
 			event = AgentEvent.leaving;
+			stateChanged();
+			return;
 		}
 		
 		if(randomChoice == 0) {
