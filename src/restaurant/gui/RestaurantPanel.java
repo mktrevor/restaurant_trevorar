@@ -24,13 +24,13 @@ public class RestaurantPanel extends JPanel {
     private Vector<Agent> agents = new Vector<Agent>();
     
     //Host, cook, waiters and customers
-    private HostAgent host = new HostAgent("Host");
+    private HostAgent host = new HostAgent("Wilczynski");
     private HostGui hostGui = new HostGui(host);
     
-    private CookAgent cook = new CookAgent("Chef");
+    private CookAgent cook = new CookAgent("Rami");
     private CookGui cookGui = new CookGui(cook);
     
-    private CashierAgent cashier = new CashierAgent("Cashier");
+    private CashierAgent cashier = new CashierAgent("Crowley");
     private CashierGui cashierGui = new CashierGui(cashier);
     
     							//usage: new MarketAgent(String name, int steak, int fish, int chicken);
@@ -92,7 +92,11 @@ public class RestaurantPanel extends JPanel {
         JLabel label = new JLabel();
         restLabel.setLayout(new BorderLayout());
         label.setText(
-                "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$15.99</td></tr><tr><td>Fish</td><td>$13.99</td></tr><tr><td>Chicken</td><td>$10.99</td></tr></table><br></html>");
+                "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>Host:</td><td>" + host.getName() + 
+                "</td></tr></table><table><tr><td>Cook:</td><td>" + cook.getName() + 
+                "</td></tr></table><table><tr><td>Cashier:</td><td>" + cashier.getName() + 
+                "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$15.99</td></tr>" +
+                "<tr><td>Fish</td><td>$13.99</td></tr><tr><td>Chicken</td><td>$10.99</td></tr></table><br></html>");
 
         restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
         restLabel.add(label, BorderLayout.CENTER);
