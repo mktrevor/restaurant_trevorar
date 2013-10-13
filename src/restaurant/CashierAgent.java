@@ -6,13 +6,6 @@ import restaurant.gui.HostGui;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-/**
- * Restaurant Host Agent
- */
-//We only have 2 types of agents in this prototype. A customer and an agent that
-//does all the rest. Rather than calling the other agent a waiter, we called him
-//the HostAgent. A Host is the manager of a restaurant who sees that all
-//is proceeded as he wishes.
 public class CashierAgent extends Agent {
 	
 	public List<MyCheck> checks = new ArrayList<MyCheck>();
@@ -26,8 +19,6 @@ public class CashierAgent extends Agent {
 	private String name;
 	
 	Timer timer = new Timer();
-	
-	//public MarketGui marketGui = null;
 
 	public CashierAgent(String name) {
 		super();
@@ -91,9 +82,6 @@ public class CashierAgent extends Agent {
 		}
 
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
 	}
 
 	// Actions
