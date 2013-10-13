@@ -33,9 +33,10 @@ public class RestaurantPanel extends JPanel {
     private CashierAgent cashier = new CashierAgent("Cashier");
     private CashierGui cashierGui = new CashierGui(cashier);
     
+    							//usage: new MarketAgent(String name, int steak, int fish, int chicken);
     private MarketAgent market1 = new MarketAgent("Market 1", 5, 5, 5);
-    private MarketAgent market2 = new MarketAgent("Market 2", 2, 2, 2);
-    private MarketAgent market3 = new MarketAgent("Market 3", 10, 10, 10);
+    private MarketAgent market2 = new MarketAgent("Market 2", 10, 10, 10);
+    private MarketAgent market3 = new MarketAgent("Market 3", 100, 100, 100);
 
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();

@@ -24,9 +24,7 @@ public class CookAgent extends Agent {
 	
 	public enum orderState { pending, cooking, cooked, finished };
 	
-	private enum foodOrderingState { notYetOrdered, notFulfilled, ordered };
-	
-	boolean needToReorder = false;
+	private enum foodOrderingState { notYetOrdered, ordered };
 	
 	boolean restaurantOpening = true; // A bool to deal with the initial inventory check when restaurant opens.
 
@@ -40,10 +38,11 @@ public class CookAgent extends Agent {
 
 	public CookAgent(String name) {
 		super();
-
-		foods.put("steak", new Food("steak", 8, 2, 2, 5));
-		foods.put("fish", new Food("fish", 6, 2, 2, 5));
-		foods.put("chicken", new Food("chicken", 4, 2, 2, 5));
+		
+					//usage: new Food(String type, int cookTime, int amount, int low, int capacity);
+		foods.put("steak", new Food("steak", 8, 2, 5, 6));
+		foods.put("fish", new Food("fish", 6, 2, 5, 6));
+		foods.put("chicken", new Food("chicken", 4, 2, 5, 6));
 		/*foods.put("pizza", new Food("pizza", 7, 5, 3, 10));
 		foods.put("salad", new Food("salad", 4, 5, 3, 10));*/
 		
@@ -59,7 +58,6 @@ public class CookAgent extends Agent {
 	}
 
 	// Messages
-
 	public void msgHereIsOrder(WaiterAgent w, String choice, int table) {
 		orders.add(new Order(w, choice, table, orderState.pending));
 		stateChanged();
@@ -75,14 +73,17 @@ public class CookAgent extends Agent {
 			FoodOrder tempOrder = orders.get(i);
 			Food thisFood = foods.get(tempOrder.foodType);
 			if(tempOrder.amount < (thisFood.capacity - thisFood.amount)) {	
-				thisFood.state = foodOrderingState.notFulfilled;
-				needToReorder = true;
+				thisFood.state = foodOrderingState.notYetOrdered;
 			}
 			else {
 				thisFood.state = foodOrderingState.ordered;
 			}
 		}
 		stateChanged();
+	}
+	
+	public void msgCannotFulfillOrder() {
+		marketChooser = (marketChooser + 1) % markets.size(); //Start ordering from a different market.
 	}
 	
 	public void msgFoodDelivery(MarketAgent m, List<FoodOrder> orders) { //Actual delivery of food
@@ -103,11 +104,6 @@ public class CookAgent extends Agent {
 		if(restaurantOpening) {
 			initialInventoryCheck();
 			return true;
-		}
-		
-		if(needToReorder) {
-			marketChooser = (marketChooser + 1) % markets.size();
-			orderMoreFood();
 		}
 		
 		for(Order o : orders) {
@@ -192,20 +188,28 @@ public class CookAgent extends Agent {
 		List<FoodOrder> orderList = new ArrayList<FoodOrder>();
 		
 		Food temp = foods.get("steak");
-		if(temp.amount < temp.low) {
+		if(temp.amount < temp.low && temp.state == foodOrderingState.notYetOrdered) {
 			orderList.add(new FoodOrder(temp.type, temp.capacity - temp.amount));
+			temp.state = foodOrderingState.ordered;
 		}
 		
 		temp = foods.get("chicken");
-		if(temp.amount < temp.low) {
+		if(temp.amount < temp.low && temp.state == foodOrderingState.notYetOrdered) {
 			orderList.add(new FoodOrder(temp.type, temp.capacity - temp.amount));
+			temp.state = foodOrderingState.ordered;
 		}
 		
 		temp = foods.get("fish");
-		if(temp.amount < temp.low) {
+		if(temp.amount < temp.low && temp.state == foodOrderingState.notYetOrdered) {
 			orderList.add(new FoodOrder(temp.type, temp.capacity - temp.amount));
+			temp.state = foodOrderingState.ordered;
 		}
 		
+		if(orderList.isEmpty()) {
+			return;
+		}
+		
+		print("Sending order for more food to the market!");
 		markets.get(marketChooser).msgFoodOrder(this, orderList);
 	}
 	

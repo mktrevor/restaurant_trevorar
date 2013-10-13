@@ -17,7 +17,7 @@ public class MarketAgent extends Agent {
 	
 	public List<Order> orders = new ArrayList<Order>();
 	
-	public enum orderState { received, processed, delivered };
+	public enum orderState { none, received, processed, readyForDelivery, delivered };
 
 	private String name;
 	
@@ -71,27 +71,19 @@ public class MarketAgent extends Agent {
 		
 		for(Order o : orders) {
 			if(o.s == orderState.processed) {
-				deliverFood(o);
+				prepareOrder(o);
 				return true;
 			}
 		}
 
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
 	}
 
 	// Actions
 
 	private void processOrder(Order o) {
 		print("Received order from cook. Now processing to see what we can fulfill.");
-		/*DoGoToRestaurant()*/
-		/* try {
-			atDestination.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} */
+		
 		for(int i = 0; i < o.orders.size(); i++) {
 			FoodOrder tempOrder = o.orders.get(i);
 			Food tempFood = foods.get(tempOrder.foodType);
@@ -109,12 +101,42 @@ public class MarketAgent extends Agent {
 				tempFood.inventory = 0;
 			}	
 		}
+		
+		boolean cannotFulfillOrder = true;;
+
+		for(int i = 0; i < o.orders.size(); i++) {
+			FoodOrder tempOrder = o.orders.get(i);
+			if(tempOrder.amount != 0) {
+				cannotFulfillOrder = false;
+			}
+		}
+		
+		if(cannotFulfillOrder) {
+			print("Sorry, we are unable to fulfill any part of your order.");
+			o.c.msgCannotFulfillOrder();
+			o.s = orderState.none;
+			return;
+		}
+		
+		print("Order processed; we will soon deliver a full or partial shipment!");
+		
 		o.c.msgWeWillDeliver(this, o.orders);
 		o.s = orderState.processed;
 	}
 	
-	deliverFood(Order o) {
-		
+	private void prepareOrder(final Order o) { //Delivers the food from this order after 10 seconds have passed.
+		o.s = orderState.readyForDelivery;
+		timer.schedule(new TimerTask() {
+			public void run() {
+				deliverFood(o);
+			}
+		}, 10000 );
+	}
+	
+	private void deliverFood(Order o) {
+		print("Sending food delivery");
+		o.c.msgFoodDelivery(this, o.orders);
+		o.s = orderState.delivered;
 	}
 
 	// The animation DoXYZ() routines
