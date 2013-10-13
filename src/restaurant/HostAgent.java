@@ -15,8 +15,6 @@ import java.util.concurrent.Semaphore;
 //is proceeded as he wishes.
 public class HostAgent extends Agent {
 	static final int NTABLES = 4;//a global for the number of tables.
-	//Notice that we implement waitingCustomers using ArrayList, but type it
-	//with List semantics.
 	public List<MyCustomer> customers
 	= new ArrayList<MyCustomer>();
 	
@@ -29,7 +27,7 @@ public class HostAgent extends Agent {
 
 	private String name;
 	
-	private int numberOfWorkingWaiters = 0; //To make sure there's always at least 1 waiter not on break.
+	private int numberOfWorkingWaiters = 0; //To make sure there's always at least 1 waiter working
 	
 	public HostGui hostGui = null;
 
@@ -243,7 +241,7 @@ public class HostAgent extends Agent {
 		}
 	}
 	
-	private enum waiterState { working, onBreak };
+	private enum waiterState { working, onBreak }; //Waiter is either working or taking a break
 	
 	private class MyCustomer {
 		CustomerAgent c;
@@ -253,7 +251,7 @@ public class HostAgent extends Agent {
 		MyCustomer(CustomerAgent c) {
 			this.c = c;
 			this.waiting = true;
-			this.toldRestaurantIsFull = false;
+			this.toldRestaurantIsFull = false; //This gives customer a chance to leave if restaurant is full
 		}
 	}
 }
