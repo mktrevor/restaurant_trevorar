@@ -108,6 +108,16 @@ public class CustomerAgent extends Agent {
 	
 	public void msgRestaurantFull() {
 		int randomChoice = ranGenerator.nextInt(2);
+		
+		//Hacks to demonstrate working code. "patient" will always wait while "impatient" will leave
+		if(name.equals("patient")) {
+			print("I'm in no hurry, I'll wait around.");
+		}
+		if(name.equals("impatient")) {
+			print("I don't have time to wait around!");
+			event = AgentEvent.leaving;
+		}
+		
 		if(randomChoice == 0) {
 			print("I don't have time to wait around!");
 			event = AgentEvent.leaving;
@@ -394,6 +404,10 @@ public class CustomerAgent extends Agent {
 	private void leaveRestaurant() {
 		print("I'm leaving! Goodbye!");
 		customerGui.DoExitRestaurant();
+		
+		if(name.equals("cheap")) {
+			money = 11.0;
+		}
 	}
 	
 	private void impatientLeaveRestaurant() {

@@ -43,7 +43,6 @@ public class Menu {
 				return c.price;
 			}
 		}
-		
 		return 0;
 	}
 
