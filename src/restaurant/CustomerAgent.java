@@ -58,6 +58,10 @@ public class CustomerAgent extends Agent {
 			money = 0.0;
 		}
 		
+		if(name.equals("normative")) {
+			money = 100.0;
+		}
+		
 		int randNum = ranGenerator.nextInt(3);
 		
 		switch(randNum) {
