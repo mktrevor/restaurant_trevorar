@@ -20,6 +20,7 @@
   + If you encounter any other problems, feel free to email me!
 
 ###How to run non-normatives!
+  + It's a good idea to restart the program for some of the scenarios. There is no way to add more inventory to markets right now, so not everything can be tested in one run-through. Market 3 starts off with a high supply which shouldn't run out unless the user presses the "empty Market 3" button.
 
 ####Waiter Breaks and Hungry Customers
   + To make customers hungry again, check the "Hungry?" checkbox in the infoPanel at the bottom. 
@@ -39,6 +40,7 @@
 
 ####Customer Name Hacks
   + Normal customers start with a random amount of money between $10 and $60, so they can almost always afford their first meal. You can add/remove money with the buttons in the infoPanel when a customer is selected.
+  + Usually, if a customer can't afford any items, they will leave. However, this is not the case if the customer's name is "flake". See below.
   + A customer named "normative" will start with $100, ensuring that he can buy the food of his choice.
   + A customer named "steak", "chicken", or "fish" will always order that food unless it runs out and they have to reorder.
   + A customer named "cheap" will start with $11.00 - just enough to buy the cheapest item (chicken). He will leave if chicken is out of stock because he can't afford anything else.
