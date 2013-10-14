@@ -52,7 +52,7 @@ public class CustomerAgent extends Agent {
 		
 		this.name = name;
 		
-		money = (double) ranGenerator.nextInt(50);
+		money = (double) ranGenerator.nextInt(60) + 10;
 		
 		if(name.equals("broke") || name.equals("flake")) {
 			money = 0.0;
