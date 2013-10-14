@@ -39,8 +39,8 @@ public class CookAgent extends Agent {
 		
 					//usage: new Food(String type, int cookTime, int amount, int low, int capacity);
 		foods.put("steak", new Food("steak", 8, 6, 5, 8));
-		foods.put("fish", new Food("fish", 6, 4, 5, 8));
-		foods.put("chicken", new Food("chicken", 4, 4, 5, 8));
+		foods.put("fish", new Food("fish", 6, 6, 5, 8));
+		foods.put("chicken", new Food("chicken", 4, 6, 5, 8));
 		/*foods.put("pizza", new Food("pizza", 7, 5, 3, 10));
 		foods.put("salad", new Food("salad", 4, 5, 3, 10));*/
 		
@@ -99,7 +99,20 @@ public class CookAgent extends Agent {
 			tempFood.amount += tempOrder.amount;
 		}
 		stateChanged();
+	}
+	
+	public void msgRecheckInventory() {
+		Food temp = foods.get("steak");
+		temp.amount = temp.low - 1;
 		
+		temp = foods.get("fish");
+		temp.amount = temp.low - 1;
+		
+		temp = foods.get("chicken");
+		temp.amount = temp.low - 1;
+		
+		restaurantOpening = true;
+		stateChanged();
 	}
 
 	/**
@@ -176,12 +189,15 @@ public class CookAgent extends Agent {
 	}
 	
 	private void initialInventoryCheck() {
+		print("Checking initial inventory levels.");
 		Food steak = foods.get("steak");
 		Food chicken = foods.get("chicken");
 		Food fish = foods.get("fish");
 		
 		if((steak.amount < steak.low) || (chicken.amount < chicken.low) || (fish.amount < fish.low)) {
 			orderMoreFood();
+		} else {
+			print("All foods are in stock! We're ready to go!");
 		}
 		restaurantOpening = false;
 	}

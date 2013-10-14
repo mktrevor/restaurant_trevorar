@@ -54,6 +54,7 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
     private JButton noMoreSteak;
     private JButton noMoreFish;
     private JButton noMoreChicken;
+    private JButton recheckInventory;
     
     private Object currentPerson;/* Holds the agent that the info is about.
     								Seems like a hack */
@@ -146,6 +147,9 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         noMoreChicken = new JButton("chicken = 0");
         noMoreChicken.addActionListener(this);
         
+        recheckInventory = new JButton("Inventory Check");
+        recheckInventory.addActionListener(this);
+        
         Dimension optionDim = new Dimension(WINDOWX, (int) (WINDOWY * .1));
         optionPanel = new JPanel();
         optionPanel.setPreferredSize(optionDim);
@@ -165,6 +169,7 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         optionPanel.add(resumeButton);
         optionPanel.add(speedLabel);
         optionPanel.add(speedSlider);
+        optionPanel.add(recheckInventory);
         
         add(optionPanel, BorderLayout.NORTH);
     }
@@ -190,6 +195,8 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
             addMoney.setEnabled(true);
            	removeMoney.setVisible(true);
             removeMoney.setEnabled(true);
+            
+            recheckInventory.setEnabled(false);
 
             infoLabel.setText(
                "<html><pre>     Name: " + customer.getName() + "    Money: " + customer.getMoney() + " </pre></html>");
@@ -287,6 +294,10 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         }
         if(e.getSource() == noMoreChicken) {
         	restPanel.noMoreChicken();
+        }
+        if(e.getSource() == recheckInventory){
+        	restPanel.recheckInventory();
+        	recheckInventory.setEnabled(false);
         }
     }
     

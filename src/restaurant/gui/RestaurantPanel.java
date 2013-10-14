@@ -205,5 +205,8 @@ public class RestaurantPanel extends JPanel {
     public void noMoreChicken() {
     	cook.clearChicken();
     }
-
+    
+    public void recheckInventory() {
+    	cook.msgRecheckInventory();
+    }
 }

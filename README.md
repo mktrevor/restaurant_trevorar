@@ -20,6 +20,8 @@
   + If you encounter any other problems, feel free to email me!
 
 ###How to run non-normatives!
+
+####Waiter Breaks and Hungry Customers
   + To make customers hungry again, check the "Hungry?" checkbox in the infoPanel at the bottom. 
   + To make a waiter ask for a break or finish a break, use the break checkbox in the infoPanel. You may have to click the waiter's name again to make the checkbox refresh.
   + A waiter will always be refused a break if he is the only one working.
@@ -27,14 +29,17 @@
 
 --------
 
+####Cook/Market Ordering
+  + The "Inventory Check" button on the top panel will remove some food from the cook's inventory and have him recheck the inventory to demonstrate the normative ordering scenario (no customers). Otherwise, the cook starts off with sufficient foods.
   + The buttons on the top of the window can be used to clear out the inventory of a market so that the cook will have to order from another or so that the cook can't order any more food at all. 
-  + Also, the buttons can clear out the cook's inventory so that customers have to reorder.
-  + Note: the cook always gets a delivery near the beginning, so make sure you set his inventory to 0 after the delivery.
+  + Also, the "food = 0" buttons can clear out the cook's inventory so that customers have to reorder or have no options left.
+  + Note: If you clear the cook's inventory, make sure there are no orders on the way. If there are, you'll have to clear the inventory again after the order arrives.
 
 --------
 
-  + Normal customers start with a random amount of money between $0 and $50. You can add/remove money with the buttons in the infoPanel when a customer is selected.
-  + A customer named "normative" will start with $100 - plenty to buy anything for a few rounds.
+####Customer Name Hacks
+  + Normal customers start with a random amount of money between $10 and $60, so they can almost always afford their first meal. You can add/remove money with the buttons in the infoPanel when a customer is selected.
+  + A customer named "normative" will start with $100, ensuring that he can buy the food of his choice.
   + A customer named "steak", "chicken", or "fish" will always order that food unless it runs out and they have to reorder.
   + A customer named "cheap" will start with $11.00 - just enough to buy the cheapest item (chicken). He will leave if chicken is out of stock because he can't afford anything else.
   + A customer named "flake" will start with $0 and will still order a food item. The cashier will let him leave when he can't pay, but if he comes back, the cashier will add his outstanding debt to his new check.
