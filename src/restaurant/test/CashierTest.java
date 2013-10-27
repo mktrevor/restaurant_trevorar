@@ -1,8 +1,6 @@
 package restaurant.test;
 
 import restaurant.CashierAgent;
-import restaurant.CashierAgent.cashierBillState;
-import restaurant.WaiterAgent.Bill;
 import restaurant.test.mock.MockCustomer;
 import restaurant.test.mock.MockWaiter;
 
@@ -37,6 +35,31 @@ public class CashierTest extends TestCase
 	/**
 	 * This tests the cashier under very simple terms: one customer is ready to pay the exact bill.
 	 */
+	
+	public void testSimpleTest() {
+		
+		try {
+			setUp();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		//Preconditions
+		assertTrue(cashier.checks.isEmpty());
+		assertTrue(cashier.customersWhoOweMoney.isEmpty());
+		
+		//Send message
+		cashier.msgProduceCheck(waiter, customer, "steak");
+		
+		//Postconditions
+		assertEquals(cashier.checks.size(), 1);
+		assertEquals(cashier.checks.get(0).c.cust, customer);
+		
+	}
+	
+	/* MONROE'S TESTS
 	public void testOneNormalCustomerScenario()
 	{
 		//setUp() runs first before this test!
@@ -44,9 +67,10 @@ public class CashierTest extends TestCase
 		customer.cashier = cashier;//You can do almost anything in a unit test.			
 		
 		//check preconditions
-		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.bills.size(), 0);		
+		assertEquals("Cashier should have 0 bills in it. It doesn't.", cashier.checks.size(), 0);		
 		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
 						+ cashier.log.toString(), 0, cashier.log.size());
+		
 		
 		//step 1 of the test
 		//public Bill(Cashier, Customer, int tableNum, double price) {
@@ -122,6 +146,6 @@ public class CashierTest extends TestCase
 		
 	
 	}//end one normal customer scenario
-	
+	*/ //END MONROE'S TEST
 	
 }

@@ -2,6 +2,7 @@ package restaurant;
 
 import agent.Agent;
 import restaurant.gui.HostGui;
+import restaurant.interfaces.Market;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -13,7 +14,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class MarketAgent extends Agent {
+public class MarketAgent extends Agent implements Market {
 	
 	public List<Order> orders = new ArrayList<Order>();
 	

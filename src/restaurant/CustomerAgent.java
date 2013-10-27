@@ -2,6 +2,7 @@ package restaurant;
 
 import restaurant.gui.CustomerGui;
 import restaurant.gui.RestaurantGui;
+import restaurant.interfaces.Customer;
 import agent.Agent;
 
 import java.util.Random;
@@ -12,7 +13,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant customer agent.
  */
-public class CustomerAgent extends Agent {
+public class CustomerAgent extends Agent implements Customer {
 	private String name;
 	private String choice;
 	private double money;

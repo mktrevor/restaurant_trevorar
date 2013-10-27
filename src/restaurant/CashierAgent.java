@@ -2,15 +2,20 @@ package restaurant;
 
 import agent.Agent;
 import restaurant.gui.HostGui;
+import restaurant.interfaces.Customer;
+import restaurant.interfaces.Waiter;
+import restaurant.test.mock.EventLog;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
 public class CashierAgent extends Agent {
 	
+	public EventLog log; //Log for keeping track of events while unit testing cashier
+	
 	public List<MyCheck> checks = new ArrayList<MyCheck>();
 	
-	private List<MyCustomer> customersWhoOweMoney = new ArrayList<MyCustomer>();
+	public List<MyCustomer> customersWhoOweMoney = new ArrayList<MyCustomer>();
 	
 	private Menu menu = new Menu();
 
@@ -31,7 +36,7 @@ public class CashierAgent extends Agent {
 	}
 
 	// Messages
-	public void msgProduceCheck(WaiterAgent w, CustomerAgent c, String choice) {
+	public void msgProduceCheck(Waiter w, Customer c, String choice) {
 		Check check = new Check(this, c, choice);
 		check.amount = menu.getPrice(choice);
 		
@@ -115,22 +120,22 @@ public class CashierAgent extends Agent {
 
 	//utilities
 	
-	private class MyCheck {
-		WaiterAgent w;
-		Check c;
+	public class MyCheck {
+		Waiter w;
+		public Check c;
 		checkState state = checkState.requested;
 		
-		MyCheck(WaiterAgent w, Check c) {
+		MyCheck(Waiter w, Check c) {
 			this.w = w;
 			this.c = c;
 		}
 	}
 	
-	private class MyCustomer {
-		CustomerAgent c;
+	public class MyCustomer {
+		Customer c;
 		double amountOwed;
 	
-		MyCustomer(CustomerAgent c, double amount) {
+		MyCustomer(Customer c, double amount) {
 			this.c = c;
 			this.amountOwed = amount;
 		}

@@ -1,6 +1,5 @@
 package restaurant.interfaces;
 
-
-public interface Customer {
+public interface Market {
 
 }
