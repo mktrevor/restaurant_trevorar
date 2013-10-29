@@ -13,8 +13,6 @@ public class AnimationPanel extends JPanel implements ActionListener {
     private static final int WINDOWX = 800;
     private static final int WINDOWY = 600;
     private static final int TIMER_INTERVAL = 15;
-    
-    private final int NUM_TABLES = 4;
 
     private List<Gui> guis = new ArrayList<Gui>();
     

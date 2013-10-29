@@ -53,7 +53,7 @@ public class RestaurantPanel extends JPanel {
         this.gui = gui;
         host.setGui(hostGui);
 
-        //gui.animationPanel.addGui(hostGui);
+        gui.animationPanel.addGui(cookGui);
         gui.animationPanel.addGui(cashierGui);
         host.startThread();
         cook.startThread();

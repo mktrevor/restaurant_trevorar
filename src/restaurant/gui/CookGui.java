@@ -11,25 +11,17 @@ import java.awt.*;
 
 public class CookGui implements Gui {
 	
-	private static final int XPOS = -30, YPOS = -30;
-	private static final int XTABLE = 200, YTABLE = 250;
+	private static final int XPOS = 700, YPOS = 350;
 
     private CookAgent agent = null;
 
     private int xPos = XPOS, yPos = YPOS;//default waiter position
     private int xDestination = XPOS, yDestination = YPOS;//default start position
-
-    public static final int xTable = XTABLE;
-    public static final int yTable = YTABLE;
+    
+    List<MyOrder> orders = new ArrayList<MyOrder>();
 
     public CookGui(CookAgent agent) {
         this.agent = agent;
-        
-        // Initial mapping of table locations!
-        tableLocations.put(new Integer(1), new Dimension(200, 200));
-        tableLocations.put(new Integer(2), new Dimension(450, 200));
-        tableLocations.put(new Integer(3), new Dimension(200, 400));
-        tableLocations.put(new Integer(4), new Dimension(450, 400));
     }
 
     public void updatePosition() {
@@ -47,6 +39,20 @@ public class CookGui implements Gui {
     public void draw(Graphics2D g) {
         g.setColor(Color.WHITE);
         g.fillRect(xPos, yPos, 30, 30); // Size/position of gui
+
+        Font font = new Font("Arial", Font.BOLD, 12);
+        g.setFont(font);
+        g.setColor(Color.BLACK);
+        g.drawString("Cook", xPos, yPos + 20);   
+        
+        g.setColor(Color.GRAY);
+        g.fillRect(750, 250, 40, 200);
+        
+        g.setColor(Color.BLACK);
+        g.fillRect(755, 255, 30, 190);
+        
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(650, 250, 40, 200);
     }
 
     public boolean isPresent() {

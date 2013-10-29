@@ -259,7 +259,7 @@ public class CookAgent extends Agent {
 			this.table = table;
 			this.s = s;
 		}
-	}	
+	}
 	
 	private class Food {
 		String type;
