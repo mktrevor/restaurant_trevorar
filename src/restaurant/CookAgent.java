@@ -1,6 +1,7 @@
 package restaurant;
 
 import agent.Agent;
+import restaurant.gui.CookGui;
 import restaurant.gui.HostGui;
 
 import java.util.*;
@@ -20,7 +21,9 @@ public class CookAgent extends Agent {
 	private List<MarketAgent> markets = new ArrayList<MarketAgent>();
 	int marketChooser = 0; //This will allow the cook to try a different market if one market runs out of a food
 	
-	public enum orderState { pending, cooking, cooked, finished };
+	public enum orderState { pending, cooking, cooked, pickedUp, finished };
+	
+	int orderCount = 0;
 	
 	private enum foodOrderingState { notYetOrdered, ordered };
 	
@@ -32,7 +35,7 @@ public class CookAgent extends Agent {
 	
 	private Map<String, Food> foods = new HashMap<String, Food>();
 	
-	//public cookGui cookGui = null;
+	public CookGui cookGui = null;
 
 	public CookAgent(String name) {
 		super();
@@ -50,6 +53,10 @@ public class CookAgent extends Agent {
 	public String getName() {
 		return name;
 	}
+	
+	public void setGui(CookGui gui) {
+		cookGui = gui;
+	}
 
 	public List getOrders() {
 		return orders;
@@ -57,12 +64,21 @@ public class CookAgent extends Agent {
 
 	// Messages
 	public void msgHereIsOrder(WaiterAgent w, String choice, int table) {
-		orders.add(new Order(w, choice, table, orderState.pending));
+		orders.add(new Order(w, choice, table, orderState.pending, orderCount++));
 		stateChanged();
 	}
 	
 	public void msgFoodDoneCooking(Order o) {
 		o.s = orderState.cooked;
+		stateChanged();
+	}
+	
+	public void msgPickedUpOrder(int orderNumber) {
+		for(Order o : orders) {
+			if(o.orderNumber == orderNumber) {
+				o.s = orderState.pickedUp;
+			}
+		}
 		stateChanged();
 	}
 	
@@ -125,6 +141,13 @@ public class CookAgent extends Agent {
 		}
 		
 		for(Order o : orders) {
+			if(o.s == orderState.pickedUp) {
+				finishIt(o);
+				return true;
+			}
+		}
+		
+		for(Order o : orders) {
 			if(o.s == orderState.cooked) {
 				plateIt(o);
 				return true;
@@ -171,6 +194,9 @@ public class CookAgent extends Agent {
 		
 		o.s = orderState.cooking;
 		thisFood.amount--;
+		
+		cookGui.msgNewOrder(o.choice, o.orderNumber);
+		
 		int cookTime = thisFood.cookingTime * 1000;
 				
 		timer.schedule(new TimerTask() {
@@ -182,10 +208,14 @@ public class CookAgent extends Agent {
 	
 	private void plateIt(Order o) {
 		o.s = orderState.finished;
-		//Animation
-		//DoPlating(o);
 		print(o.choice + " done cooking, time to plate it!");
-		o.w.msgOrderDone(o.choice, o.table);
+		cookGui.msgOrderDoneCooking(o.orderNumber);
+		o.w.msgOrderDone(o.choice, o.table, o.orderNumber);
+	}
+	
+	private void finishIt(Order o) {
+		cookGui.msgOrderPickedUp(o.orderNumber);
+		o.s = orderState.finished;
 	}
 	
 	private void initialInventoryCheck() {
@@ -252,12 +282,14 @@ public class CookAgent extends Agent {
 		String choice;
 		int table;
 		orderState s;
+		int orderNumber;
 		
-		Order(WaiterAgent w, String choice, int table, orderState s) {
+		Order(WaiterAgent w, String choice, int table, orderState s, int number) {
 			this.w = w;
 			this.choice = choice;
 			this.table = table;
 			this.s = s;
+			this.orderNumber = number;
 		}
 	}
 	

@@ -120,10 +120,11 @@ public class WaiterAgent extends Agent implements Waiter {
 		}
 	}
 	
-	public void msgOrderDone(String choice, int table) {
+	public void msgOrderDone(String choice, int table, int orderNumber) {
 		for(MyCustomer mc : customers) {
 			if(mc.table == table) {
 				mc.s = customerState.foodReady;
+				mc.orderNumber = orderNumber;
 			}
 			stateChanged();
 		}
@@ -330,6 +331,8 @@ public class WaiterAgent extends Agent implements Waiter {
 			e.printStackTrace();
 		}
 		
+		cook.msgPickedUpOrder(c.orderNumber);
+		
 		waiterGui.deliveringFood(c.choice);
 		waiterGui.DoGoToTable(c.table);
 		
@@ -450,6 +453,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	private class MyCustomer {
 		CustomerAgent c;
 		int table;
+		int orderNumber;
 		customerState s;
 		String choice;
 		
@@ -459,6 +463,10 @@ public class WaiterAgent extends Agent implements Waiter {
 			this.c = c;
 			this.table = table;
 			this.s = state;
+		}
+		
+		void setOrderNumber(int num) {
+			orderNumber = num;
 		}
 	}
 }

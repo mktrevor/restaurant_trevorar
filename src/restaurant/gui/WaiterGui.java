@@ -19,6 +19,8 @@ public class WaiterGui implements Gui {
 	private final int CASHIER_X = 80, CASHIER_Y = 300;
 	private final int BREAK_X = 50, BREAK_Y = 150;
 	
+	private int home_x, home_y;
+	
 	private boolean moving = false;
 	private boolean carryingFood = false;
 	private boolean onBreak = false;
@@ -156,6 +158,11 @@ public class WaiterGui implements Gui {
         yDestination -= 2 * HEIGHT;
     }
     
+    public void DoGoHome() {
+    	xDestination = home_x;
+    	yDestination = home_y;
+    }
+    
     public void msgBreakStarted() {
     	onBreak = true;
     }
@@ -171,5 +178,10 @@ public class WaiterGui implements Gui {
     
     public void foodDelivered() {
     	carryingFood = false;
+    }
+    
+    public void setHome(int x, int y) {
+    	home_x = x;
+    	home_y = y;
     }
 }
