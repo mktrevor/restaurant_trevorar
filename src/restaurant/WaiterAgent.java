@@ -237,6 +237,8 @@ public class WaiterAgent extends Agent implements Waiter {
 			event = waiterEvent.none;
 			return true;
 		}
+		
+		DoGoToHome();
 
 		return false;
 	}
@@ -272,8 +274,6 @@ public class WaiterAgent extends Agent implements Waiter {
 		}
 		
 		c.s = customerState.seated;
-
-		DoLeaveCustomer();
 	}
 	
 	private void takeOrder(MyCustomer c) {
@@ -288,8 +288,6 @@ public class WaiterAgent extends Agent implements Waiter {
 		c.s = customerState.askedForOrder;
 		print("Taking order from: " + c.c.getName());
 		c.c.msgWhatDoYouWant();
-
-		DoLeaveCustomer();
 	}
 
 	private void removeChoice(MyCustomer c) {		
@@ -310,8 +308,6 @@ public class WaiterAgent extends Agent implements Waiter {
 		
 		print("Taking order from: " + c.c.getName());
 		c.c.msgPleaseReorder();
-
-		DoLeaveCustomer();
 	}
 	
 	private void sendOrderToCook(MyCustomer c) {
@@ -351,8 +347,6 @@ public class WaiterAgent extends Agent implements Waiter {
 
 		cashier.msgProduceCheck(this, c.c, c.choice);
 		print("Cashier, can you prepare a check for this customer?");
-
-		DoLeaveCustomer();
 	}
 	
 	private void tellHostCustomerIsDone(MyCustomer c) {
@@ -409,8 +403,6 @@ public class WaiterAgent extends Agent implements Waiter {
 		print("Here is your check!");
 		c.c.msgHereIsYourBill(c.check);
 		c.s = customerState.checkGiven;
-		
-		DoLeaveCustomer();
 	}
 
 	// The animation DoXYZ() routines
@@ -419,8 +411,8 @@ public class WaiterAgent extends Agent implements Waiter {
 		waiterGui.DoBringToTable(customer, table);
 	}
 	
-	private void DoLeaveCustomer() {
-		waiterGui.DoLeaveCustomer();
+	private void DoGoToHome() {
+		waiterGui.DoGoHome();
 	}
 
 	//utilities

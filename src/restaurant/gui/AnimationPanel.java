@@ -82,7 +82,7 @@ public class AnimationPanel extends JPanel implements ActionListener {
 		
 		g2.setColor(Color.BLACK);
 		g2.setFont(new Font("Verdana", Font.BOLD, 24));
-		g2.drawString("Restaurant V2.1", 265, 35); // Position of text on restaurant sign
+		g2.drawString("Restaurant V2.2", 265, 35); // Position of text on restaurant sign
 	}
 
     public void addGui(CustomerGui gui) {

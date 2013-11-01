@@ -136,8 +136,8 @@ public class WaiterGui implements Gui {
     }
     
     public void DoGoToBreakZone() {
-    	xDestination = BREAK_X;
-    	yDestination = BREAK_Y;
+    	xDestination = home_x - 1;
+    	yDestination = home_y + 1;
     	moving = true;
     }
     

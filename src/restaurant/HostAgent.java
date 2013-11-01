@@ -71,13 +71,13 @@ public class HostAgent extends Agent {
 			if(mc.c == c) {
 				mc.waiting = true;
 				mc.toldRestaurantIsFull = false;
-				print("Welcome to Restaurant V2.1, " + c.getName() + "!");
+				print("Welcome to Restaurant V2.2, " + c.getName() + "!");
 				stateChanged();
 				return;
 			}
 		}
 		customers.add(new MyCustomer(c));
-		print("Welcome to Restaurant V2.1, " + c.getName() + "!");
+		print("Welcome to Restaurant V2.2, " + c.getName() + "!");
 		stateChanged();
 	}
 	

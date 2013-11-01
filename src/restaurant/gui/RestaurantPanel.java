@@ -167,6 +167,12 @@ public class RestaurantPanel extends JPanel {
     		host.addWaiter(w);
     		agents.add(w);
     		waiters.add(w);
+    		if(waiters.size() > 18) {
+    			g.setHome((waiters.size() - 18) * 40, 100);
+    		}
+    		else {
+    			g.setHome(waiters.size() * 40, 60);
+    		}
     		w.startThread();
     	}
     }
