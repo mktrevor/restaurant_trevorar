@@ -226,10 +226,12 @@ public class WaiterAgent extends Agent implements Waiter {
 			}
 		}
 		
+		DoGoToHome();
+		
 		if(event == waiterEvent.takeABreak && state == waiterState.working && allCustomersDone()) {
 			state = waiterState.onBreak;
 			takeABreak();
-			return true;
+			//return true;
 		}
 		
 		if(event == waiterEvent.backToWork && state == waiterState.onBreak) {
@@ -237,8 +239,6 @@ public class WaiterAgent extends Agent implements Waiter {
 			event = waiterEvent.none;
 			return true;
 		}
-		
-		DoGoToHome();
 
 		return false;
 	}

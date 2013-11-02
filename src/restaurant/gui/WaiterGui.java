@@ -152,11 +152,6 @@ public class WaiterGui implements Gui {
     	yDestination = CASHIER_Y;
     	moving = true;
     }
-
-    public void DoLeaveCustomer() {
-        xDestination += 2 * WIDTH;
-        yDestination -= 2 * HEIGHT;
-    }
     
     public void DoGoHome() {
     	xDestination = home_x;

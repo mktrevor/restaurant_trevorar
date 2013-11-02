@@ -34,18 +34,18 @@ public class CookAgent extends Agent {
 	Timer timer = new Timer();
 	
 	private Map<String, Food> foods = new HashMap<String, Food>();
+
+	private Semaphore atDestination = new Semaphore(0, true); // For gui movements
 	
 	public CookGui cookGui = null;
 
 	public CookAgent(String name) {
 		super();
 		
-					//usage: new Food(String type, int cookTime, int amount, int low, int capacity);
+				//usage: new Food(String type, int cookTime, int amount, int low, int capacity);
 		foods.put("steak", new Food("steak", 8, 6, 5, 8));
 		foods.put("fish", new Food("fish", 6, 6, 5, 8));
 		foods.put("chicken", new Food("chicken", 4, 6, 5, 8));
-		/*foods.put("pizza", new Food("pizza", 7, 5, 3, 10));
-		foods.put("salad", new Food("salad", 4, 5, 3, 10));*/
 		
 		this.name = name;
 	}
@@ -130,6 +130,11 @@ public class CookAgent extends Agent {
 		restaurantOpening = true;
 		stateChanged();
 	}
+	
+	public void msgAtDestination() {
+		atDestination.release();
+		stateChanged();
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -160,6 +165,8 @@ public class CookAgent extends Agent {
 				return true;
 			}
 		}
+		
+		DoGoToHome();
 
 		return false;
 	}
@@ -169,8 +176,16 @@ public class CookAgent extends Agent {
 	private void cookIt(final Order o) {
 		//Animation
 		//DoCooking(o) 
+
 		
 		Food thisFood = foods.get(o.choice);
+		
+		DoGoToFridge();
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		if(thisFood.amount == 0) {
 			print("We're all out of " + o.choice + "!");
@@ -190,12 +205,21 @@ public class CookAgent extends Agent {
 			orderMoreFood();
 		}
 		
+
+		cookGui.msgNewOrder(o.choice, o.orderNumber);
+		
 		print("Cooking up an order of " + o.choice + "!");
+		
+		DoGoToGrill();
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		o.s = orderState.cooking;
 		thisFood.amount--;
-		
-		cookGui.msgNewOrder(o.choice, o.orderNumber);
+		cookGui.msgOrderCooking(o.orderNumber);
 		
 		int cookTime = thisFood.cookingTime * 1000;
 				
@@ -205,11 +229,27 @@ public class CookAgent extends Agent {
 							}
 						}, cookTime	);
 	}
-	
+
 	private void plateIt(Order o) {
+		DoGoToGrill();
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		cookGui.msgOrderBeingCarried(o.orderNumber);
+		
 		o.s = orderState.finished;
 		print(o.choice + " done cooking, time to plate it!");
-		cookGui.msgOrderDoneCooking(o.orderNumber);
+		
+		DoGoToCounter();
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		cookGui.msgOrderWaiting(o.orderNumber);
 		o.w.msgOrderDone(o.choice, o.table, o.orderNumber);
 	}
 	
@@ -259,6 +299,22 @@ public class CookAgent extends Agent {
 		
 		print("Sending order for more food to the market!");
 		markets.get(marketChooser).msgFoodOrder(this, orderList);
+	}
+	
+	private void DoGoToHome() {
+		cookGui.DoGoToHome();
+	}
+	
+	private void DoGoToFridge() {
+		cookGui.DoGoToFridge();
+	}
+	
+	private void DoGoToGrill() {
+		cookGui.DoGoToGrill();
+	}
+	
+	private void DoGoToCounter() {
+		cookGui.DoGoToCounter();
 	}
 	
 	public void clearSteak() {
