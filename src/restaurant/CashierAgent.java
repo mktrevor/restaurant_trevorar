@@ -3,6 +3,7 @@ package restaurant;
 import agent.Agent;
 import restaurant.gui.HostGui;
 import restaurant.interfaces.Customer;
+import restaurant.interfaces.Market;
 import restaurant.interfaces.Waiter;
 import restaurant.test.mock.EventLog;
 
@@ -17,11 +18,15 @@ public class CashierAgent extends Agent {
 	
 	public List<MyCustomer> customersWhoOweMoney = new ArrayList<MyCustomer>();
 	
+	public List<MarketBill> marketBills = new ArrayList<MarketBill>();
+	
 	private Menu menu = new Menu();
 
 	private enum checkState { requested, givenToWaiter, fullyPaid, partiallyPaid, finished };
 
 	private String name;
+	
+	private double money = 1000.0;
 	
 	Timer timer = new Timer();
 
@@ -65,6 +70,11 @@ public class CashierAgent extends Agent {
 		}
 		stateChanged();
 	}
+	
+	public void msgYouOwe(MarketAgent m, double amount) {
+		marketBills.add(new MarketBill(m, amount));
+		stateChanged();
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -84,6 +94,10 @@ public class CashierAgent extends Agent {
 			if(c.state == checkState.requested) {
 				giveCheckToWaiter(c);
 			}
+		}
+		
+		if(!marketBills.isEmpty()) {
+			payBill(marketBills.get(0));
 		}
 
 		return false;
@@ -114,6 +128,19 @@ public class CashierAgent extends Agent {
 		customersWhoOweMoney.add(new MyCustomer(c.c.cust, c.c.amount));
 		c.state = checkState.finished;
 	}
+	
+	private void payBill(MarketBill mb) {
+		if(money > mb.amountOwed) {
+			print("Here is my payment for the recent shipment!");
+			mb.m.msgHereIsPayment(this, mb.amountOwed);
+			money -= mb.amountOwed;
+		} else {
+			print("Thanks for the food, but I can't pay for it!");
+			mb.m.msgCannotPayBill(this, mb.amountOwed);
+		}
+		
+		marketBills.remove(mb);
+	}
 
 	// The animation DoXYZ() routines
 	
@@ -137,6 +164,16 @@ public class CashierAgent extends Agent {
 	
 		MyCustomer(Customer c, double amount) {
 			this.c = c;
+			this.amountOwed = amount;
+		}
+	}
+	
+	public class MarketBill {
+		Market m;
+		double amountOwed;
+		
+		MarketBill(Market m, double amount) {
+			this.m = m;
 			this.amountOwed = amount;
 		}
 	}

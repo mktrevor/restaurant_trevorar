@@ -18,9 +18,13 @@ public class MarketAgent extends Agent implements Market {
 	
 	public List<Order> orders = new ArrayList<Order>();
 	
-	public enum orderState { none, received, processed, readyForDelivery, delivered };
+	public enum orderState { none, received, processed, readyForDelivery, delivered, paidFor };
+	
+	private CashierAgent cashier;
 
 	private String name;
+	
+	private double money = 1000.0;
 	
 	Timer timer = new Timer();
 	
@@ -29,11 +33,9 @@ public class MarketAgent extends Agent implements Market {
 	public MarketAgent(String name, int steakAmount, int fishAmount, int chickenAmount) {
 		super();
 
-		foods.put("steak", new Food("steak", steakAmount));
-		foods.put("fish", new Food("fish", fishAmount));
-		foods.put("chicken", new Food("chicken", chickenAmount));
-		/*foods.put("pizza", new Food("pizza", 100, 6.00));
-		foods.put("salad", new Food("salad", 100, 3.50));*/
+		foods.put("steak", new Food("steak", steakAmount, 5.60));
+		foods.put("fish", new Food("fish", fishAmount, 4.40));
+		foods.put("chicken", new Food("chicken", chickenAmount, 3.05));
 		
 		this.name = name;
 	}
@@ -52,6 +54,16 @@ public class MarketAgent extends Agent implements Market {
 		orders.add( new Order(c, order));
 		stateChanged();
 	}
+	
+	public void msgHereIsPayment(CashierAgent c, double money) {
+		this.money += money;
+		stateChanged();
+	}
+	
+	public void msgCannotPayBill(CashierAgent c, double amount) { //Change for extra credit.
+		print("I never should have trusted you with my business!");
+		stateChanged();
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -66,7 +78,7 @@ public class MarketAgent extends Agent implements Market {
 		
 		for(Order o : orders) {
 			if(o.s == orderState.processed) {
-				prepareOrder(o);
+				prepareAndSendOrder(o);
 				return true;
 			}
 		}
@@ -119,11 +131,12 @@ public class MarketAgent extends Agent implements Market {
 		o.s = orderState.processed;
 	}
 	
-	private void prepareOrder(final Order o) { //Delivers the food from this order after 10 seconds have passed.
+	private void prepareAndSendOrder(final Order o) { //Delivers the food from this order after 10 seconds have passed.
 		o.s = orderState.readyForDelivery;
 		timer.schedule(new TimerTask() {
 			public void run() {
 				deliverFood(o);
+				sendBill(o);
 			}
 		}, 10000 );
 	}
@@ -134,10 +147,24 @@ public class MarketAgent extends Agent implements Market {
 		o.s = orderState.delivered;
 	}
 
+	private void sendBill(Order o) {
+		double total = 0.0;
+		for(FoodOrder fo : o.orders) {
+			Food tempFood = foods.get(fo.foodType);
+			total += fo.amount * tempFood.price;
+		}
+		print("Here is a bill for your recent order. The total is " + total + ".");
+		cashier.msgYouOwe(this, total);
+	}
+	
 	// The animation DoXYZ() routines
 	
 
 	//utilities
+	
+	public void addCashier(CashierAgent c) {
+		this.cashier = c;
+	}
 	
 	public void clearInventory() {
 		foods.get("steak").inventory = 0;
@@ -160,10 +187,12 @@ public class MarketAgent extends Agent implements Market {
 	private class Food {
 		String type;
 		int inventory;
+		double price;
 		
-		Food(String type, int inventory) {
+		Food(String type, int inventory, double price) {
 			this.type = type;
 			this.inventory = inventory;
+			this.price = price;
 		}
 	}
 }

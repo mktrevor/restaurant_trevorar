@@ -73,6 +73,10 @@ public class RestaurantPanel extends JPanel {
         agents.add(host);
         agents.add(cook);
         agents.add(cashier);
+        
+        market1.addCashier(cashier);
+        market2.addCashier(cashier);
+        market3.addCashier(cashier);
 
         setLayout(new BorderLayout(0, 0));
         group.setLayout(new GridLayout(1, 3, 1, 1));

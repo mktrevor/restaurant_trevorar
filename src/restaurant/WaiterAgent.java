@@ -226,8 +226,6 @@ public class WaiterAgent extends Agent implements Waiter {
 			}
 		}
 		
-		DoGoToHome();
-		
 		if(event == waiterEvent.takeABreak && state == waiterState.working && allCustomersDone()) {
 			state = waiterState.onBreak;
 			takeABreak();
@@ -240,6 +238,8 @@ public class WaiterAgent extends Agent implements Waiter {
 			return true;
 		}
 
+		DoGoToHome();
+		
 		return false;
 	}
 
@@ -456,10 +456,5 @@ public class WaiterAgent extends Agent implements Waiter {
 			this.table = table;
 			this.s = state;
 		}
-		
-		void setOrderNumber(int num) {
-			orderNumber = num;
-		}
 	}
 }
-

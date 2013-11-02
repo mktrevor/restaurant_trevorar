@@ -1,8 +1,5 @@
 package restaurant.gui;
 
-
-import restaurant.CustomerAgent;
-import restaurant.HostAgent;
 import restaurant.CookAgent;
 
 import java.awt.*;
