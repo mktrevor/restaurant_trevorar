@@ -20,7 +20,7 @@ public class CashierAgent extends Agent {
 	
 	private Menu menu = new Menu();
 
-	private enum checkState { requested, givenToWaiter, fullyPaid, partiallyPaid, finished };
+	public enum checkState { requested, givenToWaiter, fullyPaid, partiallyPaid, finished };
 
 	private String name;
 	
@@ -65,6 +65,7 @@ public class CashierAgent extends Agent {
 						c.amountPaid = money;
 					}
 					else if(money < c.c.amount) {
+						this.money += money;
 						c.c.amount -= money;
 						c.state = checkState.partiallyPaid;
 						c.amountPaid = money;
@@ -128,6 +129,7 @@ public class CashierAgent extends Agent {
 	}
 	
 	private void giveChange(MyCheck c) {
+		this.money += c.c.amount;
 		double change = c.amountPaid - c.c.amount;
 		print("Here is your change of $" + change);
 		c.c.cust.msgHereIsChange(change);
@@ -170,8 +172,8 @@ public class CashierAgent extends Agent {
 	public class MyCheck {
 		Waiter w;
 		public Check c;
-		checkState state = checkState.requested;
-		double amountPaid;
+		public checkState state = checkState.requested;
+		public double amountPaid;
 		
 		MyCheck(Waiter w, Check c) {
 			this.w = w;
@@ -180,7 +182,7 @@ public class CashierAgent extends Agent {
 	}
 	
 	public class MyCustomer {
-		Customer c;
+		public Customer c;
 		double amountOwed;
 	
 		MyCustomer(Customer c, double amount) {

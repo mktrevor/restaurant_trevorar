@@ -4,21 +4,21 @@ package restaurant.test.mock;
 import restaurant.CashierAgent;
 import restaurant.interfaces.Customer;
 
-/**
- * A sample MockCustomer built to unit test a CashierAgent.
- *
- * @author Monroe Ekilah
- *
- */
 public class MockCustomer extends Mock implements Customer {	
-	EventLog log;
-	/**
-	 * Reference to the Cashier under test that can be set by the unit test.
-	 */
+	public EventLog log;
+	
 	public CashierAgent cashier;
+	public double money;
 
 	public MockCustomer(String name) {
 		super(name);
+		log = new EventLog();
+		
+		if(name.equals("flake")) {
+			money = 0.0;
+		} else {
+			money = 100.0;
+		}
 	}
 
 	public void msgHereIsChange(double change) {

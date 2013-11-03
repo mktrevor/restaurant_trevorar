@@ -7,14 +7,15 @@ import restaurant.interfaces.Waiter;
 public class MockWaiter extends Mock implements Waiter {
 	CashierAgent cashier;
 	
-	EventLog log;
+	public EventLog log;
 
 	public MockWaiter(String name) {
 		super(name);
+		log = new EventLog();
 	}
 	
 	public void msgHereIsCheck(Check c) {
-        log.add(new LoggedEvent("Received check from cashier for customer " + c.getCust()));
+        log.add(new LoggedEvent("Received check from cashier."));
 	}
 }
  
