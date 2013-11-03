@@ -70,6 +70,7 @@ public class CashierMarketTest2 extends TestCase
 		assertEquals(cashier.money, 1000.0 - billAmount1 - billAmount2); //Cashier's money goes down
 		assertEquals(market1.money, 1000.0 + billAmount1); //Market's money goes up 
 		assertEquals(market2.money, 1000.0 + billAmount2); //Market's money goes up
-		
+
+		assertFalse(cashier.pickAndExecuteAnAction()); //No more actions to be called by cashier's scheduler!
 	}
 }

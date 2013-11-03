@@ -20,25 +20,31 @@
   + If you encounter any other problems, feel free to email me!
 
 ###How to run non-normatives!
-  + It's a good idea to restart the program for some of the scenarios. There is no way to add more inventory to markets right now, so not everything can be tested in one run-through. Market 3 starts off with a high supply which shouldn't run out unless the user presses the "empty Market 3" button.
+  + It's a good idea to restart the program for some of the scenarios.
 
-####Waiter Breaks and Hungry Customers
+####Cashier/Market interaction
+  + In order to test the scenario "One order, fulfilled by TWO markets, 2 bills paid in full," start the program, then click the "Clear Cook Inventory" button and then make a customer. The first market doesn't have enough to fulfill the full order so a second order is needed.
+  + To test the "normative market ordering scenario," either make a lot of customers named "chicken" until the cook has to order more or simply start the program and press the "Inventory check" button.
+  + I did not implement a solution for bills that the cashier can't pay for. I left the cashier plenty of money for many orders.
+  
+####Animation upgrades
+  + My waiting area for customers only has room for 15 customers. Also, customers won't go to the waiting room unless all the tables are full.
+  + I did implement the extra credit for the cook animation
+
+####JUnit Testing
+######Here are the scenarios that my tests cover
+  + CashierCustomerTest1: One check request from one waiter to be paid by one customer
+  + CashierCustomerTest2: Three check requests from one waiter. Two customers will pay and the third will order food even though he has no money
+  + CashierMarketTest1: Cashier receives a single bill from one market and pays it
+  + CashierMarketTest2: Cashier receives two bills from one order fulfilled by two markets and pays them both
+  + CashierMixedTest1: One waiter sends 3 check requests for two customers who can pay and one who can't. Also, 2 markets send bills at the same time to the cashier.
+  + CashierMixedTest2: Two waiters request checks for 2 customers each, and one market sends a bill to the cashier at the same time.
+
+--------
+
+####Other notes
   + To make customers hungry again, check the "Hungry?" checkbox in the infoPanel at the bottom. 
-  + To make a waiter ask for a break or finish a break, use the break checkbox in the infoPanel. You may have to click the waiter's name again to make the checkbox refresh.
-  + A waiter will always be refused a break if he is the only one working.
-  + You must press the checkbox to make a waiter finish his or her break. Otherwise they will never return to work.
-
---------
-
-####Cook/Market Ordering
-  + The "Inventory Check" button on the top panel will remove some food from the cook's inventory and have him recheck the inventory to demonstrate the normative ordering scenario (no customers). Otherwise, the cook starts off with sufficient foods.
-  + The buttons on the top of the window can be used to clear out the inventory of a market so that the cook will have to order from another or so that the cook can't order any more food at all. 
-  + Also, the "food = 0" buttons can clear out the cook's inventory so that customers have to reorder or have no options left.
-  + Note: If you clear the cook's inventory, make sure there are no orders on the way. If there are, you'll have to clear the inventory again after the order arrives.
-
---------
-
-####Customer Name Hacks
+  + To make a waiter ask for a break or finish a break, use the break checkbox in the infoPanel. You may have to click the waiter's name again to make the checkbox refresh. You must press the checkbox to make a waiter finish his or her break. Otherwise they will never return to work.
   + Normal customers start with a random amount of money between $10 and $60, so they can almost always afford their first meal. You can add/remove money with the buttons in the infoPanel when a customer is selected.
   + Usually, if a customer can't afford any items, they will leave. However, this is not the case if the customer's name is "flake". See below.
   + A customer named "normative" will start with $100, ensuring that he can buy the food of his choice.
@@ -48,7 +54,3 @@
   + A customer named "broke" will start with $0 but will leave because all of the choices are too expensive.
   + A customer named "patient" will wait for an opening if the restaurant is full.
   + A customer named "impatient" will leave if the restaurant is full.
-
---------
-
-  + You can use all of these hacks together to test any of the non-normatives. Please feel free to email me if there's a scenario you can't figure out how to test!

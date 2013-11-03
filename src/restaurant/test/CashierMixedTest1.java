@@ -86,7 +86,7 @@ public class CashierMixedTest1 extends TestCase
 		assertEquals(check1.amount, 10.99); //Check should be created with correct amount of money owed
 		assertEquals(check2.amount, 13.99); //Check should be created with correct amount of money owed
 		assertEquals(check3.amount, 15.99); //Check should be created with correct amount of money owed
-		assertEquals(cashier.stateChange.availablePermits(), 6); //stateChange semaphore should have 4 permits due to the message calls
+		assertEquals(cashier.stateChange.availablePermits(), 6); //stateChange semaphore should have 6 permits due to the message calls
 		
 		assertTrue(cashier.marketBills.size() == 2); //Cashier should now have two bills
 		MarketBill bill = cashier.marketBills.get(0); 
@@ -153,5 +153,7 @@ public class CashierMixedTest1 extends TestCase
 		assertEquals(cashier.customersWhoOweMoney.size(), 1); //Flake should have been added to this list.
 		MyCustomer mc = cashier.customersWhoOweMoney.get(0);
 		assertEquals(mc.c, customer3); //Flake is only member of list - He'll have to pay back his debt next time he comes to the restaurant
+		
+		assertFalse(cashier.pickAndExecuteAnAction()); //No more actions to be called by cashier's scheduler!
 	}
 }

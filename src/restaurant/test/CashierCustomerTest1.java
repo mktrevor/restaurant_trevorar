@@ -75,5 +75,6 @@ public class CashierCustomerTest1 extends TestCase
 		assertTrue(customer.log.containsString("Received change from cashier. Leaving restaurant.")); //Change was given to customer
 		assertEquals(cashier.money, 1000.0 + check.amount); //Cashier received correct amount of money from check payment
 		
+		assertFalse(cashier.pickAndExecuteAnAction()); //No more actions to be called by cashier's scheduler!
 	}
 }

@@ -119,5 +119,7 @@ public class CashierCustomerTest2 extends TestCase
 		assertEquals(cashier.customersWhoOweMoney.size(), 1); //Flake should have been added to this list.
 		MyCustomer mc = cashier.customersWhoOweMoney.get(0);
 		assertEquals(mc.c, customer3); //Flake is only member of list - He'll have to pay back his debt next time he comes to the restaurant
+
+		assertFalse(cashier.pickAndExecuteAnAction()); //No more actions to be called by cashier's scheduler!
 	}
 }

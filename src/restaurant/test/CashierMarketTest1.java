@@ -52,6 +52,7 @@ public class CashierMarketTest1 extends TestCase
 		assertTrue(market.log.containsString("Received payment for order.")); //Log should have a record of this message call
 		assertEquals(cashier.money, 1000.0 - billAmount); //Cashier's money goes down by $50
 		assertEquals(market.money, 1000.0 + billAmount); //Market's money goes up by $50
-		
+	
+		assertFalse(cashier.pickAndExecuteAnAction()); //No more actions to be called by cashier's scheduler!
 	}
 }
