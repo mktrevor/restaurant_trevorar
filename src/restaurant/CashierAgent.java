@@ -59,14 +59,16 @@ public class CashierAgent extends Agent {
 	}
 	
 	public void msgPayBill(Check check, double money) {
-		for(MyCheck c : checks) {
-			if(c.c == check) {
-				if(money == c.c.amount) {
-					c.state = checkState.fullyPaid;
-				}
-				else if(money < c.c.amount) {
-					c.c.amount -= money;
-					c.state = checkState.partiallyPaid;
+		synchronized(checks) {
+			for(MyCheck c : checks) {
+				if(c.c == check) {
+					if(money == c.c.amount) {
+						c.state = checkState.fullyPaid;
+					}
+					else if(money < c.c.amount) {
+						c.c.amount -= money;
+						c.state = checkState.partiallyPaid;
+					}
 				}
 			}
 		}
@@ -82,22 +84,30 @@ public class CashierAgent extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-		for(MyCheck c : checks) {
-			if(c.state == checkState.fullyPaid) {
-				thankCustomer(c);
-			}
-		}
-		for(MyCheck c : checks) {
-			if(c.state == checkState.partiallyPaid) {
-				addCustomerToOweList(c);
-			}
-		}
-		for(MyCheck c : checks) {
-			if(c.state == checkState.requested) {
-				giveCheckToWaiter(c);
+		synchronized(checks) {
+			for(MyCheck c : checks) {
+				if(c.state == checkState.fullyPaid) {
+					thankCustomer(c);
+				}
 			}
 		}
 		
+		synchronized(checks) {
+			for(MyCheck c : checks) {
+				if(c.state == checkState.partiallyPaid) {
+					addCustomerToOweList(c);
+				}
+			}
+		}
+		
+		synchronized(checks) {
+			for(MyCheck c : checks) {
+				if(c.state == checkState.requested) {
+					giveCheckToWaiter(c);
+				}
+			}
+		}
+
 		if(!marketBills.isEmpty()) {
 			payBill(marketBills.get(0));
 		}
@@ -120,10 +130,12 @@ public class CashierAgent extends Agent {
 	
 	private void addCustomerToOweList(MyCheck c) {
 		print("You still owe $" + c.c.amount + "! You'll have to pay it back next time!");
-		for(MyCustomer mc : customersWhoOweMoney) { //If customer is already on the "owe money" list, add the money to the amount they owe
-			if(mc.c == c.c.cust) {
-				c.state = checkState.finished;
-				return;
+		synchronized(customersWhoOweMoney) {
+			for(MyCustomer mc : customersWhoOweMoney) { //If customer is already on the "owe money" list, add the money to the amount they owe
+				if(mc.c == c.c.cust) {
+					c.state = checkState.finished;
+					return;
+				}
 			}
 		}
 		

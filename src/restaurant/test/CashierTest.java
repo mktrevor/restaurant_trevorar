@@ -21,7 +21,6 @@ public class CashierTest extends TestCase
 	MockWaiter waiter;
 	MockCustomer customer;
 	
-	
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
 	 * for your agent and mocks, etc.

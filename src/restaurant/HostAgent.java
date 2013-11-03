@@ -34,8 +34,10 @@ public class HostAgent extends Agent {
 
 		this.name = name;
 		// make some tables
-		for (int i = 1; i <= NTABLES; i++) {
-			tables.add(new Table(i));
+		synchronized(tables) {
+			for (int i = 1; i <= NTABLES; i++) {
+				tables.add(new Table(i));
+			}
 		}
 	}
 
@@ -64,13 +66,15 @@ public class HostAgent extends Agent {
 	// Messages
 
 	public void msgImHungry(CustomerAgent c) {
-		for(MyCustomer mc : customers) {
-			if(mc.c == c) {
-				mc.waiting = true;
-				mc.toldRestaurantIsFull = false;
-				print("Welcome to Restaurant V2.2, " + c.getName() + "!");
-				stateChanged();
-				return;
+		synchronized(customers) {
+			for(MyCustomer mc : customers) {
+				if(mc.c == c) {
+					mc.waiting = true;
+					mc.toldRestaurantIsFull = false;
+					print("Welcome to Restaurant V2.2, " + c.getName() + "!");
+					stateChanged();
+					return;
+				}
 			}
 		}
 		customers.add(new MyCustomer(c));
@@ -79,43 +83,53 @@ public class HostAgent extends Agent {
 	}
 	
 	public void msgIWantABreak(WaiterAgent w) {
-		for(MyWaiter mw : waiters) {
-			if(mw.w == w) {
-				mw.iWantABreak = true;
+		synchronized(waiters) {
+			for(MyWaiter mw : waiters) {
+				if(mw.w == w) {
+					mw.iWantABreak = true;
+				}
 			}
 		}
 		stateChanged();
 	}
 	
 	public void msgImDoneWithMyBreak(WaiterAgent w) {
-		for(MyWaiter mw : waiters) {
-			if(mw.w == w) {
-				mw.iWantABreak = false;
-				mw.state = waiterState.working;
-				numberOfWorkingWaiters++;
+		synchronized(waiters) {
+			for(MyWaiter mw : waiters) {
+				if(mw.w == w) {
+					mw.iWantABreak = false;
+					mw.state = waiterState.working;
+					numberOfWorkingWaiters++;
+				}
 			}
 		}
 		stateChanged();
 	}
 	
 	public void msgImLeaving(CustomerAgent c) {
-		for(MyCustomer mc : customers) {
-			if(mc.c == c) {
-				mc.waiting = false;
+		synchronized(customers) {
+			for(MyCustomer mc : customers) {
+				if(mc.c == c) {
+					mc.waiting = false;
+				}
 			}
 		}
 		stateChanged();
 	}
 	
 	public void msgTableIsFree(int table, WaiterAgent w) {
-		for (Table t : tables) {
-			if (t.tableNumber == table) {
-				t.occupied = false;
+		synchronized(tables) {
+			for (Table t : tables) {
+				if (t.tableNumber == table) {
+					t.occupied = false;
+				}
 			}
 		}
-		for (MyWaiter mw : waiters) {
-			if(mw.w == w) {
-				mw.numCustomers--;
+		synchronized(waiters) {
+			for (MyWaiter mw : waiters) {
+				if(mw.w == w) {
+					mw.numCustomers--;
+				}
 			}
 		}
 		stateChanged();
@@ -125,51 +139,61 @@ public class HostAgent extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-		for(MyWaiter w : waiters) {
-			if (w.iWantABreak) {
-				giveWaiterABreak(w);
-			}
-		}		
-		for (Table table : tables) {
-			if (!table.occupied) {
-				for(MyCustomer mc : customers) {
-					if (mc.waiting) {
-						if(!waiters.isEmpty()) {
-							seatCustomer(mc, table);
-			
-							return true;//return true to the abstract agent to reinvoke the scheduler.
+		synchronized(waiters) {
+			for(MyWaiter w : waiters) {
+				if (w.iWantABreak) {
+					giveWaiterABreak(w);
+				}
+			}		
+		}
+		synchronized(tables) {
+			for (Table table : tables) {
+				if (!table.occupied) {
+					synchronized(customers) {
+						for(MyCustomer mc : customers) {
+							if (mc.waiting) {
+								if(!waiters.isEmpty()) {
+									seatCustomer(mc, table);
+
+									return true;//return true to the abstract agent to reinvoke the scheduler.
+								}
+							}
 						}
 					}
 				}
 			}
 		}
-		
-		for(MyCustomer mc : customers) {
-			if(mc.waiting && !mc.toldRestaurantIsFull && !waiters.isEmpty()) {
-				tellCustomerRestaurantIsFull(mc);
+
+		synchronized(customers) {
+			for(MyCustomer mc : customers) {
+				if(mc.waiting && !mc.toldRestaurantIsFull && !waiters.isEmpty()) {
+					tellCustomerRestaurantIsFull(mc);
+				}
 			}
 		}
+		
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
 	}
 
 	// Actions
 	
 	private void seatCustomer(MyCustomer mc, Table table) {
 		MyWaiter leastBusyWaiter = waiters.get(0);
-		for(int i = 0; i < waiters.size(); i++) {
-			if(waiters.get(i).state == waiterState.onBreak) {
-				leastBusyWaiter = waiters.get(i+1);
+		synchronized(waiters) {
+			for(int i = 0; i < waiters.size(); i++) {
+				if(waiters.get(i).state == waiterState.onBreak) {
+					leastBusyWaiter = waiters.get(i+1);
+				}
+				else { break; }
 			}
-			else { break; }
 		}
 		
 		// This loop finds the waiter that is currently dealing with the least number of customers
-		for(MyWaiter mw : waiters) {
-			if(mw.numCustomers < leastBusyWaiter.numCustomers && mw.state != waiterState.onBreak) {
-				leastBusyWaiter = mw;
+		synchronized(waiters) {
+			for(MyWaiter mw : waiters) {
+				if(mw.numCustomers < leastBusyWaiter.numCustomers && mw.state != waiterState.onBreak) {
+					leastBusyWaiter = mw;
+				}
 			}
 		}
 

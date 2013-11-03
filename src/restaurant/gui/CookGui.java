@@ -22,7 +22,7 @@ public class CookGui implements Gui {
     private int xPos = XPOS, yPos = YPOS;//default waiter position
     private int xDestination = XPOS, yDestination = YPOS;//default start position
     
-    private List<MyOrder> orders = new ArrayList<MyOrder>();
+    private List<MyOrder> orders = Collections.synchronizedList(new ArrayList<MyOrder>());
     int cookingLocation = 0, waitingLocation = 0;
     
     public CookGui(CookAgent agent) {
@@ -76,13 +76,15 @@ public class CookGui implements Gui {
         g.drawRect(689, 469, 61, 51);
         g.drawString("Fridge", 700, 495);
         
-        for(MyOrder o : orders) {
-        	if(o.s == orderState.cooking) {
-        		drawOrderCooking(o, g);
-        	} else if (o.s == orderState.carried) {
-        		drawOrderCarried(o, g);
-        	} else if (o.s == orderState.waiting) {
-        		drawOrderWaiting(o, g);
+        synchronized(orders) {
+        	for(MyOrder o : orders) {
+        		if(o.s == orderState.cooking) {
+        			drawOrderCooking(o, g);
+        		} else if (o.s == orderState.carried) {
+        			drawOrderCarried(o, g);
+        		} else if (o.s == orderState.waiting) {
+        			drawOrderWaiting(o, g);
+        		}
         	}
         }
     }
@@ -131,40 +133,50 @@ public class CookGui implements Gui {
     }
     
     public void msgNewOrder(String type, int orderNumber) {
-    	orders.add(new MyOrder(type, orderNumber, cookingLocation));
-    	cookingLocation = (cookingLocation + 1) % 5;
+    	synchronized(orders) {
+    		orders.add(new MyOrder(type, orderNumber, cookingLocation));
+    		cookingLocation = (cookingLocation + 1) % 5;
+    	}
     }
     
     public void msgOrderCooking(int number) {
-    	for(MyOrder o : orders) {
-    		if(o.orderNumber == number) {
-    			o.s = orderState.cooking;
+    	synchronized(orders) {
+    		for(MyOrder o : orders) {
+    			if(o.orderNumber == number) {
+    				o.s = orderState.cooking;
+    			}
     		}
     	}
     }
     
     public void msgOrderWaiting(int number) {
-    	for(MyOrder o : orders) {
-    		if(o.orderNumber == number) {
-    			o.s = orderState.waiting;
-    			o.setLoc(waitingLocation);
-    			waitingLocation = (waitingLocation + 1) % 5;
+    	synchronized(orders) {
+    		for(MyOrder o : orders) {
+    			if(o.orderNumber == number) {
+    				o.s = orderState.waiting;
+    				o.setLoc(waitingLocation);
+    				waitingLocation = (waitingLocation + 1) % 5;
+    			}
     		}
     	}
     }
     
     public void msgOrderBeingCarried(int number) {
-    	for(MyOrder o : orders) {
-    		if(o.orderNumber == number) {
-    			o.s = orderState.carried;
+    	synchronized(orders) {
+    		for(MyOrder o : orders) {
+    			if(o.orderNumber == number) {
+    				o.s = orderState.carried;
+    			}
     		}
     	}
     }
     
     public void msgOrderPickedUp(int number) {
-    	for(MyOrder o : orders) {
-    		if(o.orderNumber == number) {
-    			orders.remove(o);
+    	synchronized(orders) {
+    		for(int i = 0; i < orders.size(); i++) {
+    			if(orders.get(i).orderNumber == number) {
+    				orders.remove(i);
+    			}
     		}
     	}
     }

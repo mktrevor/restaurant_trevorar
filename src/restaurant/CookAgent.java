@@ -74,23 +74,27 @@ public class CookAgent extends Agent {
 	}
 	
 	public void msgPickedUpOrder(int orderNumber) {
-		for(Order o : orders) {
-			if(o.orderNumber == orderNumber) {
-				o.s = orderState.pickedUp;
+		synchronized(orders) {
+			for(Order o : orders) {
+				if(o.orderNumber == orderNumber) {
+					o.s = orderState.pickedUp;
+				}
 			}
 		}
 		stateChanged();
 	}
 	
 	public void msgWeWillDeliver(MarketAgent m, List<FoodOrder> orders) { //Market will notify the cook how much they are able to deliver
-		for(int i = 0; i < orders.size(); i++) {
-			FoodOrder tempOrder = orders.get(i);
-			Food thisFood = foods.get(tempOrder.foodType);
-			if(tempOrder.amount < (thisFood.capacity - thisFood.amount)) {	
-				thisFood.state = foodOrderingState.notYetOrdered;
-			}
-			else {
-				thisFood.state = foodOrderingState.ordered;
+		synchronized(orders) {
+			for(int i = 0; i < orders.size(); i++) {
+				FoodOrder tempOrder = orders.get(i);
+				Food thisFood = foods.get(tempOrder.foodType);
+				if(tempOrder.amount < (thisFood.capacity - thisFood.amount)) {	
+					thisFood.state = foodOrderingState.notYetOrdered;
+				}
+				else {
+					thisFood.state = foodOrderingState.ordered;
+				}
 			}
 		}
 		stateChanged();
@@ -98,21 +102,26 @@ public class CookAgent extends Agent {
 	
 	public void msgCannotFulfillOrder(List<FoodOrder> orders) {
 		marketChooser = (marketChooser + 1) % markets.size(); //Start ordering from a different market.
-		for(int i = 0; i < orders.size(); i++) {
-			FoodOrder tempOrder = orders.get(i);
-			Food tempFood = foods.get(tempOrder.foodType);
-			tempFood.state = foodOrderingState.notYetOrdered;
+		synchronized(orders) {
+			for(int i = 0; i < orders.size(); i++) {
+				FoodOrder tempOrder = orders.get(i);
+				Food tempFood = foods.get(tempOrder.foodType);
+				tempFood.state = foodOrderingState.notYetOrdered;
+			}
 		}
 		stateChanged();
 	}
 	
 	public void msgFoodDelivery(MarketAgent m, List<FoodOrder> orders) { //Actual delivery of food
-		for(int i = 0; i < orders.size(); i++) {
-			FoodOrder tempOrder = orders.get(i);
-			Food tempFood = foods.get(tempOrder.foodType);
-			tempFood.state = foodOrderingState.notYetOrdered;
-			print("Received delivery of " + tempOrder.amount + " units of " + tempOrder.foodType);
-			tempFood.amount += tempOrder.amount;
+		synchronized(orders) {
+			for(int i = 0; i < orders.size(); i++) {
+
+				FoodOrder tempOrder = orders.get(i);
+				Food tempFood = foods.get(tempOrder.foodType);
+				tempFood.state = foodOrderingState.notYetOrdered;
+				print("Received delivery of " + tempOrder.amount + " units of " + tempOrder.foodType);
+				tempFood.amount += tempOrder.amount;
+			}
 		}
 		stateChanged();
 	}
@@ -145,24 +154,30 @@ public class CookAgent extends Agent {
 			return true;
 		}
 		
-		for(Order o : orders) {
-			if(o.s == orderState.pickedUp) {
-				finishIt(o);
-				return true;
-			}
-		}
-		
-		for(Order o : orders) {
-			if(o.s == orderState.cooked) {
-				plateIt(o);
-				return true;
+		synchronized(orders) {
+			for(Order o : orders) {
+				if(o.s == orderState.pickedUp) {
+					finishIt(o);
+					return true;
+				}
 			}
 		}
 
-		for(Order o : orders) {
-			if(o.s == orderState.pending) {
-				cookIt(o);
-				return true;
+		synchronized(orders) {
+			for(Order o : orders) {
+				if(o.s == orderState.cooked) {
+					plateIt(o);
+					return true;
+				}
+			}
+		}
+
+		synchronized(orders) {
+			for(Order o : orders) {
+				if(o.s == orderState.pending) {
+					cookIt(o);
+					return true;
+				}
 			}
 		}
 		
@@ -273,7 +288,7 @@ public class CookAgent extends Agent {
 	}
 	
 	private void orderMoreFood() {
-		List<FoodOrder> orderList = new ArrayList<FoodOrder>();
+		List<FoodOrder> orderList = Collections.synchronizedList(new ArrayList<FoodOrder>());
 		
 		Food temp = foods.get("steak");
 		if(temp.amount < temp.low && temp.state == foodOrderingState.notYetOrdered) {

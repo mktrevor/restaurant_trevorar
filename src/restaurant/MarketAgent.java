@@ -69,17 +69,21 @@ public class MarketAgent extends Agent implements Market {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-		for(Order o : orders) {
-			if(o.s == orderState.received) {
-				processOrder(o);
-				return true;
+		synchronized(orders) {
+			for(Order o : orders) {
+				if(o.s == orderState.received) {
+					processOrder(o);
+					return true;
+				}
 			}
 		}
-		
-		for(Order o : orders) {
-			if(o.s == orderState.processed) {
-				prepareAndSendOrder(o);
-				return true;
+
+		synchronized(orders) {
+			for(Order o : orders) {
+				if(o.s == orderState.processed) {
+					prepareAndSendOrder(o);
+					return true;
+				}
 			}
 		}
 
@@ -91,30 +95,34 @@ public class MarketAgent extends Agent implements Market {
 	private void processOrder(Order o) {
 		print("Received order from cook. Now processing to see what we can fulfill.");
 		
-		for(int i = 0; i < o.orders.size(); i++) {
-			FoodOrder tempOrder = o.orders.get(i);
-			Food tempFood = foods.get(tempOrder.foodType);
+		synchronized(orders) {
+			for(int i = 0; i < o.orders.size(); i++) {
+				FoodOrder tempOrder = o.orders.get(i);
+				Food tempFood = foods.get(tempOrder.foodType);
 
-			if(tempFood.inventory == 0) {
-				tempOrder.amount = 0;
-			} 
+				if(tempFood.inventory == 0) {
+					tempOrder.amount = 0;
+				} 
 
-			else if(tempFood.inventory > tempOrder.amount) {				
-				tempFood.inventory -= tempOrder.amount;
+				else if(tempFood.inventory > tempOrder.amount) {				
+					tempFood.inventory -= tempOrder.amount;
+				}
+
+				else if(tempFood.inventory < tempOrder.amount) {
+					tempOrder.amount = tempFood.inventory;
+					tempFood.inventory = 0;
+				}	
 			}
-
-			else if(tempFood.inventory < tempOrder.amount) {
-				tempOrder.amount = tempFood.inventory;
-				tempFood.inventory = 0;
-			}	
 		}
 		
 		boolean cannotFulfillOrder = true;
 
-		for(int i = 0; i < o.orders.size(); i++) {
-			FoodOrder tempOrder = o.orders.get(i);
-			if(tempOrder.amount != 0) {
-				cannotFulfillOrder = false;
+		synchronized(orders) {
+			for(int i = 0; i < o.orders.size(); i++) {
+				FoodOrder tempOrder = o.orders.get(i);
+				if(tempOrder.amount != 0) {
+					cannotFulfillOrder = false;
+				}
 			}
 		}
 		
@@ -149,9 +157,12 @@ public class MarketAgent extends Agent implements Market {
 
 	private void sendBill(Order o) {
 		double total = 0.0;
-		for(FoodOrder fo : o.orders) {
-			Food tempFood = foods.get(fo.foodType);
-			total += fo.amount * tempFood.price;
+		
+		synchronized(o.orders) {
+			for(FoodOrder fo : o.orders) {
+				Food tempFood = foods.get(fo.foodType);
+				total += fo.amount * tempFood.price;
+			}
 		}
 		print("Here is a bill for your recent order. The total is " + total + ".");
 		cashier.msgYouOwe(this, total);
