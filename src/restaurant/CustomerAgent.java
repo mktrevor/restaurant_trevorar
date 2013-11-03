@@ -1,7 +1,6 @@
 package restaurant;
 
 import restaurant.gui.CustomerGui;
-import restaurant.gui.RestaurantGui;
 import restaurant.interfaces.Customer;
 import agent.Agent;
 
@@ -382,7 +381,6 @@ public class CustomerAgent extends Agent implements Customer {
 		//So, we use Java syntactic mechanism to create an
 		//anonymous inner class that has the public method run() in it.
 		timer.schedule(new TimerTask() {
-			Object cookie = 1;
 			public void run() {
 				print("Done eating!");
 				event = AgentEvent.doneEating;

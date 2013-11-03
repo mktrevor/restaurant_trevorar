@@ -2,7 +2,6 @@ package restaurant;
 
 import agent.Agent;
 import restaurant.gui.CookGui;
-import restaurant.gui.HostGui;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -29,6 +28,8 @@ public class CookAgent extends Agent {
 	
 	boolean restaurantOpening = true; // A bool to deal with the initial inventory check when restaurant opens.
 	
+	boolean needToReorder = false;
+	
 	private String name;
 	
 	Timer timer = new Timer();
@@ -42,7 +43,7 @@ public class CookAgent extends Agent {
 	public CookAgent(String name) {
 		super();
 		
-				//usage: new Food(String type, int cookTime, int amount, int low, int capacity);
+				// usage: new Food(String type, int cookTime, int amount, int low, int capacity);
 		foods.put("steak", new Food("steak", 8, 6, 5, 8));
 		foods.put("fish", new Food("fish", 6, 6, 5, 8));
 		foods.put("chicken", new Food("chicken", 4, 6, 5, 8));
@@ -56,10 +57,6 @@ public class CookAgent extends Agent {
 	
 	public void setGui(CookGui gui) {
 		cookGui = gui;
-	}
-
-	public List getOrders() {
-		return orders;
 	}
 
 	// Messages
@@ -91,6 +88,7 @@ public class CookAgent extends Agent {
 				Food thisFood = foods.get(tempOrder.foodType);
 				if(tempOrder.amount < (thisFood.capacity - thisFood.amount)) {	
 					thisFood.state = foodOrderingState.notYetOrdered;
+					needToReorder = true;
 				}
 				else {
 					thisFood.state = foodOrderingState.ordered;
@@ -151,6 +149,11 @@ public class CookAgent extends Agent {
 	protected boolean pickAndExecuteAnAction() {
 		if(restaurantOpening) {
 			initialInventoryCheck();
+			return true;
+		}
+		
+		if(needToReorder) {
+			reorderFood();
 			return true;
 		}
 		
@@ -243,6 +246,12 @@ public class CookAgent extends Agent {
 								 msgFoodDoneCooking(o);
 							}
 						}, cookTime	);
+	}
+	
+	private void reorderFood() {
+		marketChooser = (marketChooser + 1) % markets.size(); //Start ordering from a different market.
+		
+		orderMoreFood();
 	}
 
 	private void plateIt(Order o) {

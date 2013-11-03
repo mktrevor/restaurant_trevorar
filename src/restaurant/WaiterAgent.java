@@ -1,7 +1,6 @@
 package restaurant;
 
 import agent.Agent;
-import restaurant.gui.HostGui;
 import restaurant.gui.WaiterGui;
 import restaurant.interfaces.Waiter;
 

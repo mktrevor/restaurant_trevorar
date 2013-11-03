@@ -1,14 +1,12 @@
 package restaurant;
 
 import agent.Agent;
-import restaurant.gui.HostGui;
 import restaurant.interfaces.Customer;
 import restaurant.interfaces.Market;
 import restaurant.interfaces.Waiter;
 import restaurant.test.mock.EventLog;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 public class CashierAgent extends Agent {
 	
@@ -145,7 +143,7 @@ public class CashierAgent extends Agent {
 	
 	private void payBill(MarketBill mb) {
 		if(money > mb.amountOwed) {
-			print("Here is my payment for the recent shipment!");
+			print("Here is my payment of $" + mb.amountOwed + " for the recent shipment!");
 			mb.m.msgHereIsPayment(this, mb.amountOwed);
 			money -= mb.amountOwed;
 		} else {

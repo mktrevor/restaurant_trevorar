@@ -1,11 +1,9 @@
 package restaurant;
 
 import agent.Agent;
-import restaurant.gui.HostGui;
 import restaurant.interfaces.Market;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 /**
  * Restaurant Host Agent
@@ -44,10 +42,6 @@ public class MarketAgent extends Agent implements Market {
 		return name;
 	}
 
-	public List getOrders() {
-		return orders;
-	}
-
 	// Messages
 	
 	public void msgFoodOrder(CookAgent c, List<FoodOrder> order) {
@@ -55,8 +49,8 @@ public class MarketAgent extends Agent implements Market {
 		stateChanged();
 	}
 	
-	public void msgHereIsPayment(CashierAgent c, double money) {
-		this.money += money;
+	public void msgHereIsPayment(CashierAgent c, double payment) {
+		money += payment;
 		stateChanged();
 	}
 	

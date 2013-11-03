@@ -4,7 +4,6 @@ import agent.Agent;
 import restaurant.gui.HostGui;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 /**
  * Restaurant Host Agent
@@ -43,18 +42,6 @@ public class HostAgent extends Agent {
 
 	public String getName() {
 		return name;
-	}
-
-	public List getCustomers() {
-		return customers;
-	}
-
-	public Collection getTables() {
-		return tables;
-	}
-	
-	public List getWaiters() {
-		return waiters;
 	}
 	
 	public void addWaiter(WaiterAgent w) {

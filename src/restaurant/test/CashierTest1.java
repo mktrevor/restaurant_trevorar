@@ -14,7 +14,7 @@ import junit.framework.*;
  *
  * @author Monroe Ekilah
  */
-public class CashierTest extends TestCase
+public class CashierTest1 extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
 	CashierAgent cashier;
@@ -27,15 +27,15 @@ public class CashierTest extends TestCase
 	 */
 	public void setUp() throws Exception{
 		super.setUp();		
-		cashier = new CashierAgent("cashier");		
-		customer = new MockCustomer("mockcustomer");		
+		cashier = new CashierAgent("cashier");
+		customer = new MockCustomer("mockcustomer");
 		waiter = new MockWaiter("mockwaiter");
 	}	
 	/**
 	 * This tests the cashier under very simple terms: one customer is ready to pay the exact bill.
 	 */
 	
-	public void testSimpleTest() {
+	public void test() {
 		
 		try {
 			setUp();
@@ -52,9 +52,10 @@ public class CashierTest extends TestCase
 		//Send message
 		cashier.msgProduceCheck(waiter, customer, "steak");
 		
+		
 		//Postconditions
 		assertEquals(cashier.checks.size(), 1);
 		assertEquals(cashier.checks.get(0).c.cust, customer);
 		
-	}	
+	}
 }
