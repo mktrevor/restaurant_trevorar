@@ -14,11 +14,11 @@ public class CashierAgent extends Agent {
 	
 	public EventLog log; //Log for keeping track of events while unit testing cashier
 	
-	public List<MyCheck> checks = new ArrayList<MyCheck>();
+	public List<MyCheck> checks = Collections.synchronizedList(new ArrayList<MyCheck>());
 	
-	public List<MyCustomer> customersWhoOweMoney = new ArrayList<MyCustomer>();
+	public List<MyCustomer> customersWhoOweMoney = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	
-	public List<MarketBill> marketBills = new ArrayList<MarketBill>();
+	public List<MarketBill> marketBills = Collections.synchronizedList(new ArrayList<MarketBill>());
 	
 	private Menu menu = new Menu();
 
@@ -45,10 +45,12 @@ public class CashierAgent extends Agent {
 		Check check = new Check(this, c, choice);
 		check.amount = menu.getPrice(choice);
 		
-		for(MyCustomer mc : customersWhoOweMoney) {
-			if(mc.c == c) {
-				print("Well, look who's back! This customer will have to repay their previous bill of " + mc.amountOwed + " as well.");
-				check.amount += mc.amountOwed;
+		synchronized(customersWhoOweMoney) {
+			for(MyCustomer mc : customersWhoOweMoney) {
+				if(mc.c == c) {
+					print("Well, look who's back! This customer will have to repay their previous bill of " + mc.amountOwed + " as well.");
+					check.amount += mc.amountOwed;
+				}
 			}
 		}
 		checks.add(new MyCheck(w, check));

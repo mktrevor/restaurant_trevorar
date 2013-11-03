@@ -16,8 +16,7 @@ import java.util.concurrent.Semaphore;
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
 public class WaiterAgent extends Agent implements Waiter {
-	public List<MyCustomer> customers
-	= new ArrayList<MyCustomer>();
+	public List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	
 	private static enum customerState { waiting, seated, readyToOrder, 
 		askedForOrder, ordered, orderSentToCook, orderOut, foodReady, served, checkReady, checkGiven, finished, 
@@ -175,70 +174,78 @@ public class WaiterAgent extends Agent implements Waiter {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		
-		if(breakStatus == breakState.doneWithBreak) {
-			finishBreak();
-		}
+		try {
+			
+			if(breakStatus == breakState.doneWithBreak) {
+				finishBreak();
+			}
+			
+			if(breakStatus == breakState.wantABreak) {
+				askForBreak();
+			}
 		
-		if(breakStatus == breakState.wantABreak) {
-			askForBreak();
-		}
+			for(MyCustomer mc : customers) {
+				if(mc.s == customerState.finished) {
+					tellHostCustomerIsDone(mc);
+					return true;
+				}
+			}
+			for(MyCustomer mc : customers) {
+				if(mc.s == customerState.checkReady) {
+					getCheckFromCashier(mc);
+				}
+			}
+			for(MyCustomer mc : customers) {
+				if(mc.s == customerState.foodReady) {
+					bringFoodToCustomer(mc);
+					return true;
+				}
+			}
+			for(MyCustomer mc : customers) {
+				if(mc.s == customerState.waiting) {
+					seatCustomer(mc);
+					return true;
+				}
+			}
+			for(MyCustomer mc : customers) {
+				if(mc.s == customerState.readyToOrder) {
+					takeOrder(mc);
+					return true;
+				}
+			}
+			for(MyCustomer mc : customers) {
+				if(mc.s == customerState.orderOut) {
+					removeChoice(mc);
+					askToReorder(mc);
+					return true;
+				}
+			}
+			for(MyCustomer mc : customers) {
+				if(mc.s == customerState.ordered) {
+					sendOrderToCook(mc);
+					return true;
+				}
+			}
+			
+			if(event == waiterEvent.takeABreak && state == waiterState.working && allCustomersDone()) {
+				state = waiterState.onBreak;
+				takeABreak();
+				//return true;
+			}
+			
+			if(event == waiterEvent.backToWork && state == waiterState.onBreak) {
+				state = waiterState.working;
+				event = waiterEvent.none;
+				return true;
+			}
 	
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.finished) {
-				tellHostCustomerIsDone(mc);
-				return true;
-			}
+			DoGoToHome();
+			
+		} catch(ConcurrentModificationException e) {
+			
+			return false;
+			
 		}
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.checkReady) {
-				getCheckFromCashier(mc);
-			}
-		}
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.foodReady) {
-				bringFoodToCustomer(mc);
-				return true;
-			}
-		}
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.waiting) {
-				seatCustomer(mc);
-				return true;
-			}
-		}
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.readyToOrder) {
-				takeOrder(mc);
-				return true;
-			}
-		}
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.orderOut) {
-				removeChoice(mc);
-				askToReorder(mc);
-				return true;
-			}
-		}
-		for(MyCustomer mc : customers) {
-			if(mc.s == customerState.ordered) {
-				sendOrderToCook(mc);
-				return true;
-			}
-		}
-		
-		if(event == waiterEvent.takeABreak && state == waiterState.working && allCustomersDone()) {
-			state = waiterState.onBreak;
-			takeABreak();
-			//return true;
-		}
-		
-		if(event == waiterEvent.backToWork && state == waiterState.onBreak) {
-			state = waiterState.working;
-			event = waiterEvent.none;
-			return true;
-		}
-
-		DoGoToHome();
 		
 		return false;
 	}

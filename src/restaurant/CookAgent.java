@@ -18,7 +18,7 @@ public class CookAgent extends Agent {
 	
 	public List<Order> orders = new ArrayList<Order>();
 	
-	private List<MarketAgent> markets = new ArrayList<MarketAgent>();
+	private List<MarketAgent> markets = Collections.synchronizedList(new ArrayList<MarketAgent>());
 	int marketChooser = 0; //This will allow the cook to try a different market if one market runs out of a food
 	
 	public enum orderState { pending, cooking, cooked, pickedUp, finished };
@@ -33,7 +33,7 @@ public class CookAgent extends Agent {
 	
 	Timer timer = new Timer();
 	
-	private Map<String, Food> foods = new HashMap<String, Food>();
+	private Map<String, Food> foods = Collections.synchronizedMap(new HashMap<String, Food>());
 
 	private Semaphore atDestination = new Semaphore(0, true); // For gui movements
 	

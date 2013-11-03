@@ -16,7 +16,7 @@ import java.util.concurrent.Semaphore;
 //is proceeded as he wishes.
 public class MarketAgent extends Agent implements Market {
 	
-	public List<Order> orders = new ArrayList<Order>();
+	public List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
 	
 	public enum orderState { none, received, processed, readyForDelivery, delivered, paidFor };
 	
@@ -28,7 +28,7 @@ public class MarketAgent extends Agent implements Market {
 	
 	Timer timer = new Timer();
 	
-	private Map<String, Food> foods = new HashMap<String, Food>();
+	private Map<String, Food> foods = Collections.synchronizedMap(new HashMap<String, Food>());
 
 	public MarketAgent(String name, int steakAmount, int fishAmount, int chickenAmount) {
 		super();
@@ -51,7 +51,7 @@ public class MarketAgent extends Agent implements Market {
 	// Messages
 	
 	public void msgFoodOrder(CookAgent c, List<FoodOrder> order) {
-		orders.add( new Order(c, order));
+		orders.add(new Order(c, order));
 		stateChanged();
 	}
 	

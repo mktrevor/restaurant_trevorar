@@ -15,13 +15,11 @@ import java.util.concurrent.Semaphore;
 //is proceeded as he wishes.
 public class HostAgent extends Agent {
 	static final int NTABLES = 4;//a global for the number of tables.
-	public List<MyCustomer> customers
-	= new ArrayList<MyCustomer>();
+	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	
-	public List<MyWaiter> waiters
-	= new ArrayList<MyWaiter>();
+	public List<MyWaiter> waiters = Collections.synchronizedList(new ArrayList<MyWaiter>());
 	
-	public Collection<Table> tables;
+	public Collection<Table> tables = Collections.synchronizedCollection(new ArrayList<Table>(NTABLES));
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
 
@@ -36,7 +34,6 @@ public class HostAgent extends Agent {
 
 		this.name = name;
 		// make some tables
-		tables = new ArrayList<Table>(NTABLES);
 		for (int i = 1; i <= NTABLES; i++) {
 			tables.add(new Table(i));
 		}
