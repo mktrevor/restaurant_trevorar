@@ -16,7 +16,7 @@ public class MarketAgent extends Agent implements Market {
 	
 	public List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
 	
-	public enum orderState { none, received, processed, readyForDelivery, delivered, paidFor };
+	public enum orderState { none, received, processed, readyForDelivery, delivered };
 	
 	private CashierAgent cashier;
 

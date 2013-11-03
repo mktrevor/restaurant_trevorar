@@ -60,12 +60,14 @@ public class CashierAgent extends Agent {
 		synchronized(checks) {
 			for(MyCheck c : checks) {
 				if(c.c == check) {
-					if(money == c.c.amount) {
+					if(money >= c.c.amount) {
 						c.state = checkState.fullyPaid;
+						c.amountPaid = money;
 					}
 					else if(money < c.c.amount) {
 						c.c.amount -= money;
 						c.state = checkState.partiallyPaid;
+						c.amountPaid = money;
 					}
 				}
 			}
@@ -85,7 +87,7 @@ public class CashierAgent extends Agent {
 		synchronized(checks) {
 			for(MyCheck c : checks) {
 				if(c.state == checkState.fullyPaid) {
-					thankCustomer(c);
+					giveChange(c);
 				}
 			}
 		}
@@ -121,8 +123,10 @@ public class CashierAgent extends Agent {
 		c.state = checkState.givenToWaiter;
 	}
 	
-	private void thankCustomer(MyCheck c) {
-		print("Thank you! Please come again!");
+	private void giveChange(MyCheck c) {
+		double change = c.amountPaid - c.c.amount;
+		print("Here is your change of $" + change);
+		c.c.cust.msgHereIsChange(change);
 		c.state = checkState.finished;
 	}
 	
@@ -163,6 +167,7 @@ public class CashierAgent extends Agent {
 		Waiter w;
 		public Check c;
 		checkState state = checkState.requested;
+		double amountPaid;
 		
 		MyCheck(Waiter w, Check c) {
 			this.w = w;
@@ -190,4 +195,3 @@ public class CashierAgent extends Agent {
 		}
 	}
 }
-

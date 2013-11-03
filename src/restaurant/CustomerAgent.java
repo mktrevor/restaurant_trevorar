@@ -107,7 +107,7 @@ public class CustomerAgent extends Agent implements Customer {
 	// Messages
 	
 	public void msgRestaurantFull() {
-		int randomChoice = ranGenerator.nextInt(2);
+		int randomChoice = ranGenerator.nextInt(4);
 		
 		//Hacks to demonstrate working code. "patient" will always wait while "impatient" will leave
 		if(name.equals("patient")) {
@@ -126,7 +126,7 @@ public class CustomerAgent extends Agent implements Customer {
 			print("I don't have time to wait around!");
 			event = AgentEvent.leaving;
 		}
-		else if(randomChoice == 1) {
+		else if(randomChoice > 0) {
 			print("I'm in no hurry, I'll wait around.");
 		}
 		stateChanged();
@@ -167,6 +167,12 @@ public class CustomerAgent extends Agent implements Customer {
 	
 	public void msgHereIsYourBill(Check c) {
 		check = c;
+		stateChanged();
+	}
+	
+	public void msgHereIsChange(double change) {
+		money += change;
+		event = AgentEvent.leaving;
 		stateChanged();
 	}
 	
@@ -400,6 +406,7 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 
 	private void leaveRestaurant() {
+		check = null;
 		print("I'm leaving! Goodbye!");
 		customerGui.DoExitRestaurant();
 	}
@@ -422,16 +429,16 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		
 		if(money > check.amount) {
-			print("Here is my payment of $" + check.amount + ".");
-			check.cashier.msgPayBill(check, check.amount);
-			money -= check.amount;
+			print("Here is my payment of $" + money + ".");
+			check.cashier.msgPayBill(check, money);
+			money = 0.0;
 		}
 		else {
 			check.cashier.msgPayBill(check, money);
 			print("This is all I have. Take $" + money + ".");
 			money = 0;
+			event = AgentEvent.leaving;
 		}
-		event = AgentEvent.leaving;
 	}
 
 	// Accessors, etc.

@@ -10,8 +10,8 @@ import restaurant.interfaces.Customer;
  * @author Monroe Ekilah
  *
  */
-public class MockCustomer extends Mock implements Customer {
-
+public class MockCustomer extends Mock implements Customer {	
+	EventLog log;
 	/**
 	 * Reference to the Cashier under test that can be set by the unit test.
 	 */
@@ -21,6 +21,8 @@ public class MockCustomer extends Mock implements Customer {
 		super(name);
 	}
 
-	
+	public void msgHereIsChange(double change) {
+		log.add(new LoggedEvent("Received change from cashier. Leaving restaurant."));
+	}
 	
 }

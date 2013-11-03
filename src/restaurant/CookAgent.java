@@ -154,6 +154,7 @@ public class CookAgent extends Agent {
 		
 		if(needToReorder) {
 			reorderFood();
+			needToReorder = false;
 			return true;
 		}
 		
