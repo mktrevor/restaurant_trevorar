@@ -18,9 +18,12 @@ public class CustomerAgent extends Agent implements Customer {
 	private double money;
 	private Check check;
 	
+	private int waitingSpot;
+	private boolean goingInside = false;
+	
 	private int hungerLevel = 6; // determines length of meal
 	Timer timer = new Timer();
-	private CustomerGui customerGui;
+	public CustomerGui customerGui;
 	
 	private Semaphore atDestination = new Semaphore(0, true);
 
@@ -106,12 +109,14 @@ public class CustomerAgent extends Agent implements Customer {
 	
 	// Messages
 	
-	public void msgRestaurantFull() {
-		int randomChoice = ranGenerator.nextInt(4);
+	public void msgRestaurantFull(int waitingSpot) {
+		this.waitingSpot = waitingSpot;
+		int randomChoice = ranGenerator.nextInt(6);
 		
 		//Hacks to demonstrate working code. "patient" will always wait while "impatient" will leave
 		if(name.equals("patient")) {
 			print("I'm in no hurry, I'll wait around.");
+			goingInside = true;
 			stateChanged();
 			return;
 		}
@@ -128,7 +133,13 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		else if(randomChoice > 0) {
 			print("I'm in no hurry, I'll wait around.");
+			goingInside = true;
 		}
+		stateChanged();
+	}
+	
+	public void msgFeelFreeToWait(int spot) {
+		waitingSpot = spot;
 		stateChanged();
 	}
 
@@ -196,6 +207,11 @@ public class CustomerAgent extends Agent implements Customer {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
+		
+		if(goingInside) {
+			goToWaitingSpot();
+			return true;
+		}
 
 		if (state == AgentState.doingNothing && event == AgentEvent.gotHungry ){
 			state = AgentState.waitingInRestaurant;
@@ -270,6 +286,11 @@ public class CustomerAgent extends Agent implements Customer {
 	private void goToRestaurant() {
 		print("Going to restaurant");
 		host.msgImHungry(this);//send our instance, so he can respond to us
+	}
+	
+	private void goToWaitingSpot() {
+		customerGui.DoGoToSpot(waitingSpot);
+		goingInside = false;
 	}
 
 	private void sitDown() {

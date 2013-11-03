@@ -17,7 +17,7 @@ public class WaiterGui implements Gui {
 	private static final int WIDTH = 30, HEIGHT = 30;
 	private final int COOK_X = 620, COOK_Y = 320;
 	private final int CASHIER_X = 80, CASHIER_Y = 300;
-	private final int BREAK_X = 50, BREAK_Y = 150;
+	private final int LOBBY_X = 100, LOBBY_Y = 110;
 	
 	private int home_x, home_y;
 	
@@ -130,8 +130,18 @@ public class WaiterGui implements Gui {
     }
     
     public void DoGoToLobby() {
-    	xDestination = XPOS;
-    	yDestination = YPOS;
+    	xDestination = LOBBY_X;
+    	yDestination = LOBBY_Y;
+    	moving = true;
+    }
+    
+    public void DoGoToCustomer(CustomerAgent c) {
+    	c.customerGui.msgWhatAreYourCoords(this);
+    }
+    
+    public void msgHereAreMyCoords(int x, int y) {
+    	xDestination = x + 30;
+    	yDestination = y + 30;
     	moving = true;
     }
     

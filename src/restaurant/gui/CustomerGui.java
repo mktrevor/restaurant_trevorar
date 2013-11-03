@@ -146,6 +146,19 @@ public class CustomerGui implements Gui{
     	yDestination = CASHIER_Y;
     }
 	
+	public void DoGoToSpot(int spot) {
+		if(spot < 5) {
+			xDestination = 40 * (spot + 1);
+			yDestination = 10;
+		} else if(spot < 10) {
+			xDestination = 40 * (spot - 4);
+			yDestination = 50;
+		} else {
+			xDestination = 40 * (spot - 9);
+			yDestination = 90;
+		}
+	}
+	
 	public void GivenTableNumber(int table) {
 		xDestination = (int) tableLocations.get(table).getWidth(); // X coordinate of table
 		yDestination = (int) tableLocations.get(table).getHeight(); // Y coordinate of table
@@ -177,5 +190,9 @@ public class CustomerGui implements Gui{
 		xDestination = -2 * WIDTH;
 		yDestination = -2 * HEIGHT;
 		command = Command.LeaveRestaurant;
+	}
+	
+	public void msgWhatAreYourCoords(WaiterGui w) {
+		w.msgHereAreMyCoords(xPos, yPos);
 	}
 }

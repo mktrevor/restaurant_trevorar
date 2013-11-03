@@ -253,7 +253,7 @@ public class WaiterAgent extends Agent implements Waiter {
 
 	private void seatCustomer(MyCustomer c) {
 		
-		waiterGui.DoGoToLobby();
+		waiterGui.DoGoToCustomer(c.c);
 		
 		try {
 			atDestination.acquire();

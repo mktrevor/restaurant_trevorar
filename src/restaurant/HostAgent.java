@@ -26,6 +26,8 @@ public class HostAgent extends Agent {
 	
 	private int numberOfWorkingWaiters = 0; //To make sure there's always at least 1 waiter working
 	
+	private int waitingSpot = 0; //Keeps track of where new customers should wait.
+	
 	public HostGui hostGui = null;
 
 	public HostAgent(String name) {
@@ -98,6 +100,7 @@ public class HostAgent extends Agent {
 			for(MyCustomer mc : customers) {
 				if(mc.c == c) {
 					mc.waiting = false;
+					waitingSpot--;
 				}
 			}
 		}
@@ -133,6 +136,7 @@ public class HostAgent extends Agent {
 				}
 			}		
 		}
+		
 		synchronized(tables) {
 			for (Table table : tables) {
 				if (!table.occupied) {
@@ -208,7 +212,8 @@ public class HostAgent extends Agent {
 	private void tellCustomerRestaurantIsFull(MyCustomer c) {
 		print("The restaurant is currently full. Feel free to wait for an opening or leave!");
 		c.toldRestaurantIsFull = true;
-		c.c.msgRestaurantFull();
+		c.c.msgRestaurantFull(waitingSpot);
+		waitingSpot = (waitingSpot + 1) % 15;
 	}
 
 	// The animation DoXYZ() routines
