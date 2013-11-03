@@ -51,9 +51,7 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
     private JButton emptyMarket1;
     private JButton emptyMarket2;
     private JButton emptyMarket3;
-    private JButton noMoreSteak;
-    private JButton noMoreFish;
-    private JButton noMoreChicken;
+    private JButton clearCook;
     private JButton recheckInventory;
     
     private Object currentPerson;/* Holds the agent that the info is about.
@@ -140,12 +138,8 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         emptyMarket2.addActionListener(this);
         emptyMarket3 = new JButton("Empty Market 3");
         emptyMarket3.addActionListener(this);
-        noMoreSteak = new JButton("steak = 0");
-        noMoreSteak.addActionListener(this);
-        noMoreFish = new JButton("fish = 0");
-        noMoreFish.addActionListener(this);
-        noMoreChicken = new JButton("chicken = 0");
-        noMoreChicken.addActionListener(this);
+        clearCook = new JButton("Clear Cook Inventory");
+        clearCook.addActionListener(this);
         
         recheckInventory = new JButton("Inventory Check");
         recheckInventory.addActionListener(this);
@@ -156,20 +150,19 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         optionPanel.setMinimumSize(optionDim);
         optionPanel.setMaximumSize(optionDim);
         
-        optionPanel.setLayout(new GridLayout(2, 6));
+        optionPanel.setLayout(new GridLayout(2, 4));
         
-        optionPanel.add(emptyMarket1);
+        /*optionPanel.add(emptyMarket1);
         optionPanel.add(emptyMarket2);
-        optionPanel.add(emptyMarket3);
-        optionPanel.add(noMoreSteak);
-        optionPanel.add(noMoreFish);
-        optionPanel.add(noMoreChicken);
+        optionPanel.add(emptyMarket3);*/ //Buttons for testing non-norms with market inventory
+        
+        optionPanel.add(clearCook);
+        optionPanel.add(recheckInventory);
+        optionPanel.add(speedLabel);
+        optionPanel.add(speedSlider);
         optionPanel.add(pauseLabel);
         optionPanel.add(pauseButton);
         optionPanel.add(resumeButton);
-        optionPanel.add(speedLabel);
-        optionPanel.add(speedSlider);
-        optionPanel.add(recheckInventory);
         
         add(optionPanel, BorderLayout.NORTH);
     }
@@ -286,13 +279,9 @@ public class RestaurantGui extends JFrame implements ActionListener, ChangeListe
         if(e.getSource() == emptyMarket3) {
         	restPanel.emptyMarket3();
         }
-        if(e.getSource() == noMoreSteak) {
+        if(e.getSource() == clearCook) {
         	restPanel.noMoreSteak();
-        }
-        if(e.getSource() == noMoreFish) {
         	restPanel.noMoreFish();
-        }
-        if(e.getSource() == noMoreChicken) {
         	restPanel.noMoreChicken();
         }
         if(e.getSource() == recheckInventory){

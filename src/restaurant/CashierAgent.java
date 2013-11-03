@@ -24,7 +24,7 @@ public class CashierAgent extends Agent {
 
 	private String name;
 	
-	private double money = 1000.0;
+	public double money = 1000.0;
 	
 	Timer timer = new Timer();
 
@@ -75,7 +75,7 @@ public class CashierAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgYouOwe(MarketAgent m, double amount) {
+	public void msgYouOwe(Market m, double amount) {
 		marketBills.add(new MarketBill(m, amount));
 		stateChanged();
 	}
@@ -83,11 +83,12 @@ public class CashierAgent extends Agent {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		synchronized(checks) {
 			for(MyCheck c : checks) {
 				if(c.state == checkState.fullyPaid) {
 					giveChange(c);
+					return true;
 				}
 			}
 		}
@@ -96,6 +97,7 @@ public class CashierAgent extends Agent {
 			for(MyCheck c : checks) {
 				if(c.state == checkState.partiallyPaid) {
 					addCustomerToOweList(c);
+					return true;
 				}
 			}
 		}
@@ -104,12 +106,14 @@ public class CashierAgent extends Agent {
 			for(MyCheck c : checks) {
 				if(c.state == checkState.requested) {
 					giveCheckToWaiter(c);
+					return true;
 				}
 			}
 		}
 
 		if(!marketBills.isEmpty()) {
 			payBill(marketBills.get(0));
+			return true;
 		}
 
 		return false;
@@ -186,8 +190,8 @@ public class CashierAgent extends Agent {
 	}
 	
 	public class MarketBill {
-		Market m;
-		double amountOwed;
+		public Market m;
+		public double amountOwed;
 		
 		MarketBill(Market m, double amount) {
 			this.m = m;

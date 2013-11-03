@@ -8,7 +8,7 @@ import java.util.concurrent.*;
  * Base class for simple agents
  */
 public abstract class Agent {
-    Semaphore stateChange = new Semaphore(1, true);
+    public Semaphore stateChange = new Semaphore(1, true);
     Semaphore pause = new Semaphore(0, true);
     boolean isPaused = false;
     private AgentThread agentThread;
