@@ -23,7 +23,7 @@
   + It's a good idea to restart the program for some of the scenarios.
 
 ####Cashier/Market interaction
-  + In order to test the scenario "One order, fulfilled by TWO markets, 2 bills paid in full," start the program, then click the "Clear Cook Inventory" button and then make a customer. The first market doesn't have enough to fulfill the full order so a second order is needed.
+  + In order to test the scenario "One order, fulfilled by TWO markets, 2 bills paid in full," start the program, then click the "Clear Cook Inventory" button and then make a customer and a waiter. When the customer orders, the cook will have to order more food. The first market doesn't have enough to fulfill the full order so a second order is needed.
   + To test the "normative market ordering scenario," either make a lot of customers named "chicken" until the cook has to order more or simply start the program and press the "Inventory check" button.
   + I did not implement a solution for bills that the cashier can't pay for. I left the cashier plenty of money for many orders.
   
