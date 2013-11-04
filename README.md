@@ -19,7 +19,7 @@
   + As far as I know, everything in this project works. I've tried all of the scenarios listed in the rubric as well as trying to overload it with many waiters/customers, but it has handled them all.
   + If you encounter any other problems, feel free to email me!
 
-###How to run non-normatives!
+###How to run scenarios!
   + It's a good idea to restart the program for some of the scenarios.
 
 ####Cashier/Market interaction
