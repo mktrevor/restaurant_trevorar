@@ -13,7 +13,8 @@
   + 2. In eclipse, click File->New->Other and then choose Java Project from Existing Ant Buildfile.
   + 3. Click browse, find the cloned repository, and choose the build.xml file.
   + 4. Check the "Link to the buildfile in the file system box" and press finish.
-  + 5. If it does not run when you try to run it, make sure that in Run->Run Configurations, the Main Class is set to "restaurant.gui.RestaurantGui".
+  + 5. The JUnit tests require the JUnit library to be added. Right click on the project, go to Properties -> Java Build Path -> Libraries -> Add Library -> JUnit -> JUnit 3. Then, the unit tests should compile.
+  + 6. If it does not run when you try to run it, make sure that in Run->Run Configurations, the Main Class is set to "restaurant.gui.RestaurantGui".
 
 ###Other issues
   + As far as I know, everything in this project works. I've tried all of the scenarios listed in the rubric as well as trying to overload it with many waiters/customers, but it has handled them all.
