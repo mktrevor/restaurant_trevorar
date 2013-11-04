@@ -86,7 +86,7 @@ public class CashierCustomerTest2 extends TestCase
 		//Postconditions
 		assertEquals(waiter.log.size(), 3); //Message has been called 3 times for waiter
 		
-		//Message from customer to pay bill
+		//Messages from customers to pay bill
 		cashier.msgPayBill(check1, customer1.money);
 		cashier.msgPayBill(check2, customer2.money);
 		cashier.msgPayBill(check3, customer3.money);

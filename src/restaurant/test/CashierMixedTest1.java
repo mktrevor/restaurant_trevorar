@@ -44,8 +44,8 @@ public class CashierMixedTest1 extends TestCase
 		market1 = new MockMarket("market1");
 		market2 = new MockMarket("market2");
 		
-		billAmount1 = 75.0;
-		billAmount2 = 120.50;
+		billAmount1 = 75.0; //$75 bill from market
+		billAmount2 = 120.50; //$120.50 bill from market
 	}	
 	
 	/* This tests the cashier receiving three check requests from one waiter. Two of the customers pay their bills and one cannot afford it 
@@ -138,7 +138,7 @@ public class CashierMixedTest1 extends TestCase
 		assertEquals(mc3.amountPaid, 0.0); //Amount paid 0
 		assertTrue(mc3.state == checkState.partiallyPaid); //Check has not been fully paid!
 		
-		//Scheduler
+		//Scheduler - should give change to customers who paid and add flake the the list of customers who owe money
 		assertTrue(cashier.pickAndExecuteAnAction());
 		assertTrue(cashier.pickAndExecuteAnAction());
 		assertTrue(cashier.pickAndExecuteAnAction());
@@ -153,7 +153,7 @@ public class CashierMixedTest1 extends TestCase
 		assertEquals(cashier.customersWhoOweMoney.size(), 1); //Flake should have been added to this list.
 		MyCustomer mc = cashier.customersWhoOweMoney.get(0);
 		assertEquals(mc.c, customer3); //Flake is only member of list - He'll have to pay back his debt next time he comes to the restaurant
-		
+				
 		assertFalse(cashier.pickAndExecuteAnAction()); //No more actions to be called by cashier's scheduler!
 	}
 }
